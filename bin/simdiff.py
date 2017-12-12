@@ -38,17 +38,13 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Notes
-#  Intended for comparison of simulation results containing a mix of text and numeric values
-#  Numeric data columns quantities are assumed to be the same in both files
-#  Interpolated and plotted results assume col 1 is x-axis for all other columns
-#  Tokens can be whitespace or comma separated so tab/space and csv delimited files can be compared
 #  Inputs can be file names or a file and a directory, and can use wildcards
 #   The logic attempts to match up files to compare in a non-surprising way
 #   For more complex scenarios use a wrapper script to feed two files at a time to this script
-
-# Future
-#  Option to sync over lines with repeat col1 (x) entries
-#  Option to show peaks and integrated avg of X,Y curve diffs
+#  Intended for comparison of simulation results containing a mix of text and numeric values
+#  Tokens can be whitespace or comma separated
+#  Numeric data columns quantities are assumed to be the same in both files
+#  Interpolated and plotted results assume col 1 is x-axis for all other columns
 
 # Python imports
 import argparse, fastnumbers, glob, math, os, re, sys
