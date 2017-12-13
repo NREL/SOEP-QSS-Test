@@ -306,22 +306,22 @@ def sim_compare( fnam1, fnam2 ):
                         type_row = True
                         for i in range( n_cols ):
                             if row1_2[ i ] == row2_2[ i ]:
-                                lbls[ i ] = row1_2[ i ]
+                                lbls[ i ] = str( row1_2[ i ] )
                             else:
-                                lbls[ i ] = row1_2[ i ] + ' | ' + row2_2[ i ]
+                                lbls[ i ] = str( row1_2[ i ] ) + ' | ' + str( row2_2[ i ] )
                     if ( len( row1_1 ) == n_cols ) and ( len( row2_1 ) == n_cols ):
                         if type_row: # Treat as units row
                             for i in range( n_cols ):
                                 if row1_1[ i ] == row2_1[ i ]:
-                                    lbls[ i ] += ' (' + row1_1[ i ] + ')'
+                                    lbls[ i ] += ' (' + str( row1_1[ i ] ) + ')'
                                 else:
-                                    lbls[ i ] += ' (' + row1_1[ i ] + '|' + row2_1[ i ] + ')'
+                                    lbls[ i ] += ' (' + str( row1_1[ i ] ) + '|' + str( row2_1[ i ] ) + ')'
                         else: # Treat as type row
                             for i in range( n_cols ):
                                 if row1_1[ i ] == row2_1[ i ]:
-                                    lbls[ i ] = row1_1[ i ]
+                                    lbls[ i ] = str( row1_1[ i ] )
                                 else:
-                                    lbls[ i ] = row1_1[ i ] + ' | ' + row2_1[ i ]
+                                    lbls[ i ] = str( row1_1[ i ] ) + ' | ' + str( row2_1[ i ] )
                 if in_nums:
                     for i in range( n_cols ):
                         cols1[ i ].append( row1[ i ] )
