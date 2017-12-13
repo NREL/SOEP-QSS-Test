@@ -252,8 +252,8 @@ def sim_compare( fnam1, fnam2 ):
             if interp_or_plot:
                 row1_2 = row1_1
                 row2_2 = row2_1
-                row1_1 = row1
-                row2_1 = row2
+                row1_1 = row1 if not wait1 else []
+                row2_1 = row2 if not wait2 else []
                 row1 = []
                 row2 = []
             for i in range( min( len( tokens1 ), len( tokens2 ) ) - 1 ): # Last token is for the newline so skip it
@@ -302,23 +302,39 @@ def sim_compare( fnam1, fnam2 ):
                     cols2 = [ [] for i in range( n_cols ) ]
                     lbls = [ '' for i in range( n_cols ) ]
                     type_row = False
+                    if not row1_2: row1_2 = [ '' for i in range( n_cols ) ]
+                    if not row2_2: row2_2 = [ '' for i in range( n_cols ) ]
                     if ( len( row1_2 ) == n_cols ) and ( len( row2_2 ) == n_cols ):
                         type_row = True
                         for i in range( n_cols ):
                             if row1_2[ i ] == row2_2[ i ]:
                                 lbls[ i ] = str( row1_2[ i ] )
+                            elif not row1_2[ i ]:
+                                lbls[ i ] = str( row2_2[ i ] )
+                            elif not row2_2[ i ]:
+                                lbls[ i ] = str( row1_2[ i ] )
                             else:
                                 lbls[ i ] = str( row1_2[ i ] ) + ' | ' + str( row2_2[ i ] )
+                    if not row1_1: row1_1 = [ '' for i in range( n_cols ) ]
+                    if not row2_1: row2_1 = [ '' for i in range( n_cols ) ]
                     if ( len( row1_1 ) == n_cols ) and ( len( row2_1 ) == n_cols ):
                         if type_row: # Treat as units row
                             for i in range( n_cols ):
                                 if row1_1[ i ] == row2_1[ i ]:
+                                    lbls[ i ] += ' (' + str( row1_1[ i ] ) + ')'
+                                elif not row1_1[ i ]:
+                                    lbls[ i ] += ' (' + str( row2_1[ i ] ) + ')'
+                                elif not row2_1[ i ]:
                                     lbls[ i ] += ' (' + str( row1_1[ i ] ) + ')'
                                 else:
                                     lbls[ i ] += ' (' + str( row1_1[ i ] ) + '|' + str( row2_1[ i ] ) + ')'
                         else: # Treat as type row
                             for i in range( n_cols ):
                                 if row1_1[ i ] == row2_1[ i ]:
+                                    lbls[ i ] = str( row1_1[ i ] )
+                                elif not row1_1[ i ]:
+                                    lbls[ i ] = str( row2_1[ i ] )
+                                elif not row2_1[ i ]:
                                     lbls[ i ] = str( row1_1[ i ] )
                                 else:
                                     lbls[ i ] = str( row1_1[ i ] ) + ' | ' + str( row2_1[ i ] )
