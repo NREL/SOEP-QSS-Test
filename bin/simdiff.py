@@ -44,10 +44,11 @@
 #  Intended for comparison of simulation results containing a mix of text and numeric values
 #  Tokens can be whitespace or comma separated
 #  Numeric data columns quantities are assumed to be the same in both files
-#  Interpolated and plotted results assume col 1 is x-axis for all other columns
+#  Interpolated and plotted results assume col 1 is the x-axis for the other columns
 
 # Python imports
 import argparse, fastnumbers, glob, math, os, re, sys
+from types import NoneType
 
 # Globals
 args = None
@@ -61,11 +62,13 @@ def main():
     parser.add_argument( 'inp2', help = 'input 2' )
     parser.add_argument( '--rTol', help = 'relative tolerance  [0.001]', type = float, default = 0.001 )
     parser.add_argument( '--aTol', help = 'absolute tolerance  [0]', type = float, default = 0.0 )
-    parser.add_argument( '-s', '--sync', help = 'sync numeric block  [F]', action = 'store_true' )
-    parser.add_argument( '-i', '--interp', help = 'interpolate (=> sync)  [F]', action = 'store_true' )
-    parser.add_argument( '-p', '--plot', help = 'plot curves/diff  [F]', action = 'store_true' )
-    parser.add_argument( '-o', '--out', help = 'output to file(s)  [F]', action = 'store_true' )
+    parser.add_argument( '--no-sync', help = "don't sync numeric block  [F]", dest = 'sync', action = 'store_false' )
+    parser.add_argument( '--no-interp', help = "don't interpolate (interp=> sync)  [F]", dest = 'interp', action = 'store_false' )
+    parser.add_argument( '--plot', help = 'plot curves/diff  [F]', action = 'store_true' )
+    parser.add_argument( '--dpi', help = 'screen dpi', type = int, default = 0 )
+    parser.add_argument( '--out', help = 'output to file(s)  [F]', action = 'store_true' )
     parser.add_argument( '-v', '--verbose', help = 'verbose report  [F]', action = 'store_true' )
+    parser.set_defaults( sync = True, interp = True )
     global args
     args = parser.parse_args()
     if args.interp: args.sync = True # Interpolation => Sync
@@ -170,6 +173,10 @@ def sim_compare( fnam1, fnam2 ):
         try:
             from matplotlib import pyplot
             pyplot.rcParams[ 'axes.formatter.offset_threshold' ] = 3
+            if args.dpi > 0:
+                pyplot.rcParams[ 'figure.dpi' ] = args.dpi
+            elif sys.platform.startswith( 'linux' ): # Scale up to typically usable size
+                pyplot.rcParams[ 'figure.dpi' ] = 150
         except:
             print( 'Plotting unavailable: matplotlib is not installed' )
             args.plot = False
@@ -188,7 +195,7 @@ def sim_compare( fnam1, fnam2 ):
     lnum1 = lnum2 = 0 # Line numbers in files
     line1 = line2 = True # Not at end of files?
     nums1 = nums2 = False # Found numeric lines?
-    in_nums = False # In numeric block
+    in_nums1 = in_nums2 = False # In numeric blocks?
     wait1 = wait2 = False # File waiting for other file to reach numeric lines?
     end1 = end2 = False # Reached end of files prev?
     row1_1 = row1_2 = row2_1 = row2_2 = None # 2 previous rows
@@ -219,136 +226,144 @@ def sim_compare( fnam1, fnam2 ):
     print( 'Sequential:' )
     while line1 or line2:
         if sync:
-            wait1 = ( nums1 and ( not nums2 ) )
-            wait2 = ( nums2 and ( not nums1 ) )
+            wait1 = ( nums1 and ( not nums2 ) ) or ( interp and nums1 and ( not in_nums1 ) and in_nums2 )
+            wait2 = ( nums2 and ( not nums1 ) ) or ( interp and nums2 and ( not in_nums2 ) and in_nums1 )
         if sync: # Read next lines unless waiting for other file to reach numeric lines
-            if line1 and ( not wait1 ): line1 = file1.readline()
-            if line2 and ( not wait2 ): line2 = file2.readline()
+            if line1 and ( not wait1 ):
+                line1 = file1.readline()
+            elif wait1 and ( not end1 ):
+                line1 = '\n'
+            if line2 and ( not wait2 ):
+                line2 = file2.readline()
+            elif wait2 and ( not end2 ):
+                line2 = '\n'
         else: # Read next lines unless end of file already reached
             if line1: line1 = file1.readline()
             if line2: line2 = file2.readline()
         old_diffs = num_diffs
         if ( not line1 ) and ( not line2 ): # Simultaneously reached end of both files
-            pass
+            break
         elif not line1: # Reached end of file1 first
-            if verbose and ( not end1 ): print( ' File 1: End hit first' )
-            if not wait2: lnum2 += 1
+            if verbose and ( not end1 ) and ( not interp ): print( ' File 1: End hit first' )
             num_diffs += 1
             end1 = True
         elif not line2: # Reached end of file2 first
-            if verbose and ( not end2 ): print( ' File 2: End hit first' )
-            if not wait1: lnum1 += 1
+            if verbose and ( not end2 ) and ( not interp ): print( ' File 2: End hit first' )
             num_diffs += 1
             end2 = True
-        else:
-            num1 = num2 = True # Lines are all numeric tokens?
-            if not wait1: lnum1 += 1
-            if not wait2: lnum2 += 1
-            tokens1 = re.split( r'[\s,]+', line1 )
-            tokens2 = re.split( r'[\s,]+', line2 )
-            if len( tokens1 ) != len( tokens2 ):
+            line2 = ''
+        num1 = num2 = True # Lines are all numeric tokens?
+        if not wait1: lnum1 += 1
+        if not wait2: lnum2 += 1
+        tokens1 = re.split( r'[\s,]+', line1 ) if line1 else []
+        tokens2 = re.split( r'[\s,]+', line2 ) if line2 else []
+        while tokens1 and tokens1[ -1 ] == '': del tokens1[ -1 ]
+        while tokens2 and tokens2[ -1 ] == '': del tokens2[ -1 ]
+        if len( tokens1 ) != len( tokens2 ):
+            if line1 and line2 and ( not ( sync and ( wait1 or wait2 ) ) ):
                 if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ': Different number of tokens' )
                 num_diffs += 1
-            if interp_or_plot:
-                row1_2 = row1_1
-                row2_2 = row2_1
-                row1_1 = row1 if not wait1 else []
-                row2_1 = row2 if not wait2 else []
-                row1 = []
-                row2 = []
-            for i in range( min( len( tokens1 ), len( tokens2 ) ) - 1 ): # Last token is for the newline so skip it
-                token1 = tokens1[ i ]
-                token2 = tokens2[ i ]
-                val1 = fastnumbers.fast_real( token1 )
-                val2 = fastnumbers.fast_real( token2 )
-                if isinstance( val1, str ): num1 = False
-                if isinstance( val2, str ): num2 = False
-                if ( not ( interp and in_nums ) ) and ( val1 != val2 ):
-                    if isinstance( val1, int ) and isinstance( val2, int ): # Compare as integers
+        if interp_or_plot:
+            row1_2 = row1_1
+            row2_2 = row2_1
+            row1_1 = row1 if not wait1 else []
+            row2_1 = row2 if not wait2 else []
+            row1 = []
+            row2 = []
+        l1 = len( tokens1 )
+        l2 = len( tokens2 )
+        for i in range( max( l1, l2 ) ):
+            token1 = tokens1[ i ] if i < l1 else None
+            token2 = tokens2[ i ] if i < l2 else None
+            val1 = fastnumbers.fast_real( token1 ) if token1 else None
+            val2 = fastnumbers.fast_real( token2 ) if token2 else None
+            if ( val1 is None ) or isinstance( val1, str ): num1 = False
+            if ( val2 is None ) or isinstance( val2, str ): num2 = False
+            if ( not ( interp and in_nums1 and in_nums2 ) ) and ( val1 != val2 ):
+                if isinstance( val1, int ) and isinstance( val2, int ): # Compare as integers
+                    if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ':  Token: ' + str( i + 1 ) + ':  ' + token1 + ' | ' + token2 )
+                    num_diffs += 1
+                    int_diffs += 1
+                elif ( not isinstance( val1, ( str, NoneType ) ) ) and ( not isinstance( val2, ( str, NoneType ) ) ): # Compare as floats
+                    fdiff = abs( val1 - val2 )
+                    if f_min is None:
+                        f_min = f_max = fdiff
+                    elif fdiff < f_min:
+                        f_min = fdiff
+                    elif fdiff > f_max:
+                        f_max = fdiff
+                    if fdiff <= aTol: # Within abs tolerance
+                        pass
+                    elif fdiff <= rTol * max( abs( val1 ), abs( val2 ) ): # Within rel tolerance
+                        pass
+                    else:
                         if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ':  Token: ' + str( i + 1 ) + ':  ' + token1 + ' | ' + token2 )
                         num_diffs += 1
-                        int_diffs += 1
-                    elif ( not isinstance( val1, str ) ) and ( not isinstance( val2, str ) ): # Compare as floats
-                        fdiff = abs( val1 - val2 )
-                        if f_min is None:
-                            f_min = f_max = fdiff
-                        elif fdiff < f_min:
-                            f_min = fdiff
-                        elif fdiff > f_max:
-                            f_max = fdiff
-                        if fdiff <= aTol: # Within abs tolerance
-                            pass
-                        elif fdiff <= rTol * max( abs( val1 ), abs( val2 ) ): # Within rel tolerance
-                            pass
-                        else:
-                            if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ':  Token: ' + str( i + 1 ) + ':  ' + token1 + ' | ' + token2 )
-                            num_diffs += 1
-                            flt_diffs += 1
-                    else: # Compare tokens as strings
-                        if token1 != token2:
-                            if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ':  Token: ' + str( i + 1 ) + ':  ' + token1 + ' | ' + token2 )
-                            num_diffs += 1
-                            str_diffs += 1
-                if interp_or_plot:
-                    row1.append( val1 )
-                    row2.append( val2 )
+                        flt_diffs += 1
+                else: # Compare tokens as strings
+                    if token1 != token2:
+                        if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ':  Token: ' + str( i + 1 ) + ':  ' + str( token1 ) + ' | ' + str( token2 ) )
+                        num_diffs += 1
+                        str_diffs += 1
             if interp_or_plot:
-                if in_nums: # See if past numeric block
-                    if not ( num1 and num2 ): in_nums = False
-                elif num1 and num2 and ( ( not nums1 ) or ( not nums2 ) ): # Numeric block initialization
-                    in_nums = True
-                    n_cols = min( len( row1 ), len( row2 ) )
-                    cols1 = [ [] for i in range( n_cols ) ]
-                    cols2 = [ [] for i in range( n_cols ) ]
-                    lbls = [ '' for i in range( n_cols ) ]
-                    type_row = False
-                    if not row1_2: row1_2 = [ '' for i in range( n_cols ) ]
-                    if not row2_2: row2_2 = [ '' for i in range( n_cols ) ]
-                    if ( len( row1_2 ) == n_cols ) and ( len( row2_2 ) == n_cols ):
-                        type_row = True
-                        for i in range( n_cols ):
-                            if row1_2[ i ] == row2_2[ i ]:
-                                lbls[ i ] = str( row1_2[ i ] )
-                            elif not row1_2[ i ]:
-                                lbls[ i ] = str( row2_2[ i ] )
-                            elif not row2_2[ i ]:
-                                lbls[ i ] = str( row1_2[ i ] )
-                            else:
-                                lbls[ i ] = str( row1_2[ i ] ) + ' | ' + str( row2_2[ i ] )
-                    if not row1_1: row1_1 = [ '' for i in range( n_cols ) ]
-                    if not row2_1: row2_1 = [ '' for i in range( n_cols ) ]
-                    if ( len( row1_1 ) == n_cols ) and ( len( row2_1 ) == n_cols ):
-                        if type_row: # Treat as units row
-                            for i in range( n_cols ):
-                                if row1_1[ i ] == row2_1[ i ]:
-                                    lbls[ i ] += ' (' + str( row1_1[ i ] ) + ')'
-                                elif not row1_1[ i ]:
-                                    lbls[ i ] += ' (' + str( row2_1[ i ] ) + ')'
-                                elif not row2_1[ i ]:
-                                    lbls[ i ] += ' (' + str( row1_1[ i ] ) + ')'
-                                else:
-                                    lbls[ i ] += ' (' + str( row1_1[ i ] ) + '|' + str( row2_1[ i ] ) + ')'
-                        else: # Treat as type row
-                            for i in range( n_cols ):
-                                if row1_1[ i ] == row2_1[ i ]:
-                                    lbls[ i ] = str( row1_1[ i ] )
-                                elif not row1_1[ i ]:
-                                    lbls[ i ] = str( row2_1[ i ] )
-                                elif not row2_1[ i ]:
-                                    lbls[ i ] = str( row1_1[ i ] )
-                                else:
-                                    lbls[ i ] = str( row1_1[ i ] ) + ' | ' + str( row2_1[ i ] )
-                if in_nums:
+                if val1 is not None: row1.append( val1 )
+                if val2 is not None: row2.append( val2 )
+        if interp_or_plot:
+            if in_nums1 or in_nums2: # See if past numeric block
+                if not num1: in_nums1 = False
+                if not num2: in_nums2 = False
+            elif num1 and num2 and ( ( not nums1 ) or ( not nums2 ) ): # Numeric block initialization
+                in_nums1 = in_nums2 = True
+                n_cols = min( len( row1 ), len( row2 ) )
+                cols1 = [ [] for i in range( n_cols ) ]
+                cols2 = [ [] for i in range( n_cols ) ]
+                lbls = [ '' for i in range( n_cols ) ]
+                type_row = False
+                if not row1_2: row1_2 = [ '' for i in range( n_cols ) ]
+                if not row2_2: row2_2 = [ '' for i in range( n_cols ) ]
+                if ( len( row1_2 ) == n_cols ) and ( len( row2_2 ) == n_cols ):
+                    type_row = True
                     for i in range( n_cols ):
-                        cols1[ i ].append( row1[ i ] )
-                        cols2[ i ].append( row2[ i ] )
-            if num1:
-                nums1 = True
-            if num2:
-                nums2 = True
-
-        if old_diffs < num_diffs:
-            lin_diffs += 1
+                        if row1_2[ i ] == row2_2[ i ]:
+                            lbls[ i ] = str( row1_2[ i ] )
+                        elif not row1_2[ i ]:
+                            lbls[ i ] = str( row2_2[ i ] )
+                        elif not row2_2[ i ]:
+                            lbls[ i ] = str( row1_2[ i ] )
+                        else:
+                            lbls[ i ] = str( row1_2[ i ] ) + ' | ' + str( row2_2[ i ] )
+                if not row1_1: row1_1 = [ '' for i in range( n_cols ) ]
+                if not row2_1: row2_1 = [ '' for i in range( n_cols ) ]
+                if ( len( row1_1 ) == n_cols ) and ( len( row2_1 ) == n_cols ):
+                    if type_row: # Treat as units row
+                        for i in range( n_cols ):
+                            if row1_1[ i ] == row2_1[ i ]:
+                                lbls[ i ] += ' (' + str( row1_1[ i ] ) + ')'
+                            elif not row1_1[ i ]:
+                                lbls[ i ] += ' (' + str( row2_1[ i ] ) + ')'
+                            elif not row2_1[ i ]:
+                                lbls[ i ] += ' (' + str( row1_1[ i ] ) + ')'
+                            else:
+                                lbls[ i ] += ' (' + str( row1_1[ i ] ) + '|' + str( row2_1[ i ] ) + ')'
+                    else: # Treat as type row
+                        for i in range( n_cols ):
+                            if row1_1[ i ] == row2_1[ i ]:
+                                lbls[ i ] = str( row1_1[ i ] )
+                            elif not row1_1[ i ]:
+                                lbls[ i ] = str( row2_1[ i ] )
+                            elif not row2_1[ i ]:
+                                lbls[ i ] = str( row1_1[ i ] )
+                            else:
+                                lbls[ i ] = str( row1_1[ i ] ) + ' | ' + str( row2_1[ i ] )
+            if in_nums1:
+                for i in range( n_cols ):
+                    cols1[ i ].append( row1[ i ] )
+            if in_nums2:
+                for i in range( n_cols ):
+                    cols2[ i ].append( row2[ i ] )
+        if num1: nums1 = True
+        if num2: nums2 = True
+        if old_diffs < num_diffs: lin_diffs += 1
 
     # Close the files
     file1.close()
@@ -379,14 +394,14 @@ def sim_compare( fnam1, fnam2 ):
     if interp or plot:
         x1 = numpy.array( cols1[ 0 ] )
         x2 = numpy.array( cols2[ 0 ] )
-        x = numpy.unique( ( x1, x2 ) )
+        x = numpy.unique( numpy.concatenate( ( x1, x2 ) ) )
         row_diffs = 0
         for j in range( 1, n_cols ):
             y1 = numpy.array( cols1[ j ] )
             y2 = numpy.array( cols2[ j ] )
             Y1 = numpy.interp( x, x1, y1 )
             Y2 = numpy.interp( x, x2, y2 )
-            yd = Y1 - Y2
+            Yd = Y1 - Y2
 
             # Interpolation
             if interp:
@@ -395,7 +410,7 @@ def sim_compare( fnam1, fnam2 ):
                 # Tolerance
                 blk_diffs = 0
                 for i in range( len( x ) ):
-                    fdiff = abs( yd[ i ] )
+                    fdiff = abs( Yd[ i ] )
                     if fdiff <= aTol: # Within abs tolerance
                         pass
                     elif fdiff <= rTol * max( abs( Y1[ i ] ), abs( Y2[ i ] ) ): # Within rel tolerance
@@ -406,14 +421,14 @@ def sim_compare( fnam1, fnam2 ):
                 row_diffs += blk_diffs
 
                 # Statistics
-                i_min = yd.argmin()
-                i_max = yd.argmax()
+                i_min = Yd.argmin()
+                i_max = Yd.argmax()
                 m_min = isinstance( i_min, numpy.ndarray )
                 m_max = isinstance( i_max, numpy.ndarray )
                 if m_min: i_min = i_min[ 0 ]
                 if m_max: i_max = i_max[ 0 ]
-                yd_min = yd[ i_min ]
-                yd_max = yd[ i_max ]
+                yd_min = Yd[ i_min ]
+                yd_max = Yd[ i_max ]
                 print( ' Metrics:' )
                 print( '  Min: ' + str( yd_min ) + ' @ ' + str( x[ i_min ] ) + ( ' ...' if m_min else '' ) )
                 print( '  Max: ' + str( yd_max ) + ' @ ' + str( x[ i_max ] ) + ( ' ...' if m_max else '' ) )
@@ -427,7 +442,7 @@ def sim_compare( fnam1, fnam2 ):
                     print( '  Mag: ' + str( yd_min ) + ' @ ' + str( x[ min( i_min, i_max ) ] ) + ( ' ...' if m_min or m_max else '' ) )
                 x_range = x[ -1 ] - x[ 0 ]
                 if x_range != 0.0:
-                    yda = numpy.abs( yd )
+                    yda = numpy.abs( Yd )
                     yda_avg = numpy.trapz( yda, x ) / x_range
                     yd2 = numpy.square( yda )
                     yd2_avg = math.sqrt( numpy.trapz( yd2, x ) / x_range )
@@ -462,7 +477,7 @@ def sim_compare( fnam1, fnam2 ):
 
                 # Diff plot
                 bot.set_title( ( 'YCol ' + str( j ) + ' ' if n_cols > 2 else '' ) + 'Diff', fontsize = 9 )
-                bot.plot( x, yd, linewidth = 0.8 )
+                bot.plot( x, Yd, linewidth = 0.8 )
                 bot.grid( linestyle = 'dotted', alpha = 0.25 )
                 bot.tick_params( axis = 'both', direction = 'in' )
                 bot.ticklabel_format( style = 'sci', scilimits = ( -4, 5 ), axis = 'both' )
