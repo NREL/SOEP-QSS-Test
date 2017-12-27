@@ -76,12 +76,18 @@ def main():
     # Generate input lists
     glob1 = glob.glob( args.inp1 )
     glob2 = glob.glob( args.inp2 )
+    if ( not glob1 ) and ( ( '[' in args.inp1 ) or ( ']' in args.inp1 ) ): # Escape the brackets
+        args.inp1 = re.sub( r'([\[\]])', '[\\1]', args.inp1 )
+        glob1 = glob.glob( args.inp1 )
+    if ( not glob2 ) and ( ( '[' in args.inp2 ) or ( ']' in args.inp2 ) ): # Escape the brackets
+        args.inp2 = re.sub( r'([\[\]])', '[\\1]', args.inp2 )
+        glob2 = glob.glob( args.inp2 )
     if not glob1:
         print( '\nNo paths found matching inp1: ' + args.inp1 )
-        sys.exit( 1 )
     if not glob2:
         print( '\nNo paths found matching inp2: ' + args.inp2 )
-        sys.exit( 1 )
+    if not ( glob1 and glob2 ):
+         sys.exit( 1 )
     for i in range( len( glob1 ) ): glob1[ i ] = os.path.abspath( glob1[ i ] )
     for i in range( len( glob2 ) ): glob2[ i ] = os.path.abspath( glob2[ i ] )
 
