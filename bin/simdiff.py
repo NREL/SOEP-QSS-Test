@@ -203,6 +203,7 @@ def sim_compare( fnam1, fnam2 ):
     nums1 = nums2 = False # Found numeric lines?
     in_nums1 = in_nums2 = False # In numeric blocks?
     wait1 = wait2 = False # File waiting for other file to reach numeric lines?
+    tokens1 = tokens2 = []
     end1 = end2 = False # Reached end of files prev?
     row1_1 = row1_2 = row2_1 = row2_2 = None # 2 previous rows
     lin_diffs = 0
@@ -231,18 +232,11 @@ def sim_compare( fnam1, fnam2 ):
     print( 'Comparing:\n' + fnam1 + '\n' + fnam2 )
     print( 'Sequential:' )
     while line1 or line2:
-        if sync:
+        if sync: # Read next lines unless waiting for other file to reach numeric lines
             wait1 = ( nums1 and ( not nums2 ) ) or ( interp and nums1 and ( not in_nums1 ) and in_nums2 )
             wait2 = ( nums2 and ( not nums1 ) ) or ( interp and nums2 and ( not in_nums2 ) and in_nums1 )
-        if sync: # Read next lines unless waiting for other file to reach numeric lines
-            if line1 and ( not wait1 ):
-                line1 = file1.readline()
-            elif wait1 and ( not end1 ):
-                line1 = '\n'
-            if line2 and ( not wait2 ):
-                line2 = file2.readline()
-            elif wait2 and ( not end2 ):
-                line2 = '\n'
+            if line1 and ( not wait1 ): line1 = file1.readline()
+            if line2 and ( not wait2 ): line2 = file2.readline()
         else: # Read next lines unless end of file already reached
             if line1: line1 = file1.readline()
             if line2: line2 = file2.readline()
@@ -259,12 +253,14 @@ def sim_compare( fnam1, fnam2 ):
             end2 = True
             line2 = ''
         num1 = num2 = True # Lines are all numeric tokens?
-        if not wait1: lnum1 += 1
-        if not wait2: lnum2 += 1
-        tokens1 = re.split( r'[\s,]+', line1 ) if line1 else []
-        tokens2 = re.split( r'[\s,]+', line2 ) if line2 else []
-        while tokens1 and tokens1[ -1 ] == '': del tokens1[ -1 ]
-        while tokens2 and tokens2[ -1 ] == '': del tokens2[ -1 ]
+        if not wait1:
+            lnum1 += 1
+            tokens1 = re.split( r'[\s,]+', line1 ) if line1 else []
+            while tokens1 and tokens1[ -1 ] == '': del tokens1[ -1 ]
+        if not wait2:
+            lnum2 += 1
+            tokens2 = re.split( r'[\s,]+', line2 ) if line2 else []
+            while tokens2 and tokens2[ -1 ] == '': del tokens2[ -1 ]
         if len( tokens1 ) != len( tokens2 ):
             if line1 and line2 and ( not ( sync and ( wait1 or wait2 ) ) ):
                 if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ': Different number of tokens' )
