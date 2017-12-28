@@ -1,0 +1,7 @@
+StateEvent 6 Model JModelica Notes
+
+The .mo file was simplified to allow JModelica to process it.
+
+XML Modifications
+ Ran mod_xml.JModelica.py to add index comments
+ Added dependencies for zero-crossing (__zc_z) and discrete (y) variables
