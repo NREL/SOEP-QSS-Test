@@ -1,0 +1,10 @@
+ZCBoolean2 Model JModelica Notes
+
+Modelica File Modifications
+ Added tolerance to annotation
+
+XML Modifications
+ Ran mod_xml.JModelica.py to add index comments
+ Added dependencies for zero-crossing (__zc_z) and discrete (y) variables
+
+JModelica simulation is not correct

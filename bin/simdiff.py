@@ -46,7 +46,7 @@
 #  Numeric data columns quantities are assumed to be the same in both files
 #  Interpolated and plotted results assume col 1 is the x-axis for the other columns
 
-# Python imports
+# Imports
 import argparse, fastnumbers, glob, math, os, re, sys
 from types import NoneType
 

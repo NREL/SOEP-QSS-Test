@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  fmiVersion="2.0"
+  modelName="StateEvents.StateEvent6"
+  guid="{58d1b2b0-dde8-4d41-9968-7f68428eafc7}"
+  generationTool="Dymola Version 2017 FD01 (64-bit), 2016-10-11"
+  generationDateAndTime="2017-05-11T14:37:50Z"
+  variableNamingConvention="structured"
+  numberOfEventIndicators="4">
+  <ModelExchange
+    modelIdentifier="StateEvents_StateEvent6"
+    canGetAndSetFMUstate="true"
+    providesDirectionalDerivative="true"/>
+  <TypeDefinitions>
+    <SimpleType
+      name="Modelica.Blocks.Interfaces.RealOutput">
+      <Real/>
+    </SimpleType>
+  </TypeDefinitions>
+  <DefaultExperiment startTime="0.0"
+    stopTime="1.0"
+    tolerance="0.0001"/>
+  <ModelVariables>
+    <!-- Index for next variable = 1 -->
+    <ScalarVariable
+      name="x1"
+      valueReference="33554432"
+      initial="exact">
+      <Real start="1.1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 2 -->
+    <ScalarVariable
+      name="der(x1)"
+      valueReference="587202560">
+      <Real derivative="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 3 -->
+    <ScalarVariable
+      name="x2"
+      valueReference="33554433"
+      initial="exact">
+      <Real start="-2.5"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 4 -->
+    <ScalarVariable
+      name="der(x2)"
+      valueReference="587202561">
+      <Real derivative="3"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 5 -->
+    <ScalarVariable
+      name="x3"
+      valueReference="33554434"
+      initial="exact">
+      <Real start="4"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 6 -->
+    <ScalarVariable
+      name="der(x3)"
+      valueReference="587202562">
+      <Real derivative="5"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 7 -->
+    <ScalarVariable
+      name="y"
+      valueReference="905969664"
+      variability="discrete"
+      initial="exact">
+      <Real start="0.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 8 -->
+    <ScalarVariable
+      name="__zc_z"
+      valueReference="335544320"
+      description="Zero crossing"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 9 -->
+    <ScalarVariable
+      name="__zc_der_z"
+      valueReference="335544321"
+      description="Derivative of Zero crossing"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="8"
+        dependencies="1"
+        dependenciesKind="fixed"/>
+      <Unknown index="9"
+        dependencies=""
+        dependenciesKind=""/>
+    </Outputs>
+    <Derivatives>
+      <Unknown index="2"
+        dependencies=""
+        dependenciesKind=""/>
+      <Unknown index="4"
+        dependencies=""
+        dependenciesKind=""/>
+      <Unknown index="6"
+        dependencies=""
+        dependenciesKind=""/>
+    </Derivatives>
+    <InitialUnknowns>
+      <Unknown index="2"
+        dependencies=""
+        dependenciesKind=""/>
+      <Unknown index="4"
+        dependencies=""
+        dependenciesKind=""/>
+      <Unknown index="6"
+        dependencies=""
+        dependenciesKind=""/>
+      <Unknown index="8"
+        dependencies="1"
+        dependenciesKind="dependent"/>
+      <Unknown index="9"
+        dependencies=""
+        dependenciesKind=""/>
+    </InitialUnknowns>
+  </ModelStructure>
+</fmiModelDescription>

@@ -1,0 +1,49 @@
+ZCBoolean2 Model Notes
+
+This model includes zero-crossing functions and a conditional when block with boolean expressions.
+
+Variables:
+x	1	Real		state	O-> y	der(x)=y
+u	3	Internal	sin(t)
+yBoo	5	Disc+Bool		H-> z1, z2
+yBooPre	6	Disc+Bool		H-> z1, z2
+y	7	Disc+Real		H-> z1, z2
+z1	8	ZC			O-> u (internal)	real(yBooPre)*u-0.5
+z2	10	ZC			O-> u (internal)	real(yBooPre)*u+0.5
+
+Notes:
+Stop time was 1.0 instead of 10.0 in original xml: Dymola bug
+ZCs:
+ ZC at 0.5235 has no effect on y because it is already 1 (but it toggles yBoo causing z1/2 to change trajectories)
+ 3 ZCs that are not FMU events (due to yBoo in conditionals) are correctly ignored by the FMU
+
+XML changes for QSS modeling:
+
+Dependency on der(x) on y needs to be added:
+    <Derivatives>
+      <Unknown index="2"
+        dependencies="7"
+        dependenciesKind="fixed"/>
+    </Derivatives>
+
+Dependency of yBoo, yBooPre, and y on z1 and z2 need to be added:
+    <DiscreteStates>
+        <Unknown index="5"
+          dependencies="8 10"
+          dependenciesKind="dependent dependent"/>
+        <Unknown index="6"
+          dependencies="8 10"
+          dependenciesKind="dependent dependent"/>
+        <Unknown index="7"
+          dependencies="8 10"
+          dependenciesKind="dependent dependent"/>
+    </DiscreteStates>
+
+Dependency of zc1 and zc2 on yBooPre needs to be added
+      <Unknown index="8"
+        dependencies="6"
+        dependenciesKind="dependent"/>
+      <Unknown index="10"
+        dependencies="6"
+        dependenciesKind="dependent"/>
+
