@@ -1,0 +1,4 @@
+BouncingBall Model Notes
+
+This is a bouncing ball model with a zero-crossing function and
+its associated conditional when block.

@@ -1,0 +1,4 @@
+Quadratic Model QSS Notes
+
+The JModelica FMU was used to generate the QSS results.
+The results with the Dymola FMU were identical.

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  fmiVersion="2.0"
+  modelName="QSS.Specific.Events.BouncingBall"
+  guid="{f726a0dc-433e-4db0-8dd8-14fe6d2c4e20}"
+  description="This model simulates the bouncing ball"
+  generationTool="Dymola Version 2018 (64-bit), 2017-04-10"
+  generationDateAndTime="2017-09-14T17:47:08Z"
+  variableNamingConvention="structured"
+  numberOfEventIndicators="2">
+  <ModelExchange
+    modelIdentifier="QSS_Specific_Events_BouncingBall"
+    canGetAndSetFMUstate="true"
+    providesDirectionalDerivative="true"/>
+  <UnitDefinitions>
+    <Unit
+      name="1"/>
+    <Unit
+      name="m">
+      <BaseUnit m="1"/>
+    </Unit>
+    <Unit
+      name="m/s">
+      <BaseUnit m="1"
+        s="-1"/>
+    </Unit>
+    <Unit
+      name="m/s2">
+      <BaseUnit m="1"
+        s="-2"/>
+    </Unit>
+  </UnitDefinitions>
+  <TypeDefinitions>
+    <SimpleType
+      name="Modelica.Blocks.Interfaces.RealOutput">
+      <Real/>
+    </SimpleType>
+    <SimpleType
+      name="QSS.Specific.Events.BouncingBall.Height">
+      <Real
+        unit="m"/>
+    </SimpleType>
+    <SimpleType
+      name="QSS.Specific.Events.BouncingBall.Velocity">
+      <Real
+        unit="m/s"/>
+    </SimpleType>
+  </TypeDefinitions>
+  <DefaultExperiment startTime="0.0"
+    stopTime="1.0"
+    tolerance="0.0001"/>
+  <ModelVariables>
+    <!-- Index for next variable = 1 -->
+    <ScalarVariable
+      name="e"
+      valueReference="16777216"
+      description="Coefficient of restitution"
+      causality="parameter"
+      variability="fixed">
+      <Real
+        unit="1"
+        start="0.8"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 2 -->
+    <ScalarVariable
+      name="h0"
+      valueReference="16777217"
+      description="Initial height"
+      causality="parameter"
+      variability="fixed">
+      <Real
+        declaredType="QSS.Specific.Events.BouncingBall.Height"
+        start="1.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 3 -->
+    <ScalarVariable
+      name="h"
+      valueReference="33554432">
+      <Real
+        declaredType="QSS.Specific.Events.BouncingBall.Height"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 4 -->
+    <ScalarVariable
+      name="der(h)"
+      valueReference="587202560">
+      <Real
+        unit="m/s"
+        derivative="3"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 5 -->
+    <ScalarVariable
+      name="v"
+      valueReference="33554433"
+      initial="exact">
+      <Real
+        declaredType="QSS.Specific.Events.BouncingBall.Velocity"
+        start="0.0"
+        derivative="3"
+        reinit="true"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 6 -->
+    <ScalarVariable
+      name="der(v)"
+      valueReference="587202561">
+      <Real
+        unit="m/s2"
+        derivative="5"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 7 -->
+    <ScalarVariable
+      name="__zc_z"
+      valueReference="335544320"
+      description="Zero crossing function"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="m"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 8 -->
+    <ScalarVariable
+      name="__zc_der_z"
+      valueReference="335544321"
+      description="Derivative of zero crossing function"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        unit="m/s"/>
+    </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="7"
+        dependencies="3"
+        dependenciesKind="fixed"/>
+      <Unknown index="8"
+        dependencies="5"
+        dependenciesKind="fixed"/>
+    </Outputs>
+    <Derivatives>
+      <Unknown index="4"
+        dependencies="5"
+        dependenciesKind="fixed"/>
+      <Unknown index="6"
+        dependencies=""
+        dependenciesKind=""/>
+    </Derivatives>
+    <InitialUnknowns>
+      <Unknown index="3"
+        dependencies="2"
+        dependenciesKind="dependent"/>
+      <Unknown index="4"
+        dependencies="5"
+        dependenciesKind="dependent"/>
+      <Unknown index="6"
+        dependencies=""
+        dependenciesKind=""/>
+      <Unknown index="7"
+        dependencies="2"
+        dependenciesKind="dependent"/>
+      <Unknown index="8"
+        dependencies="5"
+        dependenciesKind="dependent"/>
+    </InitialUnknowns>
+  </ModelStructure>
+</fmiModelDescription>

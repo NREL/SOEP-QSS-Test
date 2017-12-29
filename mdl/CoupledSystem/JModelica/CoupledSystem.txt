@@ -1,0 +1,5 @@
+CoupledSystem Model JModelica Notes
+
+XML Modifications
+ Ran mod_xml.JModelica.py to add index comments
+ No XML modifications were required to run the FMU since no zero-crossing or discrete variables are present
