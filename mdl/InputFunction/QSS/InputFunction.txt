@@ -1,0 +1,11 @@
+InputFunction Model QSS Notes
+
+The QSS solver has a few sample input functions for use with FMU models
+since input functions are not encoded within the FMU. Currently the
+input functions are not selectable at run time and the step function is
+the hard-coded default. The FMUs must be run with the same input function
+as QSS uses to get comparable results.
+
+The JModelica FMU was used to generate the QSS results using a script
+that applied the same step input function as the current QSS default.
+The results with the Dymola FMU were identical.

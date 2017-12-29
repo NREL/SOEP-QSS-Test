@@ -1,0 +1,3 @@
+CoupledSystem Model QSS Notes
+
+The QSS2 results were identical with the Dymola and JModelica FMUs.

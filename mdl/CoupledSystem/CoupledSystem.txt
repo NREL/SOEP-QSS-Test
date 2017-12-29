@@ -1,0 +1,4 @@
+CoupledSystem Model Notes
+
+This is a simple system with 3 continuous state variables with
+coupled derivatives.

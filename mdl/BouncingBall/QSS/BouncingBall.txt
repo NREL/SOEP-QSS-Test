@@ -1,0 +1,3 @@
+BouncingBall Model QSS Notes
+
+In the QSS runs of the FMUs zero-crossings are not being detected: Under investigation.
