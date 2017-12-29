@@ -49,10 +49,16 @@ from pyfmi import load_fmu
 try:
     model = sys.argv[ 1 ]
     if model.endswith( '.fmu' ): model = model[ :-4 ]
-    fmu = load_fmu( model + '.fmu' )
-    model = os.path.basename( model )
 except:
     print( 'Usage: ' + sys.argv[ 0 ] + ' <model_name>' )
+    sys.exit( 1 )
+try:
+    fmu = load_fmu( model + '.fmu' )
+except Exception as err:
+    if err: print( err )
+    print( 'Error: ' + str( err ) )
+    sys.exit( 1 )
+model = os.path.basename( model )
 
 # Set simulation options
 opt = fmu.simulate_options()

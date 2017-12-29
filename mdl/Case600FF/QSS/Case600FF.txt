@@ -1,0 +1,12 @@
+Case600FF Model QSS Notes
+
+The Dymola FMU was used for QSS simulations.
+
+The key room temperature variables, TRooQSS_K, outputs are the primary
+basis for solution comparison.
+
+Command lines for a 63,072 s output sampling rate:
+QSS --qss=QSS1 --dtOut=63072 --out=sfx Case600FF.fmu
+QSS --qss=QSS2 --dtOut=63072 --out=sfx Case600FF.fmu
+QSS --qss=LIQSS1 --dtInf=100 --dtOut=63072 --out=sfx Case600FF.fmu
+QSS --qss=LIQSS2 --dtInf=100 --dtOut=63072 --out=sfx Case600FF.fmu
