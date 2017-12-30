@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  fmiVersion="2.0"
+  modelName="QSS.Generic.InputFunction"
+  guid="{26794659-0fdf-4fb4-b050-e71e0a6f25b0}"
+  description="This model simulates a first order ODE with an input"
+  generationTool="Dymola Version 2018 (64-bit), 2017-04-10"
+  generationDateAndTime="2017-09-14T17:48:48Z"
+  variableNamingConvention="structured"
+  numberOfEventIndicators="0">
+  <ModelExchange
+    modelIdentifier="QSS_Generic_InputFunction"
+    canGetAndSetFMUstate="true"
+    providesDirectionalDerivative="true"/>
+  <DefaultExperiment startTime="0.0"
+    stopTime="1.0"
+    tolerance="0.0001"/>
+  <ModelVariables>
+    <!-- Index for next variable = 1 -->
+    <ScalarVariable
+      name="x"
+      valueReference="33554432"
+      description="State variable"
+      initial="exact">
+      <Real start="0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 2 -->
+    <ScalarVariable
+      name="der(x)"
+      valueReference="587202560"
+      description="der(State variable)">
+      <Real derivative="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 3 -->
+    <ScalarVariable
+      name="u"
+      valueReference="352321536"
+      description="Input variable"
+      causality="input">
+      <Real start="1.0"/>
+    </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Derivatives>
+      <Unknown index="2"
+        dependencies="3"
+        dependenciesKind="fixed"/>
+    </Derivatives>
+    <InitialUnknowns>
+      <Unknown index="2"
+        dependencies="3"
+        dependenciesKind="dependent"/>
+    </InitialUnknowns>
+  </ModelStructure>
+</fmiModelDescription>

@@ -1,4 +1,4 @@
-StateEvent 6 Model Notes
+StateEvent6 Model Notes
 
 This is a simple model with 3 continuous state variables and a zero-crossing function
 with an associated conditional when block.
@@ -7,3 +7,5 @@ Since there are two when clauses the model should have 2 zero-crossing functions
 it works here because the clause expressions are mutually exclusive and the zero-
 crossing functions for FMUs are set to fire with crossings in either direction
 since the FMI API doesn't expose crossing direction information.
+
+The Modelica file was simplified to enable JModelica to compile it to an FMU.

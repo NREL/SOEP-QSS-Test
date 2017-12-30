@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Runs the InputFunction FMU with JModelica
+# Runs an FMU with PyFMI
 #
 # Project: QSS Solver
 #
@@ -38,10 +38,10 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Notes
-#  Run from an environment set up for JModelica such as jm_python.sh
+#  Run from an environment set up for PyFMI such as jm_python.sh
 
 # Imports
-import math, os, re, sys
+import os, re, sys
 import numpy
 from pyfmi import load_fmu
 
@@ -60,16 +60,6 @@ except Exception as err:
     sys.exit( 1 )
 model = os.path.basename( model )
 
-# Set up input function
-def step_fxn( t ): # Step function matching QSS Function_Inp_step( 1.0, 1.0, 0.1 )
-    h_0 = 1.0 # Initial height
-    h = 1.0 # Step height
-    d = 0.1 # Step time delta
-    ftd = math.floor( t / d )
-    step_num = ( ftd if d * ( ftd + 1.0 ) > t else ftd + 1.0 )
-    return h_0 + ( h * step_num )
-u_fxn = ( 'u', step_fxn )
-
 # Set simulation options
 opt = fmu.simulate_options()
 opt[ 'CVode_options' ][ 'atol' ] = 1e-6 # Match QSS default aTol
@@ -78,7 +68,7 @@ opt[ 'result_handling' ] = 'memory' # No file output
 #opt[ 'result_handling' ] = 'file'; opt[ 'result_file_name' ] = model + '.txt'
 
 # Simulate
-res = fmu.simulate( input=u_fxn, options=opt )
+res = fmu.simulate( options=opt )
 
 # Clean up empty log file
 try:
@@ -89,6 +79,7 @@ except:
     pass
 
 # Generate output files
+print( '\nGenerating output files...' )
 temp_re = re.compile( 'temp_\d+' )
 t = res[ 'time' ]
 for key in res.keys():
@@ -98,4 +89,9 @@ for key in res.keys():
         elif temp_re.match( key ):
             pass # Skip temporaries
         elif key != 'time':
-            numpy.savetxt( key + '.out', numpy.c_[ t, res[ key ] ], fmt = '%-20.16g', delimiter = '\t' )
+            key_out = key + '.out'
+            try:
+                t_v = numpy.c_[ t, res[ key ] ]
+                numpy.savetxt( key_out, t_v, fmt = '%-20.16g', delimiter = '\t' )
+            except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
+                print( 'Output failed to: ' + key_out )

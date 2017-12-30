@@ -44,7 +44,7 @@ equation
    // Derivative of first zero crossing function
    __zc_der_z2 = booToRea(not yBooPre)* der(u + 0.5);
   annotation (
-    experiment(StopTime=10),
+    experiment(StopTime=10, Tolerance=1e-4),
     Icon(coordinateSystem(preserveAspectRatio=false)),
     Diagram(coordinateSystem(preserveAspectRatio=false)),
     Documentation(revisions="<html>
@@ -56,12 +56,12 @@ Implemented first version.
 </ul>
 </html>", info="<html>
 <p>
-This model has 4 state events at 
-t=0.5235s, 3.66519s, 6.80678s,  
+This model has 4 state events at
+t=0.5235s, 3.66519s, 6.80678s,
 9.94838s when simulated from 0 to 10s.
 This model has a variable <code>yBooPre</pre>
-which is used to multiply the zero crossing 
-variables so they can be updated when the correct 
+which is used to multiply the zero crossing
+variables so they can be updated when the correct
 conditions are met.
 </p>
 </html>"));
