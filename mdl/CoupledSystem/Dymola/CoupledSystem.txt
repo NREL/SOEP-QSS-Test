@@ -1,3 +1,4 @@
 CoupledSystem Model Dymola Notes
 
-The XML stopTime was adjusted to the 0.1 s value in the .mo.
+XML Modifications
+ stopTime set to 0.1

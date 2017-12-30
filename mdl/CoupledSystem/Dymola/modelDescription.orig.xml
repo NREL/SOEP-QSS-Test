@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  fmiVersion="2.0"
+  modelName="QSS.Generic.CoupledSystem"
+  guid="{19794750-007e-4619-85c6-8617206a8be4}"
+  description="This model simulates a coupled system of ODEs"
+  generationTool="Dymola Version 2018 (64-bit), 2017-04-10"
+  generationDateAndTime="2017-09-14T17:48:31Z"
+  variableNamingConvention="structured"
+  numberOfEventIndicators="0">
+  <ModelExchange
+    modelIdentifier="QSS_Generic_CoupledSystem"
+    canGetAndSetFMUstate="true"
+    providesDirectionalDerivative="true"/>
+  <DefaultExperiment startTime="0.0"
+    stopTime="1.0"
+    tolerance="0.0001"/>
+  <ModelVariables>
+    <!-- Index for next variable = 1 -->
+    <ScalarVariable
+      name="x1"
+      valueReference="33554432"
+      description="State variable"
+      initial="exact">
+      <Real start="10"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 2 -->
+    <ScalarVariable
+      name="der(x1)"
+      valueReference="587202560"
+      description="der(State variable)">
+      <Real derivative="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 3 -->
+    <ScalarVariable
+      name="x2"
+      valueReference="33554433"
+      description="State variable"
+      initial="exact">
+      <Real start="10"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 4 -->
+    <ScalarVariable
+      name="der(x2)"
+      valueReference="587202561"
+      description="der(State variable)">
+      <Real derivative="3"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 5 -->
+    <ScalarVariable
+      name="x3"
+      valueReference="33554434"
+      description="State variable"
+      initial="exact">
+      <Real start="10"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 6 -->
+    <ScalarVariable
+      name="der(x3)"
+      valueReference="587202562"
+      description="der(State variable)">
+      <Real derivative="5"/>
+    </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Derivatives>
+      <Unknown index="2"
+        dependencies="1"
+        dependenciesKind="fixed"/>
+      <Unknown index="4"
+        dependencies="1"
+        dependenciesKind="fixed"/>
+      <Unknown index="6"
+        dependencies="3 5"
+        dependenciesKind="fixed fixed"/>
+    </Derivatives>
+    <InitialUnknowns>
+      <Unknown index="2"
+        dependencies="1"
+        dependenciesKind="dependent"/>
+      <Unknown index="4"
+        dependencies="1"
+        dependenciesKind="dependent"/>
+      <Unknown index="6"
+        dependencies="3 5"
+        dependenciesKind="dependent dependent"/>
+    </InitialUnknowns>
+  </ModelStructure>
+</fmiModelDescription>

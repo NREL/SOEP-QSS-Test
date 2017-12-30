@@ -1,6 +1,9 @@
 ZCBoolean2 Model QSS Notes
 
-The QSS runs used the Dymola FMU and dtMax to avoid deactivation:
+The QSS runs used the Dymola FMU but the JModelica FMU gives the same results.
+(PyFMI is not simulating these FMUs correctly.)
+
+The QSS runs use dtMax to avoid deactivation:
 QSS ZCBoolean2.fmu --dtMax=0.001 --qss=<QSS_method>
 
 Notes

@@ -1,0 +1,4 @@
+InputFunction Model Dymola Notes
+
+XML Modifications
+ stopTime set to 10
