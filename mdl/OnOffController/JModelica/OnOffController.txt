@@ -1,0 +1,11 @@
+OnOffController Model JModelica Notes
+
+The JModelica FMU from the LBNL collection depends on libgfortran.so.3 so it could not be run on Fedora 27 at Objexx.
+The JModelica FMU compile script cannot yet handle importing the Building library.
+So the JModelica FMU was not yet run.
+
+XML Modifications
+ Ran mod_xml.JModelica.py to add index comments
+ tolerance set to 1e-4
+ Added der(vol.T) -> ConSS.y dependencies to Derivatives and InitialUnknowns
+ Added ConSS.y -> __zc_z1 and __zc_z2 conditional handler dependencies
