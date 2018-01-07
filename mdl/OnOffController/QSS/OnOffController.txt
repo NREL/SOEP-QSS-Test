@@ -3,7 +3,7 @@ OnOffController Model QSS Notes
 The QSS runs used the Dymola FMU (the JModelica FMU cannot be run on Fedora 27 at Objexx).
 
 The QSS runs use "all" outputs to get accurate view of vol.T:
-QSS OnOffController.fmu --out=rafx --qss=<QSS_method>
+QSS OnOffController.fmu --qss=<QSS_method> --out=rafx
 
 Notes
  Need "all" or "observer" outputs to show vol.T accurately since it depends only on conQSS.y and so doesn't requantize often

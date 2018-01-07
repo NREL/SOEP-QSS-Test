@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Runs an FMU with PyFMI
+# Compiles Stand-Alone Modelica file with JModelica
 #
 # Project: QSS Solver
 #
@@ -38,61 +38,21 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Notes
-#  Run from an environment set up for PyFMI such as jm_python.sh
+#  Run from an environment set up for JModelica such as jm_python.sh
 
 # Imports
-import os, re, sys
-import numpy
-from pyfmi import load_fmu
+import os, sys
+from pymodelica import compile_fmu
 
-# Load the FMU
+try:
+    MBL = os.getenv( 'MODELICA_BUILDINGS_LIB' )
+except:
+    print( 'Error: MODELICA_BUILDINGS_LIB environment variable is not set' )
+    sys.exit( 1 )
+
 try:
     model = sys.argv[ 1 ]
-    if model.endswith( '.fmu' ): model = model[ :-4 ]
+    if model.endswith( '.mo' ): model = model[ :-3 ]
+    fmu_file = compile_fmu( os.path.basename( model ), model + '.mo', compiler_options = { 'extra_lib_dirs': [ MBL ] } )
 except:
     print( 'Usage: ' + sys.argv[ 0 ] + ' <model_name>' )
-    sys.exit( 1 )
-try:
-    fmu = load_fmu( model + '.fmu' )
-except Exception as err:
-    if err: print( err )
-    print( 'Error: ' + str( err ) )
-    sys.exit( 1 )
-model = os.path.basename( model )
-
-# Set simulation options
-opt = fmu.simulate_options()
-opt[ 'CVode_options' ][ 'atol' ] = 1e-6 # Match QSS default aTol
-opt[ 'result_handling' ] = 'memory' # No file output
-#opt[ 'result_handling' ] = 'csv'; opt[ 'result_file_name' ] = model + '.csv'
-#opt[ 'result_handling' ] = 'file'; opt[ 'result_file_name' ] = model + '.txt'
-#opt[ 'ncp' ] = 1000 # Number of output times
-
-# Simulate
-res = fmu.simulate( options=opt )
-
-# Clean up empty log file
-try:
-    log_file = model + '_log.txt'
-    if os.path.getsize( log_file ) == 0:
-        os.remove( log_file )
-except:
-    pass
-
-# Generate output files
-print( '\nGenerating output files...' )
-temp_re = re.compile( 'temp_\d+' )
-t = res[ 'time' ]
-for key in res.keys():
-    if ( key[ 0 ] != '_' ) or ( key[ 0:5 ] == '__zc_' ): # Not internal variable
-        if ( key[ 0:4 ] == 'der(' ) and ( key[ -1 ] == ')' ):
-            pass # Skip derivatives
-        elif temp_re.match( key ):
-            pass # Skip temporaries
-        elif key != 'time':
-            key_out = key + '.out'
-            try:
-                t_v = numpy.c_[ t, res[ key ] ]
-                numpy.savetxt( key_out, t_v, fmt = '%-20.16g', delimiter = '\t' )
-            except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
-                print( 'Output failed to: ' + key_out )

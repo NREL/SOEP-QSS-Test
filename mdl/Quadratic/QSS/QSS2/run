@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS ../Quadratic.fmu --qss=QSS2

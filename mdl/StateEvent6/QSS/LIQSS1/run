@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS ../StateEvent6.fmu --qss=LIQSS1 --dtMax=0.001

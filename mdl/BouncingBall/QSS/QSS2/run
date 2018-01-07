@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS ../BouncingBall.fmu --qss=QSS2

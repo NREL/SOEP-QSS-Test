@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS ../OnOffController.fmu --qss=QSS2 --out=rafx
