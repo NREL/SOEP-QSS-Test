@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS ../InputFunction.fmu --qss=QSS2

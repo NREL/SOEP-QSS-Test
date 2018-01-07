@@ -9,3 +9,6 @@ for this is not yet known but will be investigated.
 
 Command line to get all crossings detected:
 QSS BouncingBall.fmu --dtZC=1e-9
+
+Note: The default dtZC value has now been set to 1e-9 since improved results were seen
+with that value in other models.

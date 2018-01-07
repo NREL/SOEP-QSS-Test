@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS ../ZCBoolean2.fmu --qss=QSS2 --dtMax=0.001

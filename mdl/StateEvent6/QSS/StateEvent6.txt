@@ -1,4 +1,4 @@
 StateEvent6 Model QSS Notes
 
 The QSS runs used the Dymola FMU and use dtMax to avoid deactivation:
-QSS StateEvent6.fmu --dtMax=0.001 --qss=<QSS_method>
+QSS StateEvent6.fmu --qss=<QSS_method> --dtMax=0.001
