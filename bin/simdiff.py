@@ -64,6 +64,7 @@ def main():
     parser.add_argument( '--aTol', help = 'absolute tolerance  [0]', type = float, default = 0.0 )
     parser.add_argument( '--no-sync', help = "don't sync numeric block  [F]", dest = 'sync', action = 'store_false' )
     parser.add_argument( '--no-interp', help = "don't interpolate (interp=> sync)  [F]", dest = 'interp', action = 'store_false' )
+    parser.add_argument( '--coarse', help = "compare at coarser signal's steps  [F]", action = 'store_true' )
     parser.add_argument( '--plot', help = 'plot curves/diff  [F]', action = 'store_true' )
     parser.add_argument( '--dpi', help = 'screen dpi', type = int, default = 0 )
     parser.add_argument( '--out', help = 'output to file(s)  [F]', action = 'store_true' )
@@ -192,10 +193,38 @@ def sim_compare( fnam1, fnam2 ):
     aTol = args.aTol
     sync = args.sync
     interp = args.interp
+    coarse = args.coarse
     plot = args.plot
     interp_or_plot = interp or plot
     out = args.out
     verbose = args.verbose
+
+    if interp or plot or out:
+        # Extract model and tool name(s)
+        dirs1 = reversed( os.path.dirname( fnam1 ).split( os.sep ) )
+        dirs2 = reversed( os.path.dirname( fnam2 ).split( os.sep ) )
+        tool1 = tool2 = ''
+        model1 = model2 = ''
+        for dir in dirs1:
+            if not tool1:
+                if ( dir in ( 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ) or ( 'QSS' in dir ):
+                    tool1 = dir
+            elif not any( tool in dir for tool in ( 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ): # Assume model name precedes tool name
+                model1 = dir
+                break
+        for dir in dirs2:
+            if not tool2:
+                if ( dir in ( 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ) or ( 'QSS' in dir ):
+                    tool2 = dir
+            elif not any( tool in dir for tool in ( 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ): # Assume model name precedes tool name
+                model2 = dir
+                break
+
+        # Extract variable name(s)
+        vnam1 = os.path.splitext( os.path.basename( fnam1 ) )[ 0 ]
+        vnam2 = os.path.splitext( os.path.basename( fnam2 ) )[ 0 ]
+        if ( len( vnam1 ) > 2 ) and vnam1.endswith( ( '.q', '.x' ) ): vnam1 = os.path.splitext( vnam1 )[ 0 ]
+        if ( len( vnam2 ) > 2 ) and vnam2.endswith( ( '.q', '.x' ) ): vnam2 = os.path.splitext( vnam2 )[ 0 ]
 
     # Compare the files
     lnum1 = lnum2 = 0 # Line numbers in files
@@ -221,15 +250,26 @@ def sim_compare( fnam1, fnam2 ):
         row2 = []
         cols1 = cols2 = None
         lbls = None
-    print( '' )
     if out:
-        onam = os.path.splitext( os.path.basename( fnam1 ) )[ 0 ] + '-' + os.path.splitext( os.path.basename( fnam1 ) )[ 0 ]
+        if model1 == model2:
+            onam = model1
+        else:
+            onam = model1 + ( '-' if model1 and model2 else '' ) + model2
+        if tool1 == tool2:
+            onam += ( '.' if onam else '' ) + tool1
+        else:
+            onam += ( '.' if onam else '' ) + tool1 + ( '-' if tool1 and tool2 else '' ) + tool2
+        if vnam1 == vnam2:
+            onam += ( '.' if onam else '' ) + vnam1
+        else:
+            onam += ( '.' if onam else '' ) + vnam1 + ( '-' if vnam1 and vnam2 else '' ) + vnam2
+        # onam = os.path.abspath( onam )
         try:
             sys.stdout = open( onam + '.rpt', 'w' )
         except:
             print( 'Report open failed' )
             pass
-    print( 'Comparing:\n' + fnam1 + '\n' + fnam2 )
+    print( '\nComparing:\n' + fnam1 + '\n' + fnam2 )
     print( 'Sequential:' )
     while line1 or line2:
         if sync: # Read next lines unless waiting for other file to reach numeric lines
@@ -247,11 +287,12 @@ def sim_compare( fnam1, fnam2 ):
             if verbose and ( not end1 ) and ( not interp ): print( ' File 1: End hit first' )
             num_diffs += 1
             end1 = True
+            in_nums1 = False
         elif not line2: # Reached end of file2 first
             if verbose and ( not end2 ) and ( not interp ): print( ' File 2: End hit first' )
             num_diffs += 1
             end2 = True
-            line2 = ''
+            in_nums2 = False
         num1 = num2 = True # Lines are all numeric tokens?
         if not wait1:
             lnum1 += 1
@@ -261,10 +302,6 @@ def sim_compare( fnam1, fnam2 ):
             lnum2 += 1
             tokens2 = re.split( r'[\s,]+', line2 ) if line2 else []
             while tokens2 and tokens2[ -1 ] == '': del tokens2[ -1 ]
-        if len( tokens1 ) != len( tokens2 ):
-            if line1 and line2 and ( not ( sync and ( wait1 or wait2 ) ) ):
-                if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ': Different number of tokens' )
-                num_diffs += 1
         if interp_or_plot:
             row1_2 = row1_1
             row2_2 = row2_1
@@ -274,6 +311,10 @@ def sim_compare( fnam1, fnam2 ):
             row2 = []
         l1 = len( tokens1 )
         l2 = len( tokens2 )
+        if l1 != l2:
+            if line1 and line2 and ( not ( sync and ( wait1 or wait2 ) ) ):
+                if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ': Different number of tokens' )
+                num_diffs += 1
         for i in range( max( l1, l2 ) ):
             token1 = tokens1[ i ] if i < l1 else None
             token2 = tokens2[ i ] if i < l2 else None
@@ -281,7 +322,7 @@ def sim_compare( fnam1, fnam2 ):
             val2 = fastnumbers.fast_real( token2 ) if token2 else None
             if ( val1 is None ) or isinstance( val1, str ): num1 = False
             if ( val2 is None ) or isinstance( val2, str ): num2 = False
-            if ( not ( interp and in_nums1 and in_nums2 ) ) and ( val1 != val2 ):
+            if ( not ( end1 or end2 ) ) and ( not ( interp and in_nums1 and in_nums2 ) ) and ( val1 != val2 ):
                 if isinstance( val1, int ) and isinstance( val2, int ): # Compare as integers
                     if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ':  Token: ' + str( i + 1 ) + ':  ' + token1 + ' | ' + token2 )
                     num_diffs += 1
@@ -327,7 +368,7 @@ def sim_compare( fnam1, fnam2 ):
                     type_row = True
                     for i in range( n_cols ):
                         if row1_2[ i ] == row2_2[ i ]:
-                            lbls[ i ] = str( row1_2[ i ] )
+                            if str( row1_2[ i ] ): lbls[ i ] = str( row1_2[ i ] )
                         elif not row1_2[ i ]:
                             lbls[ i ] = str( row2_2[ i ] )
                         elif not row2_2[ i ]:
@@ -340,7 +381,7 @@ def sim_compare( fnam1, fnam2 ):
                     if type_row: # Treat as units row
                         for i in range( n_cols ):
                             if row1_1[ i ] == row2_1[ i ]:
-                                lbls[ i ] += ' (' + str( row1_1[ i ] ) + ')'
+                                if str( row1_1[ i ] ): lbls[ i ] += ' (' + str( row1_1[ i ] ) + ')'
                             elif not row1_1[ i ]:
                                 lbls[ i ] += ' (' + str( row2_1[ i ] ) + ')'
                             elif not row2_1[ i ]:
@@ -350,7 +391,7 @@ def sim_compare( fnam1, fnam2 ):
                     else: # Treat as type row
                         for i in range( n_cols ):
                             if row1_1[ i ] == row2_1[ i ]:
-                                lbls[ i ] = str( row1_1[ i ] )
+                                if str( row1_1[ i ] ): lbls[ i ] = str( row1_1[ i ] )
                             elif not row1_1[ i ]:
                                 lbls[ i ] = str( row2_1[ i ] )
                             elif not row2_1[ i ]:
@@ -387,11 +428,6 @@ def sim_compare( fnam1, fnam2 ):
         interp = False
         plot = False
 
-    # Reset stdout
-    if out:
-        sys.stdout = sys.__stdout__
-        print( 'Report written to: ' + onam + '.rpt' )
-
     # Interpolation and plotting
     if interp or plot:
         x1 = numpy.array( cols1[ 0 ] )
@@ -409,62 +445,162 @@ def sim_compare( fnam1, fnam2 ):
             if interp:
                 print( ( 'YCol ' + str( j ) + ' ' if n_cols > 2 else '' ) + 'Interpolated:' )
 
-                # Tolerance
-                blk_diffs = 0
-                for i in range( len( x ) ):
-                    fdiff = abs( Yd[ i ] )
-                    if fdiff <= aTol: # Within abs tolerance
-                        pass
-                    elif fdiff <= rTol * max( abs( Y1[ i ] ), abs( Y2[ i ] ) ): # Within rel tolerance
-                        pass
+                len_y1 = y1.size
+                len_y2 = y2.size
+                if coarse and ( len_y1 != len_y2 ): # Compare at steps of coarser signal
+                    # Comparison signals
+                    if y1.size < y2.size: # Use x1 steps
+                        X = x1
+                        z1 = y1
+                        z2 = numpy.interp( x1, x2, y2 )
+                    else: # Use x2 steps
+                        X = x2
+                        z1 = numpy.interp( x2, x1, y1 )
+                        z2 = y2
+                    zd = z1 - z2
+
+                    # Tolerance
+                    blk_diffs = 0
+                    for i in range( len( X ) ):
+                        fdiff = abs( zd[ i ] )
+                        if fdiff <= aTol: # Within abs tolerance
+                            pass
+                        elif fdiff <= rTol * max( abs( z1[ i ] ), abs( z2[ i ] ) ): # Within rel tolerance
+                            pass
+                        else:
+                            if verbose: print( ' Row ' + str( i + 1 ) + ':  ' + str( z1[ i ] ) + ' | ' + str( z2[ i ] ) )
+                            blk_diffs += 1
+                    row_diffs += blk_diffs
+
+                    # Statistics
+                    i_min = zd.argmin()
+                    i_max = zd.argmax()
+                    m_min = isinstance( i_min, numpy.ndarray )
+                    m_max = isinstance( i_max, numpy.ndarray )
+                    if m_min: i_min = i_min[ 0 ]
+                    if m_max: i_max = i_max[ 0 ]
+                    yd_min = zd[ i_min ]
+                    yd_max = zd[ i_max ]
+                    print( ' Metrics:' )
+                    print( '  Min: ' + str( yd_min ) + ' @ ' + str( X[ i_min ] ) + ( ' ...' if m_min else '' ) )
+                    print( '  Max: ' + str( yd_max ) + ' @ ' + str( X[ i_max ] ) + ( ' ...' if m_max else '' ) )
+                    yd_min = abs( yd_min )
+                    yd_max = abs( yd_max )
+                    if yd_min > yd_max:
+                        print( '  Mag: ' + str( yd_min ) + ' @ ' + str( X[ i_min ] ) + ( ' ...' if m_min else '' ) )
+                    elif yd_min < yd_max:
+                        print( '  Mag: ' + str( yd_max ) + ' @ ' + str( X[ i_max ] ) + ( ' ...' if m_max else '' ) )
                     else:
-                        if verbose: print( ' Row ' + str( i + 1 ) + ':  ' + str( Y1[ i ] ) + ' | ' + str( Y2[ i ] ) )
-                        blk_diffs += 1
-                row_diffs += blk_diffs
+                        print( '  Mag: ' + str( yd_min ) + ' @ ' + str( X[ min( i_min, i_max ) ] ) + ( ' ...' if m_min or m_max else '' ) )
+                    x_range = X[ -1 ] - X[ 0 ]
+                    if x_range != 0.0:
+                        yda = numpy.abs( zd )
+                        yda_avg = numpy.trapz( yda, X ) / x_range
+                        yd2 = numpy.square( yda )
+                        yd2_avg = math.sqrt( numpy.trapz( yd2, X ) / x_range )
+                        print( ' |Avg| (L1): ' + str( yda_avg ) )
+                        print( '  RMS  (L2): ' + str( yd2_avg ) )
 
-                # Statistics
-                i_min = Yd.argmin()
-                i_max = Yd.argmax()
-                m_min = isinstance( i_min, numpy.ndarray )
-                m_max = isinstance( i_max, numpy.ndarray )
-                if m_min: i_min = i_min[ 0 ]
-                if m_max: i_max = i_max[ 0 ]
-                yd_min = Yd[ i_min ]
-                yd_max = Yd[ i_max ]
-                print( ' Metrics:' )
-                print( '  Min: ' + str( yd_min ) + ' @ ' + str( x[ i_min ] ) + ( ' ...' if m_min else '' ) )
-                print( '  Max: ' + str( yd_max ) + ' @ ' + str( x[ i_max ] ) + ( ' ...' if m_max else '' ) )
-                yd_min = abs( yd_min )
-                yd_max = abs( yd_max )
-                if yd_min > yd_max:
-                    print( '  Mag: ' + str( yd_min ) + ' @ ' + str( x[ i_min ] ) + ( ' ...' if m_min else '' ) )
-                elif yd_min < yd_max:
-                    print( '  Mag: ' + str( yd_max ) + ' @ ' + str( x[ i_max ] ) + ( ' ...' if m_max else '' ) )
-                else:
-                    print( '  Mag: ' + str( yd_min ) + ' @ ' + str( x[ min( i_min, i_max ) ] ) + ( ' ...' if m_min or m_max else '' ) )
-                x_range = x[ -1 ] - x[ 0 ]
-                if x_range != 0.0:
-                    yda = numpy.abs( Yd )
-                    yda_avg = numpy.trapz( yda, x ) / x_range
-                    yd2 = numpy.square( yda )
-                    yd2_avg = math.sqrt( numpy.trapz( yd2, x ) / x_range )
-                    print( ' |Avg| (L1): ' + str( yda_avg ) )
-                    print( '  RMS  (L2): ' + str( yd2_avg ) )
+                    if row_diffs == 0:
+                        print( ' Pass' )
+                    else:
+                        print( ' Fail:  Diffs:  Rows: ' + str( row_diffs ) )
+                else: # Use full cross-interpolated signals
+                    # Tolerance
+                    blk_diffs = 0
+                    for i in range( len( x ) ):
+                        fdiff = abs( Yd[ i ] )
+                        if fdiff <= aTol: # Within abs tolerance
+                            pass
+                        elif fdiff <= rTol * max( abs( Y1[ i ] ), abs( Y2[ i ] ) ): # Within rel tolerance
+                            pass
+                        else:
+                            if verbose: print( ' Row ' + str( i + 1 ) + ':  ' + str( Y1[ i ] ) + ' | ' + str( Y2[ i ] ) )
+                            blk_diffs += 1
+                    row_diffs += blk_diffs
 
-                if row_diffs == 0:
-                    print( ' Pass' )
-                else:
-                    print( ' Fail:  Diffs:  Rows: ' + str( row_diffs ) )
+                    # Statistics
+                    i_min = Yd.argmin()
+                    i_max = Yd.argmax()
+                    m_min = isinstance( i_min, numpy.ndarray )
+                    m_max = isinstance( i_max, numpy.ndarray )
+                    if m_min: i_min = i_min[ 0 ]
+                    if m_max: i_max = i_max[ 0 ]
+                    yd_min = Yd[ i_min ]
+                    yd_max = Yd[ i_max ]
+                    print( ' Metrics:' )
+                    print( '  Min: ' + str( yd_min ) + ' @ ' + str( x[ i_min ] ) + ( ' ...' if m_min else '' ) )
+                    print( '  Max: ' + str( yd_max ) + ' @ ' + str( x[ i_max ] ) + ( ' ...' if m_max else '' ) )
+                    yd_min = abs( yd_min )
+                    yd_max = abs( yd_max )
+                    if yd_min > yd_max:
+                        print( '  Mag: ' + str( yd_min ) + ' @ ' + str( x[ i_min ] ) + ( ' ...' if m_min else '' ) )
+                    elif yd_min < yd_max:
+                        print( '  Mag: ' + str( yd_max ) + ' @ ' + str( x[ i_max ] ) + ( ' ...' if m_max else '' ) )
+                    else:
+                        print( '  Mag: ' + str( yd_min ) + ' @ ' + str( x[ min( i_min, i_max ) ] ) + ( ' ...' if m_min or m_max else '' ) )
+                    x_range = x[ -1 ] - x[ 0 ]
+                    if x_range != 0.0:
+                        yda = numpy.abs( Yd )
+                        yda_avg = numpy.trapz( yda, x ) / x_range
+                        yd2 = numpy.square( yda )
+                        yd2_avg = math.sqrt( numpy.trapz( yd2, x ) / x_range )
+                        print( ' |Avg| (L1): ' + str( yda_avg ) )
+                        print( '  RMS  (L2): ' + str( yd2_avg ) )
+
+                    if row_diffs == 0:
+                        print( ' Pass' )
+                    else:
+                        print( ' Fail:  Diffs:  Rows: ' + str( row_diffs ) )
 
             # Plotting
             if plot:
+                # Plot title
+                title = ''
+                if model1 == model2: title = model1
+                if vnam1 == vnam2: title += ( '  ' if title else '' ) + vnam1
+                if n_cols > 2: title += ( '  ' if title else '' ) + 'YCol ' + str( j )
+                len_title = len( title )
+                if len_title <= 50:
+                    title_font_size = 9
+                elif len_title <= 70:
+                    title_font_size = 8
+                elif len_title <= 90:
+                    title_font_size = 7
+                else:
+                    title_font_size = 6
+
+                # Legend labels
+                leg1 = leg2 = ''
+                if model1 != model2:
+                    leg1 = model1
+                    leg2 = model2
+                if tool1 != tool2:
+                    leg1 += ( '  ' if leg1 else '' ) + tool1
+                    leg2 += ( '  ' if leg1 else '' ) + tool2
+                if vnam1 != vnam2:
+                    leg1 += ( '  ' if leg1 else '' ) + vnam1
+                    leg2 += ( '  ' if leg2 else '' ) + vnam2
+                if not leg1: leg1 = 'File 1'
+                if not leg2: leg2 = 'File 2'
+
                 # Figure and axes
                 fig, ( top, bot ) = pyplot.subplots( 2, sharex = True, gridspec_kw = { 'height_ratios': [3,2] }, figsize = ( 6, 6.5 ) )
+                len_fnam = max( len( fnam1 ), len( fnam2 ) )
+                if len_fnam <= 100:
+                    fnam_font_size = 7
+                elif len_fnam <= 140:
+                    fnam_font_size = 6
+                elif len_fnam <= 150:
+                    fnam_font_size = 5
+                else:
+                    fnam_font_size = 4
+                pyplot.suptitle( fnam1 + '\n' + fnam2, horizontalalignment = 'left', x = 0.01, y = 0.99, fontsize = fnam_font_size )
 
                 # Overlay plot
-                top.set_title( ( 'YCol ' + str( j ) + ' ' if n_cols > 2 else '' ) + 'Overlay', fontsize = 9 )
-                top.plot( x1, y1, label = 'File 1', linewidth = 0.5, color = 'darkgreen', zorder = 2.1 ) # zorder > 2 to put on top of File 2 curve
-                top.plot( x2, y2, label = 'File 2', linewidth = 0.5, color = 'darkred' )
+                top.set_title( title + ( '  ' if title else '' ) + 'Overlay', fontsize = title_font_size )
+                top.plot( x1, y1, label = leg1, linewidth = 0.6, color = 'darkgreen', zorder = 2.1 ) # zorder > 2 to put on top of File 2 curve
+                top.plot( x2, y2, label = leg2, linewidth = 0.6, color = 'darkblue' )
                 top.grid( linestyle = 'dotted', alpha = 0.25 )
                 top.tick_params( axis = 'both', direction = 'in' )
                 top.ticklabel_format( style = 'sci', scilimits = ( -4, 5 ), axis = 'both' )
@@ -474,12 +610,21 @@ def sim_compare( fnam1, fnam2 ):
                     tick.label.set_fontsize( 7 )
                 for tick in top.yaxis.get_major_ticks():
                     tick.label.set_fontsize( 7 )
-                leg = top.legend( loc = 'best', fontsize = 8 )
-                leg.get_frame().set_alpha( 1.0 ) # Make legend opaque (default is semi-transparent)
+                len_leg = max( len( leg1 ), len( leg2 ) )
+                if len_leg <= 80:
+                    leg_font_size = 7
+                elif len_leg <= 120:
+                    leg_font_size = 6
+                elif len_leg <= 130:
+                    leg_font_size = 5
+                else:
+                    leg_font_size = 4
+                leg = top.legend( loc = 'best', fontsize = leg_font_size )
+                #leg.get_frame().set_alpha( 1.0 ) # Make legend opaque (default is semi-transparent)
 
                 # Diff plot
-                bot.set_title( ( 'YCol ' + str( j ) + ' ' if n_cols > 2 else '' ) + 'Diff', fontsize = 9 )
-                bot.plot( x, Yd, linewidth = 0.8 )
+                bot.set_title( title + ( '  ' if title else '' ) + 'Diff', fontsize = title_font_size )
+                bot.plot( x, Yd, linewidth = 0.8, color = 'darkred' )
                 bot.grid( linestyle = 'dotted', alpha = 0.25 )
                 bot.tick_params( axis = 'both', direction = 'in' )
                 bot.ticklabel_format( style = 'sci', scilimits = ( -4, 5 ), axis = 'both' )
@@ -500,11 +645,16 @@ def sim_compare( fnam1, fnam2 ):
 
                 # Generate plot
                 pyplot.tight_layout() # Prevents overlaps
+                pyplot.subplots_adjust( top = 0.9 ) # Leave space for file names
                 if out:
-                    pnam = os.path.abspath( onam + ( '.YCol' + str( j ) if n_cols > 2 else '' ) + '.pdf' )
+                    pnam = onam + ( '.YCol' + str( j ) if n_cols > 2 else '' ) + '.pdf'
+                    # pnam = os.path.abspath( pnam )
                     fig.set_size_inches( 8.5, 11 )
                     pyplot.savefig( pnam ) # pdf, png, jpg
-                    print( 'Plot saved to: ' + pnam )
+                    if out:
+                        sys.stderr.write( 'Plot saved to: ' + pnam + '\n' )
+                    else:
+                        print( 'Plot saved to: ' + pnam )
                     fig.set_size_inches( 6, 6.5 ) # Restore viewing size
                 else:
                     pyplot.show()
@@ -522,6 +672,11 @@ def sim_compare( fnam1, fnam2 ):
             print( ' Pass' )
         else:
             print( ' Fail:  Diffs:  Lines: ' + str( lin_diffs ) + '  Floats: ' + str( flt_diffs ) + '  Ints: ' + str( int_diffs ) + '  Strings: ' + str( str_diffs ) )
+
+    # Reset stdout
+    if out:
+        sys.stdout = sys.__stdout__
+        print( 'Report written to: ' + onam + '.rpt' )
 
 if __name__ == '__main__':
     main()
