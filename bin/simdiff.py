@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Simulation Results Comparison Tool
+# Simulation Signal Comparison Tool
 #
 # Project: QSS Solver
 #
@@ -9,7 +9,7 @@
 # Developed by Objexx Engineering, Inc. (http://objexx.com) under contract to
 # the National Renewable Energy Laboratory of the U.S. Department of Energy
 #
-# Copyright (c) 2017 Objexx Engineerinc, Inc. All rights reserved.
+# Copyright (c) 2017-2018 Objexx Engineerinc, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -47,19 +47,20 @@
 #  Interpolated and plotted results assume col 1 is the x-axis for the other columns
 
 # Imports
-import argparse, fastnumbers, glob, math, os, re, sys
+import argparse, fastnumbers, fnmatch, glob, math, os, re, sys
 from types import NoneType
 
 # Globals
 args = None
 
-def main():
-    '''main'''
+def sim_diff():
+    '''Compare simulation signal files'''
 
     # Parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument( 'inp1', help = 'input 1' )
     parser.add_argument( 'inp2', help = 'input 2' )
+    parser.add_argument( '--var', help = 'variable file' )
     parser.add_argument( '--rTol', help = 'relative tolerance  [0.001]', type = float, default = 0.001 )
     parser.add_argument( '--aTol', help = 'absolute tolerance  [0]', type = float, default = 0.0 )
     parser.add_argument( '--no-sync', help = "don't sync numeric block  [F]", dest = 'sync', action = 'store_false' )
@@ -75,22 +76,71 @@ def main():
     if args.interp: args.sync = True # Interpolation => Sync
 
     # Generate input lists
-    glob1 = glob.glob( args.inp1 )
-    glob2 = glob.glob( args.inp2 )
-    if ( not glob1 ) and ( ( '[' in args.inp1 ) or ( ']' in args.inp1 ) ): # Escape the brackets
-        args.inp1 = re.sub( r'([\[\]])', '[\\1]', args.inp1 )
-        glob1 = glob.glob( args.inp1 )
-    if ( not glob2 ) and ( ( '[' in args.inp2 ) or ( ']' in args.inp2 ) ): # Escape the brackets
-        args.inp2 = re.sub( r'([\[\]])', '[\\1]', args.inp2 )
-        glob2 = glob.glob( args.inp2 )
-    if not glob1:
-        print( '\nNo paths found matching inp1: ' + args.inp1 )
-    if not glob2:
-        print( '\nNo paths found matching inp2: ' + args.inp2 )
+    inp1 = args.inp1
+    if ( '[' in inp1 ) or ( ']' in inp1 ): # Escape the brackets
+        inp1 = re.sub( r'([\[\]])', '[\\1]', inp1 )
+    if os.path.isdir( inp1 ):
+        glob1 = glob.glob( os.path.join( inp1, '*.out' ) )
+        if not glob1: glob1 = glob.glob( os.path.join( inp1, 'out', '*.out' ) )
+    else:
+        glob1 = glob.glob( inp1 )
+    inp2 = args.inp2
+    if ( '[' in inp2 ) or ( ']' in inp2 ): # Escape the brackets
+        inp2 = re.sub( r'([\[\]])', '[\\2]', inp2 )
+    if os.path.isdir( inp2 ):
+        glob2 = glob.glob( os.path.join( inp2, '*.out' ) )
+        if not glob2: glob2 = glob.glob( os.path.join( inp2, 'out', '*.out' ) )
+    else:
+        glob2 = glob.glob( inp2 )
     if not ( glob1 and glob2 ):
-         sys.exit( 1 )
+        if not glob1: print( '\nNo dirs|files found matching: ' + args.inp1 )
+        if not glob2: print( '\nNo dirs|files found matching: ' + args.inp2 )
+        sys.exit( 1 )
     for i in range( len( glob1 ) ): glob1[ i ] = os.path.abspath( glob1[ i ] )
     for i in range( len( glob2 ) ): glob2[ i ] = os.path.abspath( glob2[ i ] )
+
+    # Filter by variables
+    if args.var:
+        keys = []
+        with open( args.var, 'rU' ) as var_file:
+            for line in var_file:
+                keys.append( line.strip() )
+        vnams = [ var_name( fnam ) for fnam in glob1 ]
+        gnams = []
+        for i in range( len( vnams ) ):
+            vnam = vnams[ i ]
+            for key in keys:
+                if vnam == key:
+                    gnams.append( glob1[ i ] )
+                else: # Try as file name wildcard pattern or regex
+                    m = fnmatch.filter( [ vnam ], key ) # File name wildcard pattern
+                    if not m: # Try as regex
+                        re_key = key + ( '' if key.endswith( '$' ) else '$' ) # Match whole string
+                        if re.match( re_key, vnam ):
+                            m.append( vnam )
+                    if m: # Matches found
+                        gnams.append( glob1[ i ] )
+        glob1 = gnams
+        vnams = [ var_name( fnam ) for fnam in glob2 ]
+        gnams = []
+        for i in range( len( vnams ) ):
+            vnam = vnams[ i ]
+            for key in keys:
+                if vnam == key:
+                    gnams.append( glob2[ i ] )
+                else: # Try as file name wildcard pattern or regex
+                    m = fnmatch.filter( [ vnam ], key ) # File name wildcard pattern
+                    if not m: # Try as regex
+                        re_key = key + ( '' if key.endswith( '$' ) else '$' ) # Match whole string
+                        if re.match( re_key, vnam ):
+                            m.append( vnam )
+                    if m: # Matches found
+                        gnams.append( glob2[ i ] )
+        glob2 = gnams
+        if not ( glob1 and glob2 ):
+            if not glob1: print( '\nNo variables in list found in: ' + args.inp1 )
+            if not glob2: print( '\nNo variables in list found in: ' + args.inp2 )
+            sys.exit( 1 )
 
     # Process single item inputs
     if ( len( glob1 ) == 1 ) and ( len( glob2 ) == 1 ): # Both single items: Handle specially to allow unrelated file names
@@ -98,7 +148,7 @@ def main():
         path2 = glob2[ 0 ]
         if os.path.isfile( path1 ) and os.path.isfile( path2 ):
             if path1 != path2:
-                sim_compare( path1, path2 )
+                sig_compare( path1, path2 )
                 glob1 = glob2 = [] # So don't keep checking
 
     # Process multiple item inputs
@@ -107,46 +157,49 @@ def main():
         if os.path.isfile( path1 ):
             done1 = False
             base1 = os.path.basename( path1 )
-            root1 = os.path.splitext( base1 )[ 0 ]
+            vnam1 = var_name( path1 )
             for path2 in glob2:
                 if os.path.isfile( path2 ):
                     if path2 != path1:
-                        base2 = os.path.basename( path2 )
-                        root2 = os.path.splitext( base2 )[ 0 ]
-                        if ( base2 == base1 ) or ( root2 == root1 ): # Base or root names match
-                            sim_compare( path1, path2 )
+                        vnam2 = var_name( path2 )
+                        if vnam1 == vnam2: # Variable names match
+                            sig_compare( path1, path2 )
                             done1 = True
                             break # Stop checking glob2
                 elif os.path.isdir( path2 ):
                     file2 = os.path.join( path2, base1 )
                     if os.path.isfile( file2 ):
                         if file2 != path1:
-                            sim_compare( path1, file2 )
+                            sig_compare( path1, file2 )
                             done1 = True
                             break # Stop checking glob2
             if not done1: next1.append( path1 )
-
     for path2 in glob2:
         if os.path.isfile( path2 ):
             base2 = os.path.basename( path2 )
-            root2 = os.path.splitext( base2 )[ 0 ]
+            vnam2 = var_name( path2 )
             for path1 in next1:
                 if os.path.isfile( path1 ):
                     if path1 != path2:
-                        base1 = os.path.basename( path1 )
-                        root1 = os.path.splitext( base1 )[ 0 ]
-                        if ( base1 == base2 ) or ( root1 == root2 ): # Base or root names match
-                            sim_compare( path2, path1 )
+                        vnam1 = var_name( path1 )
+                        if vnam1 == vnam2: # Variable names match
+                            sig_compare( path1, path2 )
                             break # Stop checking next1
                 elif os.path.isdir( path1 ):
                     file1 = os.path.join( path1, base2 )
                     if os.path.isfile( file1 ):
                         if file2 != path1:
-                            sim_compare( path2, file1 )
+                            sig_compare( file1, path2 )
                             break # Stop checking next1
 
-def sim_compare( fnam1, fnam2 ):
-    '''Compare simulation output files'''
+def var_name( fnam ):
+    '''Variable name of a file name'''
+    vnam =  os.path.splitext( os.path.basename( fnam ) )[ 0 ]
+    if ( len( vnam ) > 2 ) and vnam.endswith( ( '.f', '.q', '.x' ) ): vnam = os.path.splitext( vnam )[ 0 ]
+    return vnam
+
+def sig_compare( fnam1, fnam2 ):
+    '''Compare two simulation signal files'''
 
     # Check/report files
     if ( os.path.getsize( fnam1 ) == 0 ) or ( os.path.getsize( fnam2 ) == 0 ):
@@ -223,8 +276,8 @@ def sim_compare( fnam1, fnam2 ):
         # Extract variable name(s)
         vnam1 = os.path.splitext( os.path.basename( fnam1 ) )[ 0 ]
         vnam2 = os.path.splitext( os.path.basename( fnam2 ) )[ 0 ]
-        if ( len( vnam1 ) > 2 ) and vnam1.endswith( ( '.q', '.x' ) ): vnam1 = os.path.splitext( vnam1 )[ 0 ]
-        if ( len( vnam2 ) > 2 ) and vnam2.endswith( ( '.q', '.x' ) ): vnam2 = os.path.splitext( vnam2 )[ 0 ]
+        if ( len( vnam1 ) > 2 ) and vnam1.endswith( ( '.f', '.q', '.x' ) ): vnam1 = os.path.splitext( vnam1 )[ 0 ]
+        if ( len( vnam2 ) > 2 ) and vnam2.endswith( ( '.f', '.q', '.x' ) ): vnam2 = os.path.splitext( vnam2 )[ 0 ]
 
     # Compare the files
     lnum1 = lnum2 = 0 # Line numbers in files
@@ -679,4 +732,4 @@ def sim_compare( fnam1, fnam2 ):
         print( 'Report written to: ' + onam + '.rpt' )
 
 if __name__ == '__main__':
-    main()
+    sim_diff()
