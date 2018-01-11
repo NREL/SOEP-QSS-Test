@@ -3,5 +3,4 @@ Case600FF Model JModelica Notes
 The current FMU depends on libgfortran.so.3 so won't work on systems with
 only GCC 7 that uses libgfortran.so.4.
 
-The compile_fmu.JModelica.py script is not yet set up to pull in the
-Buildings library needed to compile Case600FF.mo into an FMU.
+The compile_fmu.Buildings.JModelica.py script gives errors for this model.

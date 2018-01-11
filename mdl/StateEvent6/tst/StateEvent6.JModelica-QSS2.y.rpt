@@ -1,0 +1,11 @@
+Comparing:
+ /Projects/EnergyPlus/SOEP/tst/Test/mdl/StateEvent6/JModelica/out/y.out
+ /Projects/EnergyPlus/SOEP/tst/Test/mdl/StateEvent6/QSS/QSS2/y.x.out
+Interpolated:
+ Metrics:
+  Min: -1.0 @ 3.85282939291
+  Max: 1.0 @ 2.40017518009
+  Mag: 1.0 @ 2.40017518009
+ |Avg| (L1): 0.0181397181345
+  RMS  (L2): 0.134683770865
+ Fail:  Diffs:  Rows: 8

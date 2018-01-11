@@ -1,0 +1,11 @@
+Comparing:
+ /Projects/EnergyPlus/SOEP/tst/Test/mdl/StateEvent6/Dymola/out/__zc_der_z.out
+ /Projects/EnergyPlus/SOEP/tst/Test/mdl/StateEvent6/QSS/QSS2/__zc_der_z.f.out
+Interpolated:
+ Metrics:
+  Min: -0.010318684477 @ 2.262
+  Max: 0.0129311532629 @ 3.782
+  Mag: 0.0129311532629 @ 3.782
+ |Avg| (L1): 0.00227941986321
+  RMS  (L2): 0.00353423699495
+ Fail:  Diffs:  Rows: 7557

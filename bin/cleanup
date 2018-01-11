@@ -1,0 +1,3 @@
+#!/bin/bash
+# Clean all modeling tool results comparison files in current directory
+rm -f *.pass *.fail *.pdf *.rpt *.sum

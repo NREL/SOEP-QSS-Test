@@ -1,0 +1,6 @@
+#!/bin/bash
+# Set up environment for JModelica
+# Place a custom version of this early in your PATH
+unset _JAVA_OPTIONS # Fedora needs this
+export MODELICA_BUILDINGS_LIB=/Projects/EnergyPlus/SOEP/tst/modelica-buildings
+/opt/JModelica/bin/jm_python.sh "$@"
