@@ -193,7 +193,7 @@
 			</EnumerationType>
 		</Type>
 	</TypeDefinitions>
-	<DefaultExperiment stopTime="3.1536E7" />
+	<DefaultExperiment stopTime="3.1536E7" tolerance="0.0001" />
 	<VendorAnnotations>
 		<Tool name="JModelica.org">
 			<Annotation name="Library" value="ModelicaExternalC" />

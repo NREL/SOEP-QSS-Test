@@ -39,6 +39,8 @@
 
 # Notes
 #  Inputs can be file names or a file and a directory, and can use wildcards
+#   Only one file for each variable name is used in each input list
+#   Variable spec lists can be supplied to filter the input lists
 #   The logic attempts to match up files to compare in a non-surprising way
 #   For more complex scenarios use a wrapper script to feed two files at a time to this script
 #  Intended for comparison of simulation results containing a mix of text and numeric values
@@ -47,7 +49,7 @@
 #  Interpolated and plotted results assume col 1 is the x-axis for the other columns
 
 # Imports
-import argparse, fastnumbers, fnmatch, glob, math, os, re, sys
+import argparse, datetime, fastnumbers, fnmatch, glob, math, os, re, sys
 from types import NoneType
 
 # Globals
@@ -56,23 +58,29 @@ args = None
 def sim_diff():
     '''Compare simulation signal files'''
 
+    # Save the current day+time
+    now = datetime.datetime.utcnow()
+
     # Parse arguments
     parser = argparse.ArgumentParser()
     parser.add_argument( 'inp1', help = 'input 1' )
     parser.add_argument( 'inp2', help = 'input 2' )
     parser.add_argument( '--var', help = 'variable file' )
-    parser.add_argument( '--rTol', help = 'relative tolerance  [0.001]', type = float, default = 0.001 )
-    parser.add_argument( '--aTol', help = 'absolute tolerance  [0]', type = float, default = 0.0 )
+    parser.add_argument( '--rTol', help = 'relative tolerance  [1e-3]', type = float, default = 1.0e-3 )
+    parser.add_argument( '--aTol', help = 'absolute tolerance  [1e-6]', type = float, default = 1.0e-6 )
+    parser.add_argument( '--sequential', help = "compare non-numeric lines  [F]", action = 'store_true' )
     parser.add_argument( '--no-sync', help = "don't sync numeric block  [F]", dest = 'sync', action = 'store_false' )
-    parser.add_argument( '--no-interp', help = "don't interpolate (interp=> sync)  [F]", dest = 'interp', action = 'store_false' )
+    parser.add_argument( '--no-interp', help = "don't interpolate (interp => sync)  [F]", dest = 'interp', action = 'store_false' )
     parser.add_argument( '--coarse', help = "compare at coarser signal's steps  [F]", action = 'store_true' )
     parser.add_argument( '--plot', help = 'plot curves/diff  [F]', action = 'store_true' )
-    parser.add_argument( '--dpi', help = 'screen dpi', type = int, default = 0 )
+    parser.add_argument( '--plot-fail', help = 'plot failed curves/diff (=> interp)  [F]', action = 'store_true' )
+    parser.add_argument( '--dpi', help = 'screen dpi for plot', type = int, default = 0 )
     parser.add_argument( '--out', help = 'output to file(s)  [F]', action = 'store_true' )
     parser.add_argument( '-v', '--verbose', help = 'verbose report  [F]', action = 'store_true' )
     parser.set_defaults( sync = True, interp = True )
     global args
     args = parser.parse_args()
+    if args.plot_fail: args.interp = True # Plot-on-fail => Interp
     if args.interp: args.sync = True # Interpolation => Sync
 
     # Generate input lists
@@ -84,6 +92,7 @@ def sim_diff():
         if not glob1: glob1 = glob.glob( os.path.join( inp1, 'out', '*.out' ) )
     else:
         glob1 = glob.glob( inp1 )
+    glob1 = [ fnam for fnam in glob1 if os.path.isfile( fnam ) ]
     inp2 = args.inp2
     if ( '[' in inp2 ) or ( ']' in inp2 ): # Escape the brackets
         inp2 = re.sub( r'([\[\]])', '[\\2]', inp2 )
@@ -92,6 +101,7 @@ def sim_diff():
         if not glob2: glob2 = glob.glob( os.path.join( inp2, 'out', '*.out' ) )
     else:
         glob2 = glob.glob( inp2 )
+    glob2 = [ fnam for fnam in glob2 if os.path.isfile( fnam ) ]
     if not ( glob1 and glob2 ):
         if not glob1: print( '\nNo dirs|files found matching: ' + args.inp1 )
         if not glob2: print( '\nNo dirs|files found matching: ' + args.inp2 )
@@ -99,104 +109,131 @@ def sim_diff():
     for i in range( len( glob1 ) ): glob1[ i ] = os.path.abspath( glob1[ i ] )
     for i in range( len( glob2 ) ): glob2[ i ] = os.path.abspath( glob2[ i ] )
 
-    # Filter by variables
+    # Generate input map by variable name: Only one (best) entry per variable
+    typeB = ( '', '.x', '.f', '.q' ) # Signal types in decreasing match preference order
+    vars1 = {}
+    for fnam in glob1:
+        snam = vnam, tnam = sig_name( fnam )
+        if vnam in vars1:
+            if tnam == '': # Preferred
+                vars1[ vnam ] = fnam
+            else: # Choose preferred signal types
+                try:
+                    if typeB.index( tnam ) < typeB.index( typ_name( vars1[ vnam ] ) ): # Better match
+                        vars1[ vnam ] = fnam
+                except: # Unexpected signal type
+                    pass # Keep current best match
+        else:
+            vars1[ vnam ] = fnam
+    vars2 = {}
+    for fnam in glob2:
+        snam = vnam, tnam = sig_name( fnam )
+        if vnam in vars2:
+            if tnam == '': # Preferred
+                vars2[ vnam ] = fnam
+            else: # Choose preferred signal types
+                try:
+                    if typeB.index( tnam ) < typeB.index( typ_name( vars2[ vnam ] ) ): # Better match
+                        vars2[ vnam ] = fnam
+                except: # Unexpected signal type
+                    pass # Keep current best match
+        else:
+            vars2[ vnam ] = fnam
+
+    # Filter by variable spec list
     if args.var:
-        keys = []
+
+        # Read variable spec list
+        vspcs = []
         with open( args.var, 'rU' ) as var_file:
             for line in var_file:
-                keys.append( line.strip() )
-        vnams = [ var_name( fnam ) for fnam in glob1 ]
-        gnams = []
-        for i in range( len( vnams ) ):
-            vnam = vnams[ i ]
-            for key in keys:
-                if vnam == key:
-                    gnams.append( glob1[ i ] )
-                else: # Try as file name wildcard pattern or regex
-                    m = fnmatch.filter( [ vnam ], key ) # File name wildcard pattern
+                vspcs.append( line.strip() )
+
+        # Filter input 1
+        for vnam in vars1.keys():
+            if vnam not in vspcs: # See if it matches a wildcard|regexx
+                m = False
+                for vspc in vspcs:
+                    m = fnmatch.filter( [ vnam ], vspc ) # File name wildcard pattern
                     if not m: # Try as regex
-                        re_key = key + ( '' if key.endswith( '$' ) else '$' ) # Match whole string
-                        if re.match( re_key, vnam ):
-                            m.append( vnam )
-                    if m: # Matches found
-                        gnams.append( glob1[ i ] )
-        glob1 = gnams
-        vnams = [ var_name( fnam ) for fnam in glob2 ]
-        gnams = []
-        for i in range( len( vnams ) ):
-            vnam = vnams[ i ]
-            for key in keys:
-                if vnam == key:
-                    gnams.append( glob2[ i ] )
-                else: # Try as file name wildcard pattern or regex
-                    m = fnmatch.filter( [ vnam ], key ) # File name wildcard pattern
+                        if not vspc.endswith( '$' ): vspc += '$' # Match whole string
+                        if re.match( vspc, vnam ): m = True
+                    if m: break
+                if not m: del( vars1[ vnam ] )
+
+        # Filter input 2
+        for vnam in vars2.keys():
+            if vnam not in vspcs: # See if it matches a wildcard|regexx
+                m = False
+                for vspc in vspcs:
+                    m = fnmatch.filter( [ vnam ], vspc ) # File name wildcard pattern
                     if not m: # Try as regex
-                        re_key = key + ( '' if key.endswith( '$' ) else '$' ) # Match whole string
-                        if re.match( re_key, vnam ):
-                            m.append( vnam )
-                    if m: # Matches found
-                        gnams.append( glob2[ i ] )
-        glob2 = gnams
-        if not ( glob1 and glob2 ):
-            if not glob1: print( '\nNo variables in list found in: ' + args.inp1 )
-            if not glob2: print( '\nNo variables in list found in: ' + args.inp2 )
+                        if not vspc.endswith( '$' ): vspc += '$' # Match whole string
+                        if re.match( vspc, vnam ): m = True
+                    if m: break
+                if not m: del( vars2[ vnam ] )
+
+        # Check if any variables
+        if not ( vars1 and vars2 ):
+            if not vars1: print( '\nNo variables matching --var list in: ' + args.inp1 )
+            if not vars2: print( '\nNo variables matching --var list in: ' + args.inp2 )
             sys.exit( 1 )
 
-    # Process single item inputs
-    if ( len( glob1 ) == 1 ) and ( len( glob2 ) == 1 ): # Both single items: Handle specially to allow unrelated file names
-        path1 = glob1[ 0 ]
-        path2 = glob2[ 0 ]
-        if os.path.isfile( path1 ) and os.path.isfile( path2 ):
-            if path1 != path2:
-                sig_compare( path1, path2 )
-                glob1 = glob2 = [] # So don't keep checking
+    # Compare signals
+    keys = vars1.keys()
+    keys.sort() # To do outputs in variable name order
+    n_passed = 0
+    n_failed = 0
+    out_name = ''
+    for vnam in keys:
+        if vnam in vars2:
+            path1 = vars1[ vnam ]
+            path2 = vars2[ vnam ]
+            if path2 != path1:
+                passed, onam = sig_compare( path1, path2 )
+                if passed:
+                    n_passed += 1
+                else:
+                    n_failed += 1
+                if not out_name:
+                    out_name = onam
+                else:
+                    out_name = os.path.commonprefix( [ out_name, onam ] )
+    out_name = out_name.rstrip( '.' )
 
-    # Process multiple item inputs
-    next1 = []
-    for path1 in glob1:
-        if os.path.isfile( path1 ):
-            done1 = False
-            base1 = os.path.basename( path1 )
-            vnam1 = var_name( path1 )
-            for path2 in glob2:
-                if os.path.isfile( path2 ):
-                    if path2 != path1:
-                        vnam2 = var_name( path2 )
-                        if vnam1 == vnam2: # Variable names match
-                            sig_compare( path1, path2 )
-                            done1 = True
-                            break # Stop checking glob2
-                elif os.path.isdir( path2 ):
-                    file2 = os.path.join( path2, base1 )
-                    if os.path.isfile( file2 ):
-                        if file2 != path1:
-                            sig_compare( path1, file2 )
-                            done1 = True
-                            break # Stop checking glob2
-            if not done1: next1.append( path1 )
-    for path2 in glob2:
-        if os.path.isfile( path2 ):
-            base2 = os.path.basename( path2 )
-            vnam2 = var_name( path2 )
-            for path1 in next1:
-                if os.path.isfile( path1 ):
-                    if path1 != path2:
-                        vnam1 = var_name( path1 )
-                        if vnam1 == vnam2: # Variable names match
-                            sig_compare( path1, path2 )
-                            break # Stop checking next1
-                elif os.path.isdir( path1 ):
-                    file1 = os.path.join( path1, base2 )
-                    if os.path.isfile( file1 ):
-                        if file2 != path1:
-                            sig_compare( file1, path2 )
-                            break # Stop checking next1
+    # Report summary
+    if args.out:
+        try: # Open summary output file
+            if not out_name: out_name = 'Summary'
+            sys.stdout = open( out_name + '.sum', 'w' )
+        except:
+            print( 'Summary file open failed' )
+        try:
+            for ext in ( '.pass', '.fail' ): # Clean any prior pass/fail files
+                if os.path.isfile( out_name + ext ): os.remove( out_name + ext )
+            PF_file = open( out_name + ( '.pass' if n_failed == 0 else '.fail' ), 'w' )
+            PF_file.close()
+        except:
+            print( 'Pass/Fail file write failed' )
+    else:
+        print( '' )
+    print( 'Summary @ UTC ' + now.strftime( '%Y-%m-%d %H:%M:%S:' ) )
+    print( ' Tolerances:  rTol: ' + str( args.rTol ) + '  aTol: ' + str( args.aTol ) )
+    print( ' Pass: ' + str( n_passed ) )
+    print( ' Fail: ' + str( n_failed ) )
 
-def var_name( fnam ):
-    '''Variable name of a file name'''
-    vnam =  os.path.splitext( os.path.basename( fnam ) )[ 0 ]
-    if ( len( vnam ) > 2 ) and vnam.endswith( ( '.f', '.q', '.x' ) ): vnam = os.path.splitext( vnam )[ 0 ]
-    return vnam
+    # Reset stdout
+    if args.out:
+        sys.stdout = sys.__stdout__
+        print( 'Summary written to: ' + out_name + '.sum' )
+
+def sig_name( fnam ):
+    '''Signal name of a file name: /path/var.sig.out -> (var,.sig)'''
+    return os.path.splitext( os.path.splitext( os.path.basename( fnam ) )[ 0 ] )
+
+def typ_name( fnam ):
+    '''Signal type of a file name: /path/var.sig.out -> .sig'''
+    return os.path.splitext( os.path.splitext( os.path.basename( fnam ) )[ 0 ] )[ 1 ]
 
 def sig_compare( fnam1, fnam2 ):
     '''Compare two simulation signal files'''
@@ -219,17 +256,19 @@ def sig_compare( fnam1, fnam2 ):
         return
 
     # Conditional imports
-    if args.interp or args.plot:
+    plotting = args.plot or args.plot_fail
+    if args.interp or plotting:
         try:
             import numpy
         except:
             if args.interp:
                 print( 'Interpolation diffs unavailable: NumPy is not installed' )
                 args.interp = False
-            if args.plot:
+            if plotting:
                 print( 'Plotting unavailable: NumPy is not installed' )
-                args.plot = False
-    if args.plot:
+                args.plot = args.plot_fail = False
+    plotting = args.plot or args.plot_fail
+    if plotting:
         try:
             from matplotlib import pyplot
             pyplot.rcParams[ 'axes.formatter.offset_threshold' ] = 3
@@ -239,20 +278,23 @@ def sig_compare( fnam1, fnam2 ):
                 pyplot.rcParams[ 'figure.dpi' ] = 150
         except:
             print( 'Plotting unavailable: matplotlib is not installed' )
-            args.plot = False
+            args.plot = args.plot_fail = False
 
     # Argument aliases
     rTol = args.rTol
     aTol = args.aTol
+    sequential = args.sequential
     sync = args.sync
     interp = args.interp
     coarse = args.coarse
     plot = args.plot
-    interp_or_plot = interp or plot
+    plot_fail = args.plot_fail
+    plotting = plot or plot_fail
+    interp_or_plot = interp or plotting
     out = args.out
     verbose = args.verbose
 
-    if interp or plot or out:
+    if interp_or_plot or out:
         # Extract model and tool name(s)
         dirs1 = reversed( os.path.dirname( fnam1 ).split( os.sep ) )
         dirs2 = reversed( os.path.dirname( fnam2 ).split( os.sep ) )
@@ -289,11 +331,12 @@ def sig_compare( fnam1, fnam2 ):
     end1 = end2 = False # Reached end of files prev?
     row1_1 = row1_2 = row2_1 = row2_2 = None # 2 previous rows
     lin_diffs = 0
-    num_diffs = 0
+    seq_diffs = 0
     int_diffs = 0
     flt_diffs = 0
     str_diffs = 0
     f_min = f_max = None # min/max floating point differences in line scan
+    passed = True
     if interp_or_plot:
         row1_2 = []
         row2_2 = []
@@ -316,14 +359,16 @@ def sig_compare( fnam1, fnam2 ):
             onam += ( '.' if onam else '' ) + vnam1
         else:
             onam += ( '.' if onam else '' ) + vnam1 + ( '-' if vnam1 and vnam2 else '' ) + vnam2
-        # onam = os.path.abspath( onam )
         try:
             sys.stdout = open( onam + '.rpt', 'w' )
         except:
-            print( 'Report open failed' )
-            pass
-    print( '\nComparing:\n' + fnam1 + '\n' + fnam2 )
-    print( 'Sequential:' )
+            print( 'Report file open failed' )
+            sys.exit( 1 )
+    else:
+        onam = ''
+    if not out: print( '' )
+    print( 'Comparing:\n ' + fnam1 + '\n ' + fnam2 )
+    if sequential: print( 'Sequential:' )
     while line1 or line2:
         if sync: # Read next lines unless waiting for other file to reach numeric lines
             wait1 = ( nums1 and ( not nums2 ) ) or ( interp and nums1 and ( not in_nums1 ) and in_nums2 )
@@ -333,17 +378,17 @@ def sig_compare( fnam1, fnam2 ):
         else: # Read next lines unless end of file already reached
             if line1: line1 = file1.readline()
             if line2: line2 = file2.readline()
-        old_diffs = num_diffs
+        old_diffs = seq_diffs
         if ( not line1 ) and ( not line2 ): # Simultaneously reached end of both files
             break
         elif not line1: # Reached end of file1 first
             if verbose and ( not end1 ) and ( not interp ): print( ' File 1: End hit first' )
-            num_diffs += 1
+            if ( not interp ) or ( not nums1 ): seq_diffs += 1
             end1 = True
             in_nums1 = False
         elif not line2: # Reached end of file2 first
             if verbose and ( not end2 ) and ( not interp ): print( ' File 2: End hit first' )
-            num_diffs += 1
+            if ( not interp ) or ( not nums2 ): seq_diffs += 1
             end2 = True
             in_nums2 = False
         num1 = num2 = True # Lines are all numeric tokens?
@@ -364,10 +409,10 @@ def sig_compare( fnam1, fnam2 ):
             row2 = []
         l1 = len( tokens1 )
         l2 = len( tokens2 )
-        if l1 != l2:
+        if sequential and ( l1 != l2 ):
             if line1 and line2 and ( not ( sync and ( wait1 or wait2 ) ) ):
                 if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ': Different number of tokens' )
-                num_diffs += 1
+                seq_diffs += 1
         for i in range( max( l1, l2 ) ):
             token1 = tokens1[ i ] if i < l1 else None
             token2 = tokens2[ i ] if i < l2 else None
@@ -375,10 +420,10 @@ def sig_compare( fnam1, fnam2 ):
             val2 = fastnumbers.fast_real( token2 ) if token2 else None
             if ( val1 is None ) or isinstance( val1, str ): num1 = False
             if ( val2 is None ) or isinstance( val2, str ): num2 = False
-            if ( not ( end1 or end2 ) ) and ( not ( interp and in_nums1 and in_nums2 ) ) and ( val1 != val2 ):
+            if sequential and ( not ( end1 or end2 ) ) and ( not ( interp and in_nums1 and in_nums2 ) ) and ( val1 != val2 ):
                 if isinstance( val1, int ) and isinstance( val2, int ): # Compare as integers
                     if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ':  Token: ' + str( i + 1 ) + ':  ' + token1 + ' | ' + token2 )
-                    num_diffs += 1
+                    seq_diffs += 1
                     int_diffs += 1
                 elif ( not isinstance( val1, ( str, NoneType ) ) ) and ( not isinstance( val2, ( str, NoneType ) ) ): # Compare as floats
                     fdiff = abs( val1 - val2 )
@@ -394,12 +439,12 @@ def sig_compare( fnam1, fnam2 ):
                         pass
                     else:
                         if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ':  Token: ' + str( i + 1 ) + ':  ' + token1 + ' | ' + token2 )
-                        num_diffs += 1
+                        seq_diffs += 1
                         flt_diffs += 1
                 else: # Compare tokens as strings
                     if token1 != token2:
                         if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ':  Token: ' + str( i + 1 ) + ':  ' + str( token1 ) + ' | ' + str( token2 ) )
-                        num_diffs += 1
+                        seq_diffs += 1
                         str_diffs += 1
             if interp_or_plot:
                 if val1 is not None: row1.append( val1 )
@@ -459,30 +504,37 @@ def sig_compare( fnam1, fnam2 ):
                     cols2[ i ].append( row2[ i ] )
         if num1: nums1 = True
         if num2: nums2 = True
-        if old_diffs < num_diffs: lin_diffs += 1
+        if old_diffs < seq_diffs: lin_diffs += 1
 
     # Close the files
     file1.close()
     file2.close()
 
-    # Statistics
-    print( ' Diffs:  Lines: ' + str( lin_diffs ) + '  Floats: ' + str( flt_diffs ) + '  Ints: ' + str( int_diffs ) + '  Strings: ' + str( str_diffs ) )
-    if ( not interp ) and ( f_min is not None ):
-        print( ' Metrics:' )
-        print( '  Min: ' + str( f_min ) )
-        print( '  Max: ' + str( f_max ) )
-        if abs( f_min ) > abs( f_max ):
-            print( '  Mag: ' + str( f_min ) )
+    # Sequential statistics
+    if sequential:
+        if ( not interp ) and ( f_min is not None ):
+            print( ' Metrics:' )
+            print( '  Min: ' + str( f_min ) )
+            print( '  Max: ' + str( f_max ) )
+            if abs( f_min ) > abs( f_max ):
+                print( '  Mag: ' + str( f_min ) )
+            else:
+                print( '  Mag: ' + str( f_max ) )
+        if seq_diffs == 0:
+            print( ' Pass' )
+            passed = True
         else:
-            print( '  Mag: ' + str( f_max ) )
+            print( ' Fail:  Diffs:  Lines: ' + str( lin_diffs ) + '  Floats: ' + str( flt_diffs ) + '  Ints: ' + str( int_diffs ) + '  Strings: ' + str( str_diffs ) )
+            passed = False
 
     # Check can interp and plot
     if interp_or_plot and ( not ( cols1 and cols2 ) ):
         interp = False
-        plot = False
+        plot = plot_fail = False
+        interp_or_plot = False
 
     # Interpolation and plotting
-    if interp or plot:
+    if interp_or_plot:
         x1 = numpy.array( cols1[ 0 ] )
         x2 = numpy.array( cols2[ 0 ] )
         x = numpy.unique( numpy.concatenate( ( x1, x2 ) ) )
@@ -496,6 +548,7 @@ def sig_compare( fnam1, fnam2 ):
 
             # Interpolation
             if interp:
+                failed = False
                 print( ( 'YCol ' + str( j ) + ' ' if n_cols > 2 else '' ) + 'Interpolated:' )
 
                 len_y1 = y1.size
@@ -553,11 +606,13 @@ def sig_compare( fnam1, fnam2 ):
                         yd2_avg = math.sqrt( numpy.trapz( yd2, X ) / x_range )
                         print( ' |Avg| (L1): ' + str( yda_avg ) )
                         print( '  RMS  (L2): ' + str( yd2_avg ) )
-
                     if row_diffs == 0:
                         print( ' Pass' )
+                        passed = True
                     else:
                         print( ' Fail:  Diffs:  Rows: ' + str( row_diffs ) )
+                        passed = False
+                        failed = True
                 else: # Use full cross-interpolated signals
                     # Tolerance
                     blk_diffs = 0
@@ -600,14 +655,16 @@ def sig_compare( fnam1, fnam2 ):
                         yd2_avg = math.sqrt( numpy.trapz( yd2, x ) / x_range )
                         print( ' |Avg| (L1): ' + str( yda_avg ) )
                         print( '  RMS  (L2): ' + str( yd2_avg ) )
-
                     if row_diffs == 0:
                         print( ' Pass' )
+                        passed = True
                     else:
                         print( ' Fail:  Diffs:  Rows: ' + str( row_diffs ) )
+                        passed = False
+                        failed = True
 
             # Plotting
-            if plot:
+            if plot or ( plot_fail and failed ):
                 # Plot title
                 title = ''
                 if model1 == model2: title = model1
@@ -713,23 +770,13 @@ def sig_compare( fnam1, fnam2 ):
                     pyplot.show()
                 pyplot.close()
 
-    # Report file summary
-    print( 'Summary:' )
-    if interp:
-        if ( num_diffs == 0 ) and ( row_diffs == 0 ):
-            print( ' Pass' )
-        else:
-            print( ' Fail:  Diffs:  Lines: ' + str( lin_diffs ) + '  Floats: ' + str( flt_diffs ) + '  Ints: ' + str( int_diffs ) + '  Strings: ' + str( str_diffs ) + '  Rows: ' + str( row_diffs ) )
-    else:
-        if num_diffs == 0:
-            print( ' Pass' )
-        else:
-            print( ' Fail:  Diffs:  Lines: ' + str( lin_diffs ) + '  Floats: ' + str( flt_diffs ) + '  Ints: ' + str( int_diffs ) + '  Strings: ' + str( str_diffs ) )
-
     # Reset stdout
     if out:
         sys.stdout = sys.__stdout__
         print( 'Report written to: ' + onam + '.rpt' )
+
+    # Return info
+    return passed, onam
 
 if __name__ == '__main__':
     sim_diff()

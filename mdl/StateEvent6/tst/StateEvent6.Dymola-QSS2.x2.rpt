@@ -1,0 +1,11 @@
+Comparing:
+ /Projects/EnergyPlus/SOEP/tst/Test/mdl/StateEvent6/Dymola/out/x2.out
+ /Projects/EnergyPlus/SOEP/tst/Test/mdl/StateEvent6/QSS/QSS2/x2.x.out
+Interpolated:
+ Metrics:
+  Min: 0.0 @ 0.0
+  Max: 1.13298259663e-13 @ 2.682
+  Mag: 1.13298259663e-13 @ 2.682
+ |Avg| (L1): 1.02705194255e-13
+  RMS  (L2): 1.04424578777e-13
+ Pass

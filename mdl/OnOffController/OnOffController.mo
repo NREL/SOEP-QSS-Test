@@ -102,18 +102,18 @@ equation
   connect(theCon.port_b, vol.port) annotation (Line(points={{0,60},{32,60},{32,62},
           {60,62}}, color={191,0,0}));
   annotation (
-    experiment(Tolerance=1e-6, StopTime=2),
+    experiment(Tolerance=1e-4, StopTime=2),
     Icon(coordinateSystem(preserveAspectRatio=false, extent={{-160,-100},{100,100}})),
     Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-160,-100},{100,
             100}})),
     Documentation(info="<html>
 <p>
-This model simulates an on/off controller which 
+This model simulates an on/off controller which
 controls the room temperature of a simple room
 modeled using a capacitor.
 </p>
 <p>
-If simulated from 0 to 2s, 
+If simulated from 0 to 2s,
 then the model generates 5 state events
 at t=0.00507228, 0.719569, 0.729711, 1.44419, 1.45433.
 </p>
