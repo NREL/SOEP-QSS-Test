@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Compiles Stand-Alone Modelica file with JModelica
+# Compiles a Modelica file using the Buildings library with JModelica
 #
 # Project: QSS Solver
 #
@@ -45,8 +45,14 @@ import os, sys
 from pymodelica import compile_fmu
 
 try:
+    MBL = os.getenv( 'MODELICA_BUILDINGS_LIB' )
+except:
+    print( 'Error: MODELICA_BUILDINGS_LIB environment variable is not set' )
+    sys.exit( 1 )
+
+try:
     model = sys.argv[ 1 ]
     if model.endswith( '.mo' ): model = model[ :-3 ]
-    fmu_file = compile_fmu( os.path.basename( model ), model + '.mo' )
+    fmu_file = compile_fmu( os.path.basename( model ), model + '.mo', compiler_options = { 'extra_lib_dirs': [ MBL ] } )
 except:
     print( 'Usage: ' + sys.argv[ 0 ] + ' <model_name>' )

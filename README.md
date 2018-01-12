@@ -1,13 +1,12 @@
-# SOEP-QSS-Test: QSS Solver Test Model Library
+# QSS Solver Test Repository
 
 This is a library of test models and results for development of the JModelica QSS solver being developed as part of the "Spawn of EnergyPlus" project.
 The library serves these purposes:
-* Regresssion testing
-* Results comparisons *vs* Dymola, JModelica, and Ptolemy
+* Comparison testing *vs* Dymola, JModelica, and Ptolemy
+* Regresssion testing new releases
 * Performance testing
 
-Models will be run as FMUs since the QSS solver is being built for integration into JModelica via the FMU interface.
-Some simpler models may also be run as QSS "code-defined" models for results and performance comparison.
+Models will be run as FMUs since the QSS solver is being built for integration into JModelica via the FMU interface. Some simpler models may also be run as QSS "code-defined" models for results and performance comparison.
 
 ## Organization
 
@@ -18,12 +17,23 @@ The top-level repository directory contains these subdirectories:
 ```
 
 The `bin` directory contains scripts for modeling and testing:
-* `compile_fmu.JModelica.py`  Compiles .mo to .fmu with JModelica
-* `compile_fmu.Buildings.JModelica.py`  Compiles .mo that uses the Buildings library to .fmu with JModelica
-* `compile_fmu.Dymola.py`  Compiles .mo to .fmu with Dymola
-* `mod_xml.JModelica.py`  Adds index comments to JModelica XML files
-* `run_fmu.py`  Runs .fmu with PyFMI
-* `simdiff.py`  Results comparison tool
+* `bld_fmu`  Builds the model's `.fmu` with JModelica (wraps `compile_fmu.JModelica.py`)
+* `cleanup`  Removes comparison/regression testing output files
+* `comparison`  Compares results from two modeling tools
+* `compile_fmu.Dymola.py`  Compiles `.mo` to .fmu with Dymola
+* `compile_fmu.JModelica.py`  Compiles `.mo` to .fmu with JModelica
+* `jm`  Wraps `jm_python.sh`: Customize to your system
+* `jmi`  Wraps `jm_ipython.sh`: Customize to your system
+* `mod_xml.JModelica.py`  Adds index comments to JModelica-generated `.fmu` XML files
+* `regression`  Regression tests results from two versions of a modeling tool
+* `run_fmu`  Runs the model's `.fmu` with PyFMI (wraps `run_fmu.py`)
+* `run_fmu.py`  Runs a model's `.fmu` with PyFMI
+* `setTest`  Sets environment: Customize to your system
+* `simdiff.py`  Simulation results comparison tool
+
+### `bin` Notes
+* Place copies of scripts needing customization for your system's Buildings library location in a directory early in your PATH.
+* The JModelica `jm_python.sh` needs to be on your PATH to use some of these scripts.
 
 The `mdl` directory contains the models and results with this (tentative) organization for each model:
 ```
@@ -35,12 +45,12 @@ ModelName/
   JModelica/         JModelica model & results
   Ptolemy/           Ptolemy model & results
   QSS/               QSS model & results
-  out/               Comparison results between tools
+  tst/               Comparison and regression testing results
 ```
 
-Modeling tool and `out` sub-directories names may have .*RunType* suffixes that indicate the run variation in use, such as time span and tolerances or minor changes to the model structure. This can create large directory trees and complicates comparison between results so should be used with restraint.
+Modeling tool and `tst` sub-directories names may have .*RunType* suffixes that indicate the run variation in use, such as time span and tolerances or minor changes to the model structure. This can create large directory trees and complicates comparison between results so it should be used with restraint.
 
-Each modeling tool (Dymola, JModelica, and Ptolemy) sub-directory has this structure:
+Each non-QSS modeling tool (Dymola, JModelica, and Ptolemy) sub-directory has this structure:
 ```
 Tool/
   ModelName.txt                 Notes
@@ -62,13 +72,16 @@ QSS/
   QSS2/                         QSS2 results
 ```
 
-Each QSS results sub-directory has a `run` script.
+The QSS2 method is usually the best choice so the other sub-directories may not be present.
+LIQSS2 may be used for "stiff" models.
+The first-order QSS1 and LIQSS1 methods are mostly of academic interest since they very slow for most systems.
+Each QSS method sub-directory has a `run` script that has the recommended options for running that QSS method.
 
 ## Models
 
-* Models are being brought into the repository as they are ready and the scripts are updated to support them.
-* The organization and choice of models is pending LBNL review.
-* More Dymola results will be added.
+* Models of different types are being brought into the repository as they are ready.
+* There are simple models to test basic behavior, feature models to develop/test QSS support for specific Modelica features, and EnergyPlus related models that use the Modelica Buildings library.
+* Some of the models are relevant for performance assessment but performance profiling automation is not currently provided here.
 
 ## Tools
 
@@ -78,10 +91,12 @@ Notes on each of the modeling tools appear below.
 
 * Dymola FMUs have twice as many event indicators as expected. The QSS solver FMU simulation accounts for this when checking Dymola-generated FMUs.
 * Some outputs generated by PyFMI, not Dymola, are included.
+* At this time Dymola-generated outputs are not planned for inclusion but we are checking whether Dymola and PyFMI results are consistent with some of the models. We are noting any significant differences and isolating the causes when possible and reporting any bugs in these tools where appropriate.
 
 ### JModelica
 
 * FMI/FMIL API extensions to better support QSS solvers are under development at Modelon.
+* PyFMI fails in retrieving some variable results: we don't currently know why.
 
 ### Ptolemy
 
@@ -94,14 +109,65 @@ Notes on each of the modeling tools appear below.
 
 ### Notes
 
-* This repository may become large due to the size of results and comparisons. Since history isn't critical the repository may be reinitialized occasionally to control its size.
-* Comparisons between modeling tools may have names like: `ModelName/out/ModelName.Tool1.Tool2.cmp`.
-* The `run_fmu.py` script runs FMUs with PyFMI and generates per-variable ASCII output files for easy comparison with QSS results.
-  It currently outputs all non-internal variables but an option to limit output to a set of variables will probably be added.
-  PyFMI fails in retrieving some variable results: we don't currently know why.
+* This repository may become large due to the size of simulation and testing output. Since history isn't critical the repository may be reinitialized occasionally to control its size.
+* A relative tolerance of 1.0e-4 and, for QSS, an absolute tolerance of 1.0e-6 is being used in the simulations. Tolerance has a somewhat different meaning for QSS and traditional solvers so this may be revisited.
+* Comparisons between modeling tools may have names with prefixes like: `ModelName.Tool1-Tool2`.
 
 ### Issues
 
 * What about variations on a model? Allow small changes under the same ModelName directory?
 * Do we want to store Dymola FMU outputs generated with PyFMI or just those generated with Dymola?
 * The ZCBoolean2 model Dymola and JModelica FMUs are not correctly simulated with PyFMI while the QSS results are correct.
+
+## Usage
+
+### Building FMUs with JModelica
+
+Run `bld_fmu` from the `JModelica` sub-directory of the model's directory. (This script wraps `compile_fmu.JModelica.py` to simplify usage.)
+
+* This runs the `mod_xml.JModelica.py` script to add index number comments to the FMU's `modelDescription.xml` file.
+
+### Running FMUs with PyFMI
+
+Run `run_fmu` from the desired output sub-directory under the modeling tool sub-directory of the model's directory, such as MyModel/JModelica/out. (This script wraps `run_fmu.py` to simplify usage.
+
+* `run_fmu` will use a variable list file named as MyModel.var if present in the model's directory. If no variables list is provided all non-internal variables will be output.
+* `run_fmu` generates per-variable ASCII output files named as MyVariable.out for easy comparison with QSS results.
+* PyFMI fails to generate output for some variables but we don't know why yet.
+
+### Running FMUs with QSS
+
+There are `run` scripts in each QSS method sub-directory of the `QSS` directory of each model that have the recommended QSS options for that model. The `run` scripts place outputs in the current directory.
+
+* To be suitable for QSS modeling with current FMI Library support any zero-crossing functions need to be assigned to variables with names of the form `__zc_`*VariableName*.
+* The `modelDescription.xml` files in the `.fmu` files need to be modified for QSS use in some cases. The `.fmu` files are zip files so the `modelDescription.xml` files can be extracted with `unzip`, modified, and then updated in the `.fmu` by running `zip -f`.
+* Dymola-generated FMUs may not have the correct startTime, stopTime, and/or tolerance values in the `modelDescription.xml` `DefaultExperiment` section.
+* QSS needs some dependency information not currently included in `modelDescription.xml` by JModelica or Dymola generated FMUs:
+  * Discrete variables modified by conditional/zero-crossing events need to be listed in a `DiscreteStates` section (between the `Derivatives` and `InitialUnknowns` sections) with dependency on the zero-crossing variables.
+  * State variable modified by conditional/zero-crossing events need to be listed in the `InitialUnknowns` section with dependency on the zero-crossing variables.
+
+### Comparison Testing Different Modeling Tools
+
+Run the `comparison` script from the `tst` sub-directory of the model's directory passing the directories of the two results to be compared, such as:
+
+`comparison ../JModelica ../QSS/QSS2`
+
+This generates report (`.rpt`) files for each pair of signals compared, a summary (`.sum`) file listing the number of signal comparisons that pass and that fail, and PDFs with plots of signal pairs that fail, showing the signal overlay and difference plots.
+
+* This will use the `out` sub-directory of the specified directory if no `.out` files are found.
+* `comparison` wraps `simdiff.py` with the default comparison testing options.
+* The tolerances used by `comparison` may not be appropriate for all models.
+* Signals that represent discrete or boolean variables are not well-compared by the use of a worst-case difference magnitude criterion because slight timing difference in the discrete value changes can cause large differences. The use of RMS or integral-based metrics for such signals will be explored.
+* Signal comparisons are based on interpolating the pairs of signals onto the same time steps. This can cause the apparent signal differences to "bounce" between time steps when the sampling resolution is low, giving an artificially high worst-case difference. The `--coarse` option in `simdiff.py` can reduce this effect when one signal has much more frequent sampling by only measuring the difference at the time steps of the "coarser" (lower sampling rate) signal. A combination of the `--coarse` option, refining the tolerances, and adjusting the QSS output sampling rates will probably be used to obtain more meaningful comparisons. (PyFMI doesn't appear to offer a method of decreasing the simulation time steps to obtain a higher samping rate.) For now many models with a very good match between modeling tools will report as "failed" by comparison.
+
+### Regression Testing Different Versions of a Modeling Tool
+
+Run the `regression` script from the `tst` sub-directory of the model's directory passing the directories of the two results to be compared, such as:
+
+`regression ../QSS/QSS2/new ../QSS/QSS2`
+
+* This will use the `out` sub-directory of the specified directory if no `.out` files are found.
+* `regression` wraps `simdiff.py` with the default regression testing options.
+* The tolerances used by `regression` may not be appropriate for all models.
+* Signals that represent discrete or boolean variables are not well-compared by the use of a worst-case difference magnitude criterion because slight timing difference in the discrete value changes can cause large differences. The use of RMS or integral-based metrics for such signals will be explored.
+* After regression testing is found to be satisfactory we will be copying new results over the prior version's results.

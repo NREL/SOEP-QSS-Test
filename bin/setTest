@@ -1,0 +1,5 @@
+#!/bin/bash
+# Set environment for using these scripts
+# Customize for the directory of the Buildings library
+export MODELICA_BUILDINGS_LIB=/Projects/EnergyPlus/SOEP/tst/modelica-buildings
+export PATH=$PATH:$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
