@@ -85,6 +85,10 @@ try:
     log_file = model + '_log.txt'
     if os.path.getsize( log_file ) == 0:
         os.remove( log_file )
+    log_files = glob.glob( '*_log.txt' ) # Remove all 0-size log files (FMU internal name might not be model name)
+    for log_file in log_files:
+        if os.path.getsize( log_file ) == 0:
+            os.remove( log_file )
 except:
     pass
 

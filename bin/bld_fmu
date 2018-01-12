@@ -1,0 +1,34 @@
+#!/bin/bash
+# Build the local model FMU with JModelica
+# jm script customized for your system must be on your PATH
+# compile_fmu.JModelica.py and mod_xml.JModelica.py must be on your PATH
+# Run from the JModelica sub-directory of the model directory
+
+# Find tool name and dir
+tool_dir=$(realpath $(pwd))
+tool=$(basename "$tool_dir")
+while [ "$tool" != "Dymola" ] && [ "$tool" != "JModelica" ] && [ "$tool" != "Ptolemy" ] && [ "$tool" != "QSS" ]; do
+    tool_dir=$(dirname "$tool_dir")
+    tool=$(basename "$tool_dir")
+done
+
+# Find model name and dir
+model_dir=$(dirname "$tool_dir")
+model=$(basename "$model_dir")
+
+# Compile the Modelica file with JModelica
+compile_fmu_name="compile_fmu.JModelica.py"
+compile_fmu=$(which "$compile_fmu_name")
+if [ "$compile_fmu" == "" ]; then
+    echo "$compile_fmu_name not found on your PATH"
+    exit 1
+else
+    # Compile the FMU
+    jm $compile_fmu $model_dir/$model $@
+
+    # Add index comment lines to XML
+    unzip $model.fmu modelDescription.xml
+    cp modelDescription.xml modelDescription.orig.xml
+    mod_xml.JModelica.py
+    zip -f $model.fmu
+fi
