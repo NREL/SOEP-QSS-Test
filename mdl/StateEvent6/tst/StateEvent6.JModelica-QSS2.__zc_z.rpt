@@ -1,6 +1,6 @@
 Comparing:
- /Projects/EnergyPlus/SOEP/tst/Test/mdl/StateEvent6/JModelica/out/__zc_z.out
- /Projects/EnergyPlus/SOEP/tst/Test/mdl/StateEvent6/QSS/QSS2/__zc_z.x.out
+ StateEvent6/JModelica/out/__zc_z.out
+ StateEvent6/QSS/QSS2/__zc_z.x.out
 Interpolated:
  Metrics:
   Min: -0.00534444467358 @ 3.267

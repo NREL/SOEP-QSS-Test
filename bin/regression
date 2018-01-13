@@ -1,5 +1,5 @@
 #!/bin/bash
-# Modeling tool regression test for a model
+# Modeling tool regression testing
 # jm script customized for your system must be on your PATH
 # simdiff.py must be on your PATH
 # Example: regression ../QSS/QSS2 ../QSS/QSS2/new
@@ -35,6 +35,11 @@ fi
 model2=$(basename $(dirname "$path2"))
 if [ "$model2" == "Dymola" ] || [ "$model2" == "JModelica" ] || [ "$model2" == "Ptolemy" ] || [ "$model2" == "QSS" ]; then
     model2=$(basename $(dirname $(dirname "$path2")))
+fi
+if [ "$model1" == "$model2" ]; then
+    model="$model1"
+else
+    model="$model1-$model2"
 fi
 
 # Clean up previous comparison files

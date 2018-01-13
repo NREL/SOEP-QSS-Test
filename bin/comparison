@@ -1,5 +1,5 @@
 #!/bin/bash
-# Modeling tool results comparison for a model
+# Modeling tool comparison testing
 # jm script customized for your system must be on your PATH
 # simdiff.py must be on your PATH
 # Example: comparison ../JModelica ../QSS/QSS2
@@ -35,6 +35,11 @@ fi
 model2=$(basename $(dirname "$path2"))
 if [ "$model2" == "Dymola" ] || [ "$model2" == "JModelica" ] || [ "$model2" == "Ptolemy" ] || [ "$model2" == "QSS" ]; then
     model2=$(basename $(dirname $(dirname "$path2")))
+fi
+if [ "$model1" == "$model2" ]; then
+    model="$model1"
+else
+    model="$model1-$model2"
 fi
 
 # Clean up previous comparison files
