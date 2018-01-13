@@ -296,24 +296,28 @@ def sig_compare( fnam1, fnam2 ):
 
     if interp_or_plot or out:
         # Extract model and tool name(s)
-        dirs1 = reversed( os.path.dirname( fnam1 ).split( os.sep ) )
-        dirs2 = reversed( os.path.dirname( fnam2 ).split( os.sep ) )
-        tool1 = tool2 = ''
-        model1 = model2 = ''
-        for dir in dirs1:
+        parts1 = fnam1.split( os.sep )
+        rdirs1 = reversed( parts1[ : -1 ] )
+        tool1 = model1 = ''
+        for dir in rdirs1:
             if not tool1:
                 if ( dir in ( 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ) or ( 'QSS' in dir ):
                     tool1 = dir
             elif not any( tool in dir for tool in ( 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ): # Assume model name precedes tool name
                 model1 = dir
                 break
-        for dir in dirs2:
+        mnam1 = os.path.join( *parts1[ parts1.index( model1 ) : ] )
+        parts2 = fnam2.split( os.sep )
+        rdirs2 = reversed( parts2[ : -1 ] )
+        tool2 = model2 = ''
+        for dir in rdirs2:
             if not tool2:
                 if ( dir in ( 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ) or ( 'QSS' in dir ):
                     tool2 = dir
             elif not any( tool in dir for tool in ( 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ): # Assume model name precedes tool name
                 model2 = dir
                 break
+        mnam2 = os.path.join( *parts2[ parts2.index( model2 ) : ] )
 
         # Extract variable name(s)
         vnam1 = os.path.splitext( os.path.basename( fnam1 ) )[ 0 ]
@@ -367,7 +371,7 @@ def sig_compare( fnam1, fnam2 ):
     else:
         onam = ''
     if not out: print( '' )
-    print( 'Comparing:\n ' + fnam1 + '\n ' + fnam2 )
+    print( 'Comparing:\n ' + mnam1 + '\n ' + mnam2 )
     if sequential: print( 'Sequential:' )
     while line1 or line2:
         if sync: # Read next lines unless waiting for other file to reach numeric lines
@@ -696,16 +700,16 @@ def sig_compare( fnam1, fnam2 ):
 
                 # Figure and axes
                 fig, ( top, bot ) = pyplot.subplots( 2, sharex = True, gridspec_kw = { 'height_ratios': [3,2] }, figsize = ( 6, 6.5 ) )
-                len_fnam = max( len( fnam1 ), len( fnam2 ) )
-                if len_fnam <= 100:
-                    fnam_font_size = 7
-                elif len_fnam <= 140:
-                    fnam_font_size = 6
-                elif len_fnam <= 150:
-                    fnam_font_size = 5
+                len_mnam = max( len( mnam1 ), len( mnam2 ) )
+                if len_mnam <= 100:
+                    mnam_font_size = 7
+                elif len_mnam <= 140:
+                    mnam_font_size = 6
+                elif len_mnam <= 150:
+                    mnam_font_size = 5
                 else:
-                    fnam_font_size = 4
-                pyplot.suptitle( fnam1 + '\n' + fnam2, horizontalalignment = 'left', x = 0.01, y = 0.99, fontsize = fnam_font_size )
+                    mnam_font_size = 4
+                pyplot.suptitle( mnam1 + '\n' + mnam2, horizontalalignment = 'left', x = 0.01, y = 0.99, fontsize = mnam_font_size )
 
                 # Overlay plot
                 top.set_title( title + ( '  ' if title else '' ) + 'Overlay', fontsize = title_font_size )

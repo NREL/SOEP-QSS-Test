@@ -1,6 +1,6 @@
 Comparing:
- /Projects/EnergyPlus/SOEP/tst/Test/mdl/StateEvent6/Dymola/out/x3.out
- /Projects/EnergyPlus/SOEP/tst/Test/mdl/StateEvent6/QSS/QSS2/x3.x.out
+ StateEvent6/Dymola/out/x3.out
+ StateEvent6/QSS/QSS2/x3.x.out
 Interpolated:
  Metrics:
   Min: -2.28039809258e-13 @ 2.683

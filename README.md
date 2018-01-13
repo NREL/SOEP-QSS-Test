@@ -113,10 +113,11 @@ Notes on each of the modeling tools appear below.
 * A relative tolerance of 1.0e-4 and, for QSS, an absolute tolerance of 1.0e-6 is being used in the simulations. Tolerance has a somewhat different meaning for QSS and traditional solvers so this may be revisited.
 * Comparisons between modeling tools may have names with prefixes like: `ModelName.Tool1-Tool2`.
 
-### Issues
+## Issues
 
 * What about variations on a model? Allow small changes under the same ModelName directory?
-* Do we want to store Dymola FMU outputs generated with PyFMI or just those generated with Dymola?
+* Interpolating across different sampling times artificially increases the difference between signals so that many signals that are actually a good match will fail the tolerance test: increasing sampling rates and/or using the `--coarse` option when differencing need to be explored.
+* A max difference metric isn't good for discrete and boolean signals: we probably need to use RMS, integral-based, or another metric for comparison/regression testing.
 * The ZCBoolean2 model Dymola and JModelica FMUs are not correctly simulated with PyFMI while the QSS results are correct.
 
 ## Usage
@@ -152,7 +153,7 @@ Run the `comparison` script from the `tst` sub-directory of the model's director
 
 `comparison ../JModelica ../QSS/QSS2`
 
-This generates report (`.rpt`) files for each pair of signals compared, a summary (`.sum`) file listing the number of signal comparisons that pass and that fail, and PDFs with plots of signal pairs that fail, showing the signal overlay and difference plots.
+This generates report (`.rpt`) files for each pair of signals compared, a summary (`.sum`) file listing the number of signal comparisons that pass and that fail, a 0-size pass (`.pass`) or fail (`.fail`) file, and PDFs with plots of signal pairs that fail, showing the signal overlay and difference plots.
 
 * This will use the `out` sub-directory of the specified directory if no `.out` files are found.
 * `comparison` wraps `simdiff.py` with the default comparison testing options.
@@ -165,6 +166,8 @@ This generates report (`.rpt`) files for each pair of signals compared, a summar
 Run the `regression` script from the `tst` sub-directory of the model's directory passing the directories of the two results to be compared, such as:
 
 `regression ../QSS/QSS2/new ../QSS/QSS2`
+
+This generates report (`.rpt`) files for each pair of signals compared, a summary (`.sum`) file listing the number of signal comparisons that pass and that fail, a 0-size pass (`.pass`) or fail (`.fail`) file, and PDFs with plots of signal pairs that fail, showing the signal overlay and difference plots.
 
 * This will use the `out` sub-directory of the specified directory if no `.out` files are found.
 * `regression` wraps `simdiff.py` with the default regression testing options.
