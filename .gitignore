@@ -2,6 +2,7 @@
 *.d
 *.dll
 *.exe
+*.fmu
 *.gcda
 *.ilk
 *.lib
