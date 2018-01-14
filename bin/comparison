@@ -6,7 +6,7 @@
 
 # Tolerances
 rTol="1.0e-3"
-aTol="1.0e-6"
+aTol="1.0e-5"
 
 # Find tool name(s)
 path1=$(realpath "$1")
@@ -51,8 +51,8 @@ if [ "$simdiff" == "" ]; then
     echo "simdiff.py not found on your PATH"
 else
     if [ -e "../$model.var" ]; then # Use variable list
-        jm $simdiff --var ../$model.var --rTol=$rTol --aTol=$aTol --plot-fail --out $@
+        jm $simdiff --coarse --rTol=$rTol --aTol=$aTol --plot-fail --out --var ../$model.var $@
     else # No variable list
-        jm $simdiff --rTol=$rTol --aTol=$aTol --plot-fail --out $@
+        jm $simdiff --coarse --rTol=$rTol --aTol=$aTol --plot-fail --out $@
     fi
 fi

@@ -54,6 +54,7 @@ from types import NoneType
 
 # Globals
 args = None
+infinity = float( 'inf' )
 
 def sim_diff():
     '''Compare simulation signal files'''
@@ -437,11 +438,7 @@ def sig_compare( fnam1, fnam2 ):
                         f_min = fdiff
                     elif fdiff > f_max:
                         f_max = fdiff
-                    if fdiff <= aTol: # Within abs tolerance
-                        pass
-                    elif fdiff <= rTol * max( abs( val1 ), abs( val2 ) ): # Within rel tolerance
-                        pass
-                    else:
+                    if fdiff > max( aTol, rTol * max( abs( val1 ), abs( val2 ) ) ): # Exceeds tolerance
                         if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ':  Token: ' + str( i + 1 ) + ':  ' + token1 + ' | ' + token2 )
                         seq_diffs += 1
                         flt_diffs += 1
@@ -571,16 +568,23 @@ def sig_compare( fnam1, fnam2 ):
 
                     # Tolerance
                     blk_diffs = 0
+                    i_max = 0
+                    fdiff = abs( zd[ 0 ] )
+                    fitol = max( aTol, rTol * max( abs( z1[ 0 ] ), abs( z2[ 0 ] ) ) )
+                    r_max = fdiff / fitol if fitol > 0.0 else infinity
                     for i in range( len( X ) ):
                         fdiff = abs( zd[ i ] )
-                        if fdiff <= aTol: # Within abs tolerance
-                            pass
-                        elif fdiff <= rTol * max( abs( z1[ i ] ), abs( z2[ i ] ) ): # Within rel tolerance
-                            pass
-                        else:
+                        fitol = max( aTol, rTol * max( abs( z1[ i ] ), abs( z2[ i ] ) ) )
+                        r = fdiff / fitol if fitol > 0.0 else infinity
+                        if r > r_max:
+                            r_max = r
+                            i_max = i
+                        if fdiff > fitol: # Exceeds tolerance
                             if verbose: print( ' Row ' + str( i + 1 ) + ':  ' + str( z1[ i ] ) + ' | ' + str( z2[ i ] ) )
                             blk_diffs += 1
                     row_diffs += blk_diffs
+                    print( ' Difference:' )
+                    print( ' *Tol: ' + str( r_max ) + ' @ ' + str( X[ i_max ] ) )
 
                     # Statistics
                     i_min = zd.argmin()
@@ -591,7 +595,6 @@ def sig_compare( fnam1, fnam2 ):
                     if m_max: i_max = i_max[ 0 ]
                     yd_min = zd[ i_min ]
                     yd_max = zd[ i_max ]
-                    print( ' Metrics:' )
                     print( '  Min: ' + str( yd_min ) + ' @ ' + str( X[ i_min ] ) + ( ' ...' if m_min else '' ) )
                     print( '  Max: ' + str( yd_max ) + ' @ ' + str( X[ i_max ] ) + ( ' ...' if m_max else '' ) )
                     yd_min = abs( yd_min )
@@ -620,16 +623,23 @@ def sig_compare( fnam1, fnam2 ):
                 else: # Use full cross-interpolated signals
                     # Tolerance
                     blk_diffs = 0
+                    i_max = 0
+                    fdiff = abs( Yd[ 0 ] )
+                    fitol = max( aTol, rTol * max( abs( Y1[ 0 ] ), abs( Y2[ 0 ] ) ) )
+                    r_max = fdiff / fitol if fitol > 0.0 else infinity
                     for i in range( len( x ) ):
                         fdiff = abs( Yd[ i ] )
-                        if fdiff <= aTol: # Within abs tolerance
-                            pass
-                        elif fdiff <= rTol * max( abs( Y1[ i ] ), abs( Y2[ i ] ) ): # Within rel tolerance
-                            pass
-                        else:
+                        fitol = max( aTol, rTol * max( abs( Y1[ i ] ), abs( Y2[ i ] ) ) )
+                        r = fdiff / fitol if fitol > 0.0 else infinity
+                        if r > r_max:
+                            r_max = r
+                            i_max = i
+                        if fdiff > fitol: # Exceeds tolerance
                             if verbose: print( ' Row ' + str( i + 1 ) + ':  ' + str( Y1[ i ] ) + ' | ' + str( Y2[ i ] ) )
                             blk_diffs += 1
                     row_diffs += blk_diffs
+                    print( ' Difference:' )
+                    print( ' *Tol: ' + str( r_max ) + ' @ ' + str( x[ i_max ] ) )
 
                     # Statistics
                     i_min = Yd.argmin()
