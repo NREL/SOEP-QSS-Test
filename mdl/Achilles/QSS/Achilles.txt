@@ -1,4 +1,4 @@
 Achilles Model QSS Notes
 
-The QSS runs used the Dymola FMU and were run with the default options:
-QSS Achilles.fmu --qss=<QSS_method>
+The QSS runs use the JModelica FMU (results with the Dymola FMU were identical)
+with the default options.

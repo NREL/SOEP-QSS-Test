@@ -1,6 +1,8 @@
 OnOffController Model QSS Notes
 
-The QSS runs used the Dymola FMU (the JModelica FMU cannot be run on Fedora 27 at Objexx).
+The QSS runs used the Dymola FMU (the available JModelica FMU depends on
+libgfortran.so3 and so cannot be run on Fedora 27 at Objexx and
+compile_fmu.JModelica.py is failing with the .mo).
 
 The QSS runs use "all" outputs to get accurate view of the temperature:
 QSS OnOffController.fmu --qss=<QSS_method> --out=rafx

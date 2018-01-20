@@ -1,2 +1,2 @@
 #!/bin/bash
-QSS ../Quadratic.fmu --qss=QSS2
+QSS ../../JModelica/Quadratic.fmu --qss=QSS2

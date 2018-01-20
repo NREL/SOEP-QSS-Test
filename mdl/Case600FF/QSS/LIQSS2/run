@@ -1,2 +1,2 @@
 #!/bin/bash
-QSS ../Case600FF.fmu --qss=LIQSS2
+QSS ../../DymolaCase600FF.fmu --qss=LIQSS2

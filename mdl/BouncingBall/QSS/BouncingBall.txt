@@ -4,11 +4,8 @@ The JModelica FMU was used to generate the QSS results.
 The results with the Dymola FMU were identical.
 
 The FMUs are not detecting some of the ball height zero crossings unless the time advance
-that zero-crossing dependency's values are set to (dtZC) is made very small. The reason
-for this is not yet known but will be investigated.
-
-Command line to get all crossings detected:
-QSS BouncingBall.fmu --dtZC=1e-9
+that zero-crossing dependency's values are set to (dtZC) is made very small (1e-9). The
+reason for this is not yet known but will be investigated.
 
 Note: The default dtZC value has now been set to 1e-9 since improved results were seen
 with that value in other models.

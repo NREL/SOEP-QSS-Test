@@ -1,7 +1,7 @@
 ZCBoolean2 Model QSS Notes
 
-The QSS runs used the Dymola FMU but the JModelica FMU gives the same results.
-(PyFMI is not simulating these FMUs correctly.)
+The QSS runs used the JModelica FMU but the Dymola FMU gives the same results.
+(PyFMI is not simulating either of these FMUs correctly.)
 
 The QSS runs use dtMax to avoid deactivation:
 QSS ZCBoolean2.fmu --qss=<QSS_method> --dtMax=0.001
@@ -13,4 +13,3 @@ Notes
   Internal variables with discontinuous functions or discrete events need to be input functions for QSS to operate correctly
  z1/2 have zero 2nd derivatives at t=0 giving large (14s) requantization time (infinity with exact derivatives)
   This is an example of what "near-deactivation": dtInf won't kick in: Need dtMax with current QSS
-

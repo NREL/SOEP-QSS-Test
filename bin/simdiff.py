@@ -701,7 +701,7 @@ def sig_compare( fnam1, fnam2 ):
                     leg2 = model2
                 if tool1 != tool2:
                     leg1 += ( '  ' if leg1 else '' ) + tool1
-                    leg2 += ( '  ' if leg1 else '' ) + tool2
+                    leg2 += ( '  ' if leg2 else '' ) + tool2
                 if vnam1 != vnam2:
                     leg1 += ( '  ' if leg1 else '' ) + vnam1
                     leg2 += ( '  ' if leg2 else '' ) + vnam2
