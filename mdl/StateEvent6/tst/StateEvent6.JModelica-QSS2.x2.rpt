@@ -2,10 +2,11 @@ Comparing:
  StateEvent6/JModelica/out/x2.out
  StateEvent6/QSS/QSS2/x2.x.out
 Interpolated:
- Metrics:
+ Difference:
+ *Tol: 4.31853911105e-09 @ 2.4747399877
   Min: 0.0 @ 0.0
-  Max: 1.16351372981e-13 @ 5.338
-  Mag: 1.16351372981e-13 @ 5.338
- |Avg| (L1): 1.06135864975e-13
-  RMS  (L2): 1.07954701867e-13
+  Max: 1.15907283771e-13 @ 5.4546064518
+  Mag: 1.15907283771e-13 @ 5.4546064518
+ |Avg| (L1): 1.06113563955e-13
+  RMS  (L2): 1.07941273064e-13
  Pass

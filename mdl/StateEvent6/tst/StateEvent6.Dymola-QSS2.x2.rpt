@@ -2,10 +2,11 @@ Comparing:
  StateEvent6/Dymola/out/x2.out
  StateEvent6/QSS/QSS2/x2.x.out
 Interpolated:
- Metrics:
+ Difference:
+ *Tol: 4.42759262704e-09 @ 2.47473997692
   Min: 0.0 @ 0.0
-  Max: 1.13298259663e-13 @ 2.682
-  Mag: 1.13298259663e-13 @ 2.682
- |Avg| (L1): 1.02705194255e-13
-  RMS  (L2): 1.04424578777e-13
+  Max: 1.12743148151e-13 @ 2.68579684276
+  Mag: 1.12743148151e-13 @ 2.68579684276
+ |Avg| (L1): 1.02686497319e-13
+  RMS  (L2): 1.04413805913e-13
  Pass

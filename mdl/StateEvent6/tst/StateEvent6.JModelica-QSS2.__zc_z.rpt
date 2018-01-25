@@ -2,10 +2,11 @@ Comparing:
  StateEvent6/JModelica/out/__zc_z.out
  StateEvent6/QSS/QSS2/__zc_z.x.out
 Interpolated:
- Metrics:
-  Min: -0.00534444467358 @ 3.267
-  Max: 0.00380905993723 @ 7.261
-  Mag: 0.00534444467358 @ 3.267
- |Avg| (L1): 0.00138336590133
-  RMS  (L2): 0.00170712364216
- Fail:  Diffs:  Rows: 9159
+ Difference:
+ *Tol: 154.803092283 @ 9.91196077714
+  Min: -0.00142806200684 @ 2.81908962871
+  Max: 0.00191451988986 @ 9.13342834736
+  Mag: 0.00191451988986 @ 9.13342834736
+ |Avg| (L1): 0.000775527066945
+  RMS  (L2): 0.000980842369294
+ Fail:  Diffs:  Rows: 150

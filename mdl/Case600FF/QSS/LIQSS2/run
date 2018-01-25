@@ -1,2 +1,0 @@
-#!/bin/bash
-QSS ../../DymolaCase600FF.fmu --qss=LIQSS2
