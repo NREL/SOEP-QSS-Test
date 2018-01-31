@@ -54,5 +54,6 @@ try:
     model = sys.argv[ 1 ]
     if model.endswith( '.mo' ): model = model[ :-3 ]
     fmu_file = compile_fmu( os.path.basename( model ), model + '.mo', compiler_options = { 'extra_lib_dirs': [ MBL ] } )
-except:
+except Exception as msg:
+    print( 'Error: ' + str( msg ) )
     print( 'Usage: ' + sys.argv[ 0 ] + ' <model_name>' )
