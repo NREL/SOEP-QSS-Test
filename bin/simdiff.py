@@ -403,10 +403,12 @@ def sig_compare( fnam1, fnam2 ):
         if not wait1:
             lnum1 += 1
             tokens1 = re.split( r'[\s,]+', line1 ) if line1 else []
+            if tokens1 and tokens1[ 0 ] == '': del tokens1[ 0 ]
             while tokens1 and tokens1[ -1 ] == '': del tokens1[ -1 ]
         if not wait2:
             lnum2 += 1
             tokens2 = re.split( r'[\s,]+', line2 ) if line2 else []
+            if tokens2 and tokens2[ 0 ] == '': del tokens2[ 0 ]
             while tokens2 and tokens2[ -1 ] == '': del tokens2[ -1 ]
         if interp_or_plot:
             row1_2 = row1_1
