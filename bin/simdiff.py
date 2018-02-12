@@ -50,7 +50,6 @@
 
 # Imports
 import argparse, datetime, fastnumbers, fnmatch, glob, math, os, re, sys
-from types import NoneType
 
 # Globals
 args = None
@@ -307,7 +306,10 @@ def sig_compare( fnam1, fnam2 ):
             elif not any( tool in dir for tool in ( 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ): # Assume model name precedes tool name
                 model1 = dir
                 break
-        mnam1 = os.path.join( *parts1[ parts1.index( model1 ) : ] )
+        try:
+            mnam1 = os.path.join( *parts1[ parts1.index( model1 ) : ] )
+        except:
+            mnam1 = os.path.basename( fnam1 )
         parts2 = fnam2.split( os.sep )
         rdirs2 = reversed( parts2[ : -1 ] )
         tool2 = model2 = ''
@@ -318,7 +320,10 @@ def sig_compare( fnam1, fnam2 ):
             elif not any( tool in dir for tool in ( 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ): # Assume model name precedes tool name
                 model2 = dir
                 break
-        mnam2 = os.path.join( *parts2[ parts2.index( model2 ) : ] )
+        try:
+            mnam2 = os.path.join( *parts2[ parts2.index( model2 ) : ] )
+        except:
+            mnam2 = os.path.basename( fnam2 )
 
         # Extract variable name(s)
         vnam1 = os.path.splitext( os.path.basename( fnam1 ) )[ 0 ]
@@ -430,7 +435,7 @@ def sig_compare( fnam1, fnam2 ):
                     if verbose: print( ' Line ' + str( lnum1 ) + '|' + str( lnum2 ) + ':  Token: ' + str( i + 1 ) + ':  ' + token1 + ' | ' + token2 )
                     seq_diffs += 1
                     int_diffs += 1
-                elif ( not isinstance( val1, ( str, NoneType ) ) ) and ( not isinstance( val2, ( str, NoneType ) ) ): # Compare as floats
+                elif ( val1 is not None ) and ( not isinstance( val1, str ) ) and ( val2 is not None ) and ( not isinstance( val2, str ) ): # Compare as floats
                     fdiff = abs( val1 - val2 )
                     if f_min is None:
                         f_min = f_max = fdiff
