@@ -180,12 +180,10 @@ def sim_diff():
             sys.exit( 1 )
 
     # Compare signals
-    keys = vars1.keys()
-    keys.sort() # To do outputs in variable name order
     n_passed = 0
     n_failed = 0
     out_name = ''
-    for vnam in keys:
+    for vnam in sorted( vars1.keys() ):
         if vnam in vars2:
             path1 = vars1[ vnam ]
             path2 = vars2[ vnam ]
