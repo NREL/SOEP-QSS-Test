@@ -130,7 +130,7 @@ Run `bld_fmu` from the `JModelica` sub-directory of the model's directory. (This
 
 ### Running FMUs with PyFMI
 
-Run `run_fmu` from the desired output sub-directory under the modeling tool sub-directory of the model's directory, such as MyModel/JModelica/out. (This script wraps `run_fmu.py` to simplify usage.
+Run `run_fmu` from the desired output sub-directory under the modeling tool sub-directory of the model's directory, such as MyModel/JModelica/out. (This script wraps `run_fmu.py` to simplify usage.)
 
 * `run_fmu` will use a variable list file named as MyModel.var if present in the model's directory. If no variables list is provided all non-internal variables will be output.
 * `run_fmu` generates per-variable ASCII output files named as MyVariable.out for easy comparison with QSS results.

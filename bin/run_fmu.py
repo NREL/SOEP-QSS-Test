@@ -71,11 +71,13 @@ model = os.path.basename( model )
 
 # Set simulation options
 opt = fmu.simulate_options()
-opt[ 'CVode_options' ][ 'atol' ] = 1e-6 # Match QSS default aTol
 opt[ 'result_handling' ] = 'memory' # No file output
 #opt[ 'result_handling' ] = 'csv'; opt[ 'result_file_name' ] = model + '.csv'
 #opt[ 'result_handling' ] = 'file'; opt[ 'result_file_name' ] = model + '.txt'
-#opt[ 'ncp' ] = 1000 # Number of output times
+#opt[ 'ncp' ] = 10000 # Number of output times #Do Make this an option
+opt[ 'CVode_options' ][ 'rtol' ] = 1e-4 # QSS default rTol=1e-4 #Do Make this an option
+opt[ 'CVode_options' ][ 'atol' ] = 1e-6 # QSS default aTol=1e-6 #Do Make this an option
+#opt[ 'CVode_options' ][ 'maxord' ] = 2 # Max method order
 
 # Simulate
 res = fmu.simulate( options = opt )

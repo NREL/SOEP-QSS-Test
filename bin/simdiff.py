@@ -113,7 +113,10 @@ def sim_diff():
     typeB = ( '', '.x', '.f', '.q' ) # Signal types in decreasing match preference order
     vars1 = {}
     for fnam in glob1:
-        snam = vnam, tnam = sig_name( fnam )
+        if 'QSS' in fnam.split( os.sep ): # Split QSS variable and type
+            snam = vnam, tnam = qss_sig_name( fnam )
+        else:
+            snam = vnam, tnam = ( sig_name( fnam ), '' )
         if vnam in vars1:
             if tnam == '': # Preferred
                 vars1[ vnam ] = fnam
@@ -127,7 +130,10 @@ def sim_diff():
             vars1[ vnam ] = fnam
     vars2 = {}
     for fnam in glob2:
-        snam = vnam, tnam = sig_name( fnam )
+        if 'QSS' in fnam.split( os.sep ): # Split QSS variable and type
+            snam = vnam, tnam = qss_sig_name( fnam )
+        else:
+            snam = vnam, tnam = ( sig_name( fnam ), '' )
         if vnam in vars2:
             if tnam == '': # Preferred
                 vars2[ vnam ] = fnam
@@ -226,7 +232,11 @@ def sim_diff():
         print( 'Summary written to: ' + out_name + '.sum' )
 
 def sig_name( fnam ):
-    '''Signal name of a file name: /path/var.sig.out -> (var,.sig)'''
+    '''Signal name of a file name: /path/var.out -> var'''
+    return os.path.splitext( os.path.basename( fnam ) )[ 0 ]
+
+def qss_sig_name( fnam ):
+    '''Signal name of a QSS file name: /path/var.sig.out -> (var,.sig)'''
     return os.path.splitext( os.path.splitext( os.path.basename( fnam ) )[ 0 ] )
 
 def typ_name( fnam ):
@@ -299,9 +309,9 @@ def sig_compare( fnam1, fnam2 ):
         tool1 = model1 = ''
         for dir in rdirs1:
             if not tool1:
-                if ( dir in ( 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ) or ( 'QSS' in dir ):
+                if ( dir in ( 'ana', 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ) or ( 'QSS' in dir ):
                     tool1 = dir
-            elif not any( tool in dir for tool in ( 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ): # Assume model name precedes tool name
+            elif not any( tool in dir for tool in ( 'ana', 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ): # Assume model name precedes tool name
                 model1 = dir
                 break
         try:
@@ -313,9 +323,9 @@ def sig_compare( fnam1, fnam2 ):
         tool2 = model2 = ''
         for dir in rdirs2:
             if not tool2:
-                if ( dir in ( 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ) or ( 'QSS' in dir ):
+                if ( dir in ( 'ana', 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ) or ( 'QSS' in dir ):
                     tool2 = dir
-            elif not any( tool in dir for tool in ( 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ): # Assume model name precedes tool name
+            elif not any( tool in dir for tool in ( 'ana', 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ): # Assume model name precedes tool name
                 model2 = dir
                 break
         try:
@@ -714,7 +724,7 @@ def sig_compare( fnam1, fnam2 ):
                 if not leg2: leg2 = 'File 2'
 
                 # Figure and axes
-                fig, ( top, bot ) = pyplot.subplots( 2, sharex = True, gridspec_kw = { 'height_ratios': [3,2] }, figsize = ( 6, 6.5 ) )
+                fig, ( top, bot ) = pyplot.subplots( 2, sharex = True, gridspec_kw = { 'height_ratios': [4,2] }, figsize = ( 6, 6.5 ) )
                 len_mnam = max( len( mnam1 ), len( mnam2 ) )
                 if len_mnam <= 100:
                     mnam_font_size = 7
@@ -776,9 +786,9 @@ def sig_compare( fnam1, fnam2 ):
                 pyplot.tight_layout() # Prevents overlaps
                 pyplot.subplots_adjust( top = 0.9 ) # Leave space for file names
                 if out:
-                    pnam = onam + ( '.YCol' + str( j ) if n_cols > 2 else '' ) + '.pdf'
+                    pnam = onam + ( '.YCol' + str( j ) if n_cols > 2 else '' ) + '.png' # '.pdf' '.png' '.jpg' #Do Make type an option
                     # pnam = os.path.abspath( pnam )
-                    fig.set_size_inches( 8.5, 11 )
+                    fig.set_size_inches( 8.5, 11 ) #Do Make this an option with default based on file type: 8.5x11 for pdf, ...
                     pyplot.savefig( pnam ) # pdf, png, jpg
                     if out:
                         sys.stderr.write( 'Plot saved to: ' + pnam + '\n' )
