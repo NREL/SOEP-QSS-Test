@@ -724,7 +724,7 @@ def sig_compare( fnam1, fnam2 ):
                 if not leg2: leg2 = 'File 2'
 
                 # Figure and axes
-                fig, ( top, bot ) = pyplot.subplots( 2, sharex = True, gridspec_kw = { 'height_ratios': [4,2] }, figsize = ( 6, 6.5 ) )
+                fig, ( top, bot ) = pyplot.subplots( 2, sharex = True, gridspec_kw = { 'height_ratios': [3,1] }, figsize = ( 6, 6.5 ) )
                 len_mnam = max( len( mnam1 ), len( mnam2 ) )
                 if len_mnam <= 100:
                     mnam_font_size = 7

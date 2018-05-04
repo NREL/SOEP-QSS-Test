@@ -64,8 +64,8 @@ if model.endswith( '.fmu' ): model = model[ :-4 ]
 try:
     fmu = load_fmu( model + '.fmu' )
 except Exception as err:
-    if err: print( err )
-    print( 'Error: ' + str( err ) )
+    if err: print( 'Error: ' + str( err ) )
+    print( 'FMU file: ' + model + '.fmu' )
     sys.exit( 1 )
 model = os.path.basename( model )
 
