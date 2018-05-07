@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS ../../JModelica/CoupledSystem.fmu --qss=LIQSS2

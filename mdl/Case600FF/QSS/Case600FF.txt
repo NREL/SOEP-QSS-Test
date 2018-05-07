@@ -12,3 +12,7 @@ QSS --qss=QSS1 --dtOut=100 --out=sfx Case600FF.fmu
 QSS --qss=QSS2 --dtOut=100 --out=sfx Case600FF.fmu
 QSS --qss=LIQSS1 --dtInf=100 --dtOut=100 --out=sfx Case600FF.fmu
 QSS --qss=LIQSS2 --dtInf=100 --dtOut=100 --out=sfx Case600FF.fmu
+
+The LIQSS2 solution drifts upward in temperature. We need to investigate
+this to see if it is an issue with the LIQSS2 implementation or a problem
+with the model such as missing dependencies.

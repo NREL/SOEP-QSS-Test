@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS ../../JModelica/InputFunction.fmu --qss=LIQSS2

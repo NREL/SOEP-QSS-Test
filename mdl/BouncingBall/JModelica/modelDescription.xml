@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fmiModelDescription fmiVersion="2.0" modelName="BouncingBall" guid="a802de3ef18918520507d0f9a7e972c" generationTool="JModelica.org" generationDateAndTime="2017-12-29T02:54:44" variableNamingConvention="structured" numberOfEventIndicators="1">
+<fmiModelDescription fmiVersion="2.0" modelName="BouncingBall" guid="a802de3ef18918520507d0f9a7e972c" generationTool="JModelica.org" generationDateAndTime="2018-05-02T01:58:00" variableNamingConvention="structured" numberOfEventIndicators="1">
 	<ModelExchange modelIdentifier="BouncingBall" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="false" canSerializeFMUstate="false" providesDirectionalDerivative="false" />
 	<UnitDefinitions>
 		<Unit name="m">

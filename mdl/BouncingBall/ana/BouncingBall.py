@@ -32,14 +32,19 @@ ti = math.sqrt( 2 / g ) # First impact time
 print 'Time', '\t', 'Height'
 print 's', '\t', 'm'
 while t <= 3.0:
-	if t >= ti:
-		print ti, '\t', 0.0
-		h0 = 0.0
-		v0 = abs( e * ( v0 - g * ( ti - t0 ) ) )
-		t0 = ti
-		t = ti # Reset steps from impact time
-		ti = t0 + 2 * v0 / g
-	else:
-		h = h0 + ( v0 * ( t - t0 ) ) - ( 0.5 * g * ( t - t0 )**2 )
-		print t, '\t', h
-	t += 0.00001
+    if t >= ti:
+        print "%.15f" % ti, '\t', 0.0
+        h0 = 0.0
+        v0 = abs( e * ( v0 - g * ( ti - t0 ) ) )
+        t0 = ti
+        t = ti # Reset steps from impact time
+        ti_next = t0 + ( 2 * v0 / g )
+        if ti_next <= ti:
+            t = 3.0
+            print "%.15f" % t, '\t', 0.0
+        else:
+            ti = ti_next
+    else:
+        h = h0 + ( v0 * ( t - t0 ) ) - ( 0.5 * g * ( t - t0 )**2 )
+        print "%.15f" % t, '\t', "%.15f" % h
+    t += 0.001

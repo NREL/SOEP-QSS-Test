@@ -1,0 +1,29 @@
+#!/bin/bash
+# Run the local model FMU with PyFMI
+# jm script customized for your system must be on your PATH
+# run_fmu.step.py must be on your PATH
+# Run from the modeling tool directory or below such as MyModel/JModelica/out
+
+# Find tool name and dir
+tool_dir=$(realpath $(pwd))
+tool=$(basename "$tool_dir")
+while [ "$tool" != "Dymola" ] && [ "$tool" != "JModelica" ] && [ "$tool" != "Ptolemy" ] && [ "$tool" != "QSS" ]; do
+    tool_dir=$(dirname "$tool_dir")
+    tool=$(basename "$tool_dir")
+done
+
+# Find model name and dir
+model_dir=$(dirname "$tool_dir")
+model=$(basename "$model_dir")
+
+# Run the simulation with PyFMI
+run_fmu=$(which "run_fmu.step.py")
+if [ "$run_fmu" == "" ]; then
+    echo "run_fmu.step.py not found on your PATH"
+else
+    if [ -e "$model_dir/$model.var" ]; then # Use variable list
+        jm $run_fmu $tool_dir/$model.fmu --var $model_dir/$model.var $@
+    else # No variable list
+        jm $run_fmu $tool_dir/$model.fmu $@
+    fi
+fi

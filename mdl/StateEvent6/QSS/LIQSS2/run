@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS ../../Dymola/StateEvent6.fmu --qss=LIQSS2 --dtMax=0.001
