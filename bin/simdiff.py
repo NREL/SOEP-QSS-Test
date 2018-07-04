@@ -788,7 +788,8 @@ def sig_compare( fnam1, fnam2 ):
                 if out:
                     pnam = onam + ( '.YCol' + str( j ) if n_cols > 2 else '' ) + '.png' # '.pdf' '.png' '.jpg' #Do Make type an option
                     # pnam = os.path.abspath( pnam )
-                    fig.set_size_inches( 8.5, 11 ) #Do Make this an option with default based on file type: 8.5x11 for pdf, ...
+#                   fig.set_size_inches( 8.5, 11 ) #Do Make this an option with default based on file type: 8.5x11 for pdf, ...
+                    fig.set_size_inches( 5, 6.5 )
                     pyplot.savefig( pnam ) # pdf, png, jpg
                     if out:
                         sys.stderr.write( 'Plot saved to: ' + pnam + '\n' )

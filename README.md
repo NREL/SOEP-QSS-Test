@@ -28,6 +28,8 @@ The `bin` directory contains scripts for modeling and testing:
 * `regression`  Regression tests results from two versions of a modeling tool
 * `run_fmu`  Runs the model's `.fmu` with PyFMI (wraps `run_fmu.py`)
 * `run_fmu.py`  Runs a model's `.fmu` with PyFMI
+* `run_fmu.step`  Runs the model's `.fmu` with PyFMI using a step input function (wraps `run_fmu.step.py`)
+* `run_fmu.step.py`  Runs a model's `.fmu` with PyFMI using a step input function
 * `setTest`  Sets environment: Customize to your system
 * `simdiff.py`  Simulation results comparison tool
 
@@ -66,16 +68,16 @@ The QSS sub-directory has this structure:
 QSS/
   ModelName.txt                 Notes
   ModelName.fmu                 FMU file used for QSS runs
-  LIQSS1/                       LIQSS1 results
-  LIQSS2/                       LIQSS2 results
-  QSS1/                         QSS1 results
-  QSS2/                         QSS2 results
+  FMU-[LI]QSS#/                 FMU-QSS [LI]QSS#
+  [LI]QSS#/                     [LI]QSS#
 ```
+where # is 1 or 2 indicating the QSS method order.
+The QSS subdirectories have a `run` script that was used to generate the results and the `.out` output files.
+The FMU-QSS subdirectories have a `run` script that generates the FMU-QSS and then runs it with the QSS application.
 
 The QSS2 method is usually the best choice so the other sub-directories may not be present.
-LIQSS2 may be used for "stiff" models.
+LIQSS2 is probably best for "stiff" models.
 The first-order QSS1 and LIQSS1 methods are mostly of academic interest since they very slow for most systems.
-Each QSS method sub-directory has a `run` script that has the recommended options for running that QSS method.
 
 ## Models
 

@@ -55,7 +55,10 @@ except:
 # Open output xml file: Will overwrite local file
 try:
     xmlname = 'modelDescription.xml'
-    xmlfile = open( xmlname, 'w' )
+    if sys.version_info >= ( 3, 0 ):
+        xmlfile = open( xmlname, 'w', newline = '\n' )
+    else:
+        xmlfile = open( xmlname, 'wb' )
 except:
     print( '\nOutput open failed: ' + xmlname )
     sys.exit( 1 )
@@ -64,16 +67,19 @@ except:
 inModelVariables = False
 iVars = 0
 for line in lines:
+    write_line = True
     if '<ModelVariables>' in line:
         inModelVariables = True
     elif '</ModelVariables>' in line:
         inModelVariables = False
     elif inModelVariables:
-        if '<ScalarVariable' in line: # Add index comment using Dymola's format
+        if '<!-- Variable with index #' in line: # Remove pymodelica comment
+            write_line = False
+        elif '<ScalarVariable' in line: # Add index comment using Dymola's format
             pre = line[ : line.index( '<ScalarVariable' ) ]
             iVars += 1
             xmlfile.write( pre + '<!-- Index for next variable = ' + str( iVars ) + ' -->\n' )
-    xmlfile.write( line )
+    if write_line: xmlfile.write( line )
 
 # Close output xml file
 xmlfile.close()

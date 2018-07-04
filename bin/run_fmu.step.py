@@ -64,8 +64,8 @@ if model.endswith( '.fmu' ): model = model[ :-4 ]
 try:
     fmu = load_fmu( model + '.fmu' )
 except Exception as err:
-    if err: print( err )
-    print( 'Error: ' + str( err ) )
+    if err: print( 'Error: ' + str( err ) )
+    print( 'FMU file: ' + model + '.fmu' )
     sys.exit( 1 )
 model = os.path.basename( model )
 
@@ -81,20 +81,26 @@ u_fxn = ( 'u', step_fxn )
 
 # Set simulation options
 opt = fmu.simulate_options()
-opt[ 'CVode_options' ][ 'atol' ] = 1e-6 # Match QSS default aTol
 opt[ 'result_handling' ] = 'memory' # No file output
 #opt[ 'result_handling' ] = 'csv'; opt[ 'result_file_name' ] = model + '.csv'
 #opt[ 'result_handling' ] = 'file'; opt[ 'result_file_name' ] = model + '.txt'
-#opt[ 'ncp' ] = 1000 # Number of output times
+#opt[ 'ncp' ] = 10000 # Number of output times #Do Make this an option
+opt[ 'CVode_options' ][ 'rtol' ] = 1e-4 # QSS default rTol=1e-4 #Do Make this an option
+opt[ 'CVode_options' ][ 'atol' ] = 1e-6 # QSS default aTol=1e-6 #Do Make this an option
+#opt[ 'CVode_options' ][ 'maxord' ] = 2 # Max method order
 
 # Simulate
-res = fmu.simulate( input=u_fxn, options=opt )
+res = fmu.simulate( input=u_fxn, options = opt )
 
 # Clean up empty log file
 try:
     log_file = model + '_log.txt'
     if os.path.getsize( log_file ) == 0:
         os.remove( log_file )
+    log_files = glob.glob( '*_log.txt' ) # Remove all 0-size log files (FMU internal name might not be model name)
+    for log_file in log_files:
+        if os.path.getsize( log_file ) == 0:
+            os.remove( log_file )
 except:
     pass
 

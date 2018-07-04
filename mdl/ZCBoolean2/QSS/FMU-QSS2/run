@@ -1,0 +1,3 @@
+#!/bin/bash
+FMU-QSS.gen.py ../../JModelica/ZCBoolean2.fmu --qss=QSS2
+QSS ZCBoolean2_QSS.fmu --qss=QSS2 --dtMax=0.001 --out=k
