@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS ../../JModelica/Achilles.fmu --qss=xQSS2
