@@ -10,6 +10,10 @@ tool=$(basename "$tool_dir")
 while [ "$tool" != "Dymola" ] && [ "$tool" != "JModelica" ] && [ "$tool" != "Ptolemy" ] && [ "$tool" != "QSS" ]; do
     tool_dir=$(dirname "$tool_dir")
     tool=$(basename "$tool_dir")
+    if [ "$tool_dir" == "/" ]; then
+        tool_dir=""
+        break
+    fi
 done
 
 # Find model name and dir
@@ -23,7 +27,9 @@ if [ "$run_fmu" == "" ]; then
 else
     if [ -e "$model_dir/$model.var" ]; then # Use variable list
         jm $run_fmu $tool_dir/$model.fmu --var $model_dir/$model.var $@
-    else # No variable list
+    elif [ -e "$tool_dir/$model.fmu" ]; then # No variable list
         jm $run_fmu $tool_dir/$model.fmu $@
+    else # No FMU
+        jm $run_fmu $@
     fi
 fi

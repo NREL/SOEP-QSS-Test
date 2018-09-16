@@ -46,8 +46,12 @@ try:
 except:
     xmlname = 'modelDescription.xml'
 try:
-    with open( xmlname, 'rU' ) as f:
-        lines = [ line for line in f ]
+    if sys.version_info >= ( 3, 0 ):
+        with open( xmlname, 'r' ) as f:
+            lines = [ line for line in f ]
+    else:
+        with open( xmlname, 'rU' ) as f:
+            lines = [ line for line in f ]
 except:
     print( '\nInput open failed: ' + xmlname )
     sys.exit( 1 )

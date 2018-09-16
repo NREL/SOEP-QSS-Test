@@ -111,9 +111,10 @@ def sim_diff():
 
     # Generate input map by variable name: Only one (best) entry per variable
     typeB = ( '', '.x', '.f', '.q' ) # Signal types in decreasing match preference order
+    eextB = ( '.x.out', '.f.out', '.q.out' ) # QSS extended extension types
     vars1 = {}
     for fnam in glob1:
-        if 'QSS' in fnam.split( os.sep ): # Split QSS variable and type
+        if 'QSS' in fnam.split( os.sep ) or os.path.basename( fnam ).endswith( eextB ): # Split QSS variable and type
             snam = vnam, tnam = qss_sig_name( fnam )
         else:
             snam = vnam, tnam = ( sig_name( fnam ), '' )
@@ -130,7 +131,7 @@ def sim_diff():
             vars1[ vnam ] = fnam
     vars2 = {}
     for fnam in glob2:
-        if 'QSS' in fnam.split( os.sep ): # Split QSS variable and type
+        if 'QSS' in fnam.split( os.sep ) or os.path.basename( fnam ).endswith( eextB ): # Split QSS variable and type
             snam = vnam, tnam = qss_sig_name( fnam )
         else:
             snam = vnam, tnam = ( sig_name( fnam ), '' )
@@ -151,9 +152,14 @@ def sim_diff():
 
         # Read variable spec list
         vspcs = []
-        with open( args.var, 'rU' ) as var_file:
-            for line in var_file:
-                vspcs.append( line.strip() )
+        if sys.version_info >= ( 3, 0 ):
+            with open( args.var, 'r' ) as var_file:
+                for line in var_file:
+                    vspcs.append( line.strip() )
+        else:
+            with open( args.var, 'rU' ) as var_file:
+                for line in var_file:
+                    vspcs.append( line.strip() )
 
         # Filter input 1
         for vnam in vars1.keys():
@@ -253,12 +259,18 @@ def sig_compare( fnam1, fnam2 ):
 
     # Open the files
     try:
-        file1 = open( fnam1, 'rU' )
+        if sys.version_info >= ( 3, 0 ):
+            file1 = open( fnam1, 'r' )
+        else:
+            file1 = open( fnam1, 'rU' )
     except:
         print( '\nOpen failed: ' + fnam1 )
         return
     try:
-        file2 = open( fnam2, 'rU' )
+        if sys.version_info >= ( 3, 0 ):
+            file2 = open( fnam2, 'r' )
+        else:
+            file2 = open( fnam2, 'rU' )
     except:
         print( '\nOpen failed: ' + fnam2 )
         return
@@ -788,8 +800,7 @@ def sig_compare( fnam1, fnam2 ):
                 if out:
                     pnam = onam + ( '.YCol' + str( j ) if n_cols > 2 else '' ) + '.png' # '.pdf' '.png' '.jpg' #Do Make type an option
                     # pnam = os.path.abspath( pnam )
-#                   fig.set_size_inches( 8.5, 11 ) #Do Make this an option with default based on file type: 8.5x11 for pdf, ...
-                    fig.set_size_inches( 5, 6.5 )
+                    fig.set_size_inches( 8.5, 11 ) #Do Make this an option with default based on file type: 8.5x11 for pdf, ...
                     pyplot.savefig( pnam ) # pdf, png, jpg
                     if out:
                         sys.stderr.write( 'Plot saved to: ' + pnam + '\n' )
