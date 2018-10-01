@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS ../../JModelica/Case600.fmu --qss=LIQSS2 --dtInf=25 --dtOut=100 --out=sfx

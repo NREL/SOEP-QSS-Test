@@ -39,21 +39,38 @@
 
 # Notes
 #  Run from an environment set up for JModelica such as jm_python.sh
+#  Run from an environment with MODELICAPATH set up as in export MODELICAPATH=/opt/JModelica/ThirdParty/MSL:/opt/modelica-buildings
 
 # Imports
 import os, sys
 from pymodelica import compile_fmu
 
 try:
-    MBL = os.getenv( 'MODELICA_BUILDINGS_LIB' )
+    MODELICAPATH = os.getenv( 'MODELICAPATH' )
 except:
-    print( 'Error: MODELICA_BUILDINGS_LIB environment variable is not set' )
+    print( 'Error: MODELICAPATH environment variable is not set' )
     sys.exit( 1 )
 
 try:
     model = sys.argv[ 1 ]
     if model.endswith( '.mo' ): model = model[ :-3 ]
-    fmu_file = compile_fmu( os.path.basename( model ), model + '.mo', compiler_options = { 'extra_lib_dirs': [ MBL ] } )
+    if len( sys.argv ) > 2:
+        model_file = sys.argv[ 2 ]
+        fmu_file = compile_fmu(
+         os.path.basename( model ),
+         model_file,
+         version = "2.0",
+         compiler_log_level = 'error',
+         compiler_options = { 'generate_html_diagnostics': False }
+        )
+    else:
+        fmu_file = compile_fmu(
+         os.path.basename( model ),
+         model + '.mo',
+         version = "2.0",
+         compiler_log_level = 'error',
+         compiler_options = { 'generate_html_diagnostics': False }
+        )
 except Exception as msg:
     print( 'Error: ' + str( msg ) )
-    print( 'Usage: ' + sys.argv[ 0 ] + ' <model_name>' )
+    print( 'Usage: ' + sys.argv[ 0 ] + ' <model_name>  [<mo_file_name>]' )

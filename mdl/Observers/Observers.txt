@@ -1,0 +1,5 @@
+Observers Model Notes
+
+This is an easily scalable model with many observers per variable
+to test parallelization of the observers advance operation in FMU
+models.

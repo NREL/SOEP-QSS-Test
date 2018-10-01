@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS ../../JModelica/PID_Controller.fmu --qss=QSS2

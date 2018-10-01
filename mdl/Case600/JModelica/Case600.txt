@@ -1,0 +1,3 @@
+Case600 Model JModelica Notes
+
+The TRooAir.T variable is local instead of output so not available from QSS simulations.

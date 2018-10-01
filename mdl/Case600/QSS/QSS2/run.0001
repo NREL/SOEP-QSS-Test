@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS ../../JModelica/Case600.fmu --qss=QSS2 --rTol=1e-4 --aTol=1e-6 --dtOut=100 --out=sfx

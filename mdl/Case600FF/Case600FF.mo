@@ -1,3 +1,4 @@
+within Buildings.ThermalZones.Detailed.Validation.BESTEST.Cases6xx;
 model Case600FF
   "Basic test with light-weight construction and free floating temperature"
   extends Modelica.Icons.Example;
@@ -189,7 +190,7 @@ model Case600FF
   Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor TRooAir
     "Room air temperature"
     annotation (Placement(transformation(extent={{-86,-28},{-78,-20}})));
-  replaceable parameter 
+  replaceable parameter
     Buildings.ThermalZones.Detailed.Validation.BESTEST.Data.StandardResultsFreeFloating
       staRes(
         minT( Min=-18.8+273.15, Max=-15.6+273.15, Mean=-17.6+273.15),
@@ -200,11 +201,14 @@ model Case600FF
     annotation (Placement(transformation(extent={{80,40},{94,54}})));
   Modelica.Blocks.Math.MultiSum multiSum(nu=1)
     annotation (Placement(transformation(extent={{-78,-80},{-66,-68}})));
+  Modelica.Blocks.Math.Mean TRooHou(f=1/3600, y(start=293.15))
+    "Hourly averaged room air temperature"
+    annotation (Placement(transformation(extent={{-68,-28},{-60,-20}})));
+  Modelica.Blocks.Math.Mean TRooAnn(f=1/86400/365, y(start=293.15))
+    "Annual averaged room air temperature"
+    annotation (Placement(transformation(extent={{-68,-40},{-60,-32}})));
 
-  Modelica.Blocks.Interfaces.RealOutput TRooQSS_K 
-    "\"room temperature for QSS in Kelvin\""
-    annotation (Placement(transformation(extent={{-48,2},{-28,22}})));
-equation 
+equation
   connect(qRadGai_flow.y,multiplex3_1. u1[1])  annotation (Line(
       points={{-35.6,76},{-34,76},{-34,70.8},{-18.8,70.8}},
       color={0,0,127},
@@ -287,13 +291,19 @@ equation
       color={0,0,127},
       smooth=Smooth.None));
 
+  connect(TRooAir.T, TRooHou.u) annotation (Line(
+      points={{-78,-24},{-68.8,-24}},
+      color={0,0,127},
+      smooth=Smooth.None));
+  connect(TRooAir.T, TRooAnn.u) annotation (Line(
+      points={{-78,-24},{-72,-24},{-72,-36},{-68.8,-36}},
+      color={0,0,127},
+      smooth=Smooth.None));
   connect(souInf.ports[1], roo.ports[3]) annotation (Line(points={{-12,-28},{14,
           -28},{14,-20.5},{39.75,-20.5}}, color={0,127,255}));
-  connect(TRooQSS_K, TRooAir.T) annotation (Line(points={{-38,12},{-50,12},{-60,
-          12},{-60,-24},{-78,-24}}, color={0,0,127}));
   annotation (
-experiment(StopTime=3.1536e+07),
-__Dymola_Commands(file="modelica://Buildings/Resources/Scripts/Dymola/ThermalZones/Detailed/Validation/BESTEST/Case600FF.mos"
+experiment(Tolerance=1e-06, StopTime=3.1536e+07),
+__Dymola_Commands(file="modelica://Buildings/Resources/Scripts/Dymola/ThermalZones/Detailed/Validation/BESTEST/Cases6xx/Case600FF.mos"
         "Simulate and plot"), Documentation(info="<html>
 <p>
 This model is used for the test case 600FF of the BESTEST validation suite.
@@ -338,4 +348,3 @@ First implementation.
 </ul>
 </html>"));
 end Case600FF;
-

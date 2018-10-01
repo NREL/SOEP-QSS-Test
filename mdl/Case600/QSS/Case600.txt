@@ -1,0 +1,14 @@
+Case600 Model QSS Notes
+
+The JModelica FMU was used for QSS simulations.
+
+The zero-crossing variables have not been manually added to this model
+because the new event indicators support being added by Modelon will be
+available soon. The QSS simulations seem roughly OK without them but
+should not be expected to be highly accurate until re-run with the
+event indicators.
+
+The key room temperature variable, TRooAir.T, is not set up in the FMU as an
+output variable so it is not available from the QSS runs.
+
+A sampling rate of 100 s is suggested for comparison with the PyFMI solution.

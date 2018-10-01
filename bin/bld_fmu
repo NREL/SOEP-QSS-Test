@@ -22,11 +22,13 @@ compile_fmu=$(which "$compile_fmu_name")
 if [ "$compile_fmu" == "" ]; then
     echo "$compile_fmu_name not found on your PATH"
     exit 1
-else
-    # Compile the FMU
-    jm $compile_fmu $model_dir/$model $@
+fi
 
-    # Add index comment lines to XML
+# Compile the FMU
+jm $compile_fmu $model_dir/$model.mo $@
+
+# Add index comment lines to XML
+if [ -f "$model.fmu" ]; then
     unzip -o $model.fmu modelDescription.xml
     cp -f modelDescription.xml modelDescription.orig.xml
     mod_xml.JModelica.py

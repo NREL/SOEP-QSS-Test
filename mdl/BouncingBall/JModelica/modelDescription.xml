@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fmiModelDescription fmiVersion="2.0" modelName="BouncingBall" guid="a802de3ef18918520507d0f9a7e972c" generationTool="JModelica.org" generationDateAndTime="2018-05-02T01:58:00" variableNamingConvention="structured" numberOfEventIndicators="1">
+<fmiModelDescription fmiVersion="2.0" modelName="BouncingBall" guid="41b9453934539dbba3d8ac49cd91fffe" generationTool="JModelica.org" generationDateAndTime="2018-10-01T14:02:02" variableNamingConvention="structured" numberOfEventIndicators="1">
 	<ModelExchange modelIdentifier="BouncingBall" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="false" canSerializeFMUstate="false" providesDirectionalDerivative="false" />
 	<UnitDefinitions>
 		<Unit name="m">
@@ -15,7 +15,7 @@
 				<Item name="never" value="1" description="Do not use as state at all." />
 				<Item name="avoid" value="2" description="Use as state, if it cannot be avoided (but only if variable appears differentiated and no other potential state with attribute default, prefer, or always can be selected)." />
 				<Item name="default" value="3" description="Use as state if appropriate, but only if variable appears differentiated." />
-				<Item name="prefer" value="4" description="Prefer it as state over those having the default value (also variables can be selected, which do not appear differentiated). " />
+				<Item name="prefer" value="4" description="Prefer it as state over those having the default value (also variables can be selected, which do not appear differentiated)." />
 				<Item name="always" value="5" description="Do use it as a state." />
 			</Enumeration>
 		</SimpleType>
@@ -32,7 +32,7 @@
 	<VendorAnnotations>
 		<Tool name="JModelica.org">
 			<Annotations>
-				<Annotation name="CompilerVersion" value="r10462" />
+				<Annotation name="CompilerVersion" value="r11651" />
 			</Annotations>
 		</Tool>
 	</VendorAnnotations>

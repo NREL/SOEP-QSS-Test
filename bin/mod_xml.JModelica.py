@@ -77,7 +77,9 @@ for line in lines:
     elif '</ModelVariables>' in line:
         inModelVariables = False
     elif inModelVariables:
-        if '<!-- Variable with index #' in line: # Remove pymodelica comment
+        if '<!-- Variable with index #' in line: # Remove old comment
+            write_line = False
+        elif '<!-- Index for next variable = ' in line: # Remove old comment
             write_line = False
         elif '<ScalarVariable' in line: # Add index comment using Dymola's format
             pre = line[ : line.index( '<ScalarVariable' ) ]

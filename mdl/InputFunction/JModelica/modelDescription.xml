@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fmiModelDescription fmiVersion="2.0" modelName="InputFunction" guid="48e43eeecf215a98e2a6ce4f166b1397" generationTool="JModelica.org" generationDateAndTime="2018-05-04T12:56:01" variableNamingConvention="structured" numberOfEventIndicators="0">
+<fmiModelDescription fmiVersion="2.0" modelName="InputFunction" guid="48e43eeecf215a98e2a6ce4f166b1397" generationTool="JModelica.org" generationDateAndTime="2018-10-01T14:45:02" variableNamingConvention="structured" numberOfEventIndicators="0">
 	<ModelExchange modelIdentifier="InputFunction" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="false" canSerializeFMUstate="false" providesDirectionalDerivative="false" />
 	<LogCategories>
 		<Category name="logLevel1" description="logLevel1 - fatal error" />
@@ -13,7 +13,7 @@
 	<VendorAnnotations>
 		<Tool name="JModelica.org">
 			<Annotations>
-				<Annotation name="CompilerVersion" value="r10462" />
+				<Annotation name="CompilerVersion" value="r11651" />
 			</Annotations>
 		</Tool>
 	</VendorAnnotations>
