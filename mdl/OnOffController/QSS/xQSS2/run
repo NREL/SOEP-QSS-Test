@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS ../../Dymola/OnOffController.fmu --qss=xQSS2 --out=rafx --rTol=1e-7 --aTol=1e-9 --dtZC=1e-10

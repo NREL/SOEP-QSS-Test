@@ -1,2 +1,2 @@
 #!/bin/bash
-QSS ../../JModelica/BouncingBall.fmu --qss=QSS1 --dtZC=1e-9
+QSS ../../JModelica/BouncingBall.fmu --qss=QSS1 --dtZC=1e-9 # No dtZC gets all the bounces!
