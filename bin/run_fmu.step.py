@@ -50,10 +50,12 @@ from pyfmi import load_fmu
 parser = argparse.ArgumentParser()
 parser.add_argument( 'fmu', help = 'FMU file' )
 parser.add_argument( '--var', help = 'variable file' )
+parser.add_argument( '--solver', help = 'Solver  (CVode|DASSL|LSODAR|RungeKutta34)  [CVode]', default = 'CVode', choices = [ 'CVode', 'DASSL', 'LSODAR', 'RungeKutta34' ] )
 parser.add_argument( '--discr', help = 'CVode discretization method  (BDF|Adams)  [BDF]', default = 'BDF', choices = [ 'BDF', 'Adams' ] )
-parser.add_argument( '--rtol', help = 'CVode relative tolerance  [1e-4]', type = float, default = 1.0e-4 )
-parser.add_argument( '--atol', help = 'CVode absolute tolerance  [1e-6]', type = float, default = 1.0e-6 )
-parser.add_argument( '--maxord', help = 'CVode max order  BDF: [5]  Adams: [12]', type = int )
+parser.add_argument( '--rtol', help = 'Relative tolerance  [1e-4]', type = float, default = 1.0e-4 )
+parser.add_argument( '--atol', help = 'Absolute tolerance  [1e-6]', type = float, default = 1.0e-6 )
+parser.add_argument( '--final_time', help = 'Simulation end time', type = float )
+parser.add_argument( '--maxord', help = 'Max order', type = int )
 parser.add_argument( '--ncp', help = 'Number of communication (output) points  [internal]', type = int )
 args = parser.parse_args()
 
@@ -86,18 +88,44 @@ u_fxn = ( 'u', step_fxn )
 
 # Set simulation options
 opt = fmu.simulate_options()
-#opt[ 'solver' ] = 'CVode' # This is the default so don't need to specify it
+opt[ 'solver' ] = args.solver
 opt[ 'result_handling' ] = 'memory' # No file output: We do that explicitly below to filter by var file
 #opt[ 'result_handling' ] = 'csv'; opt[ 'result_file_name' ] = model + '.csv' # CSV output files
 #opt[ 'result_handling' ] = 'file'; opt[ 'result_file_name' ] = model + '.txt' # ASCII output files
 if args.ncp is not None: opt[ 'ncp' ] = args.ncp
-opt[ 'CVode_options' ][ 'discr' ] = args.discr
-opt[ 'CVode_options' ][ 'rtol' ] = args.rtol
-opt[ 'CVode_options' ][ 'atol' ] = args.atol
-if args.maxord is not None: opt[ 'CVode_options' ][ 'maxord' ] = args.maxord
+if args.solver == 'CVode':
+    opt_solver = opt[ args.solver + '_options' ]
+    opt_solver[ 'discr' ] = args.discr
+    opt_solver[ 'rtol' ] = args.rtol
+    opt_solver[ 'atol' ] = args.atol
+    if args.maxord is not None:
+        opt_solver[ 'maxord' ] = args.maxord
+elif args.solver == 'DASSL':
+    opt[ 'solver' ] = 'ODASSL'
+    opt_solver = opt[ 'ODASSL_options' ]
+    opt_solver[ 'rtol' ] = args.rtol
+    opt_solver[ 'atol' ] = args.atol
+    if args.maxord is not None:
+        opt_solver[ 'maxord' ] = args.maxord
+elif args.solver == 'LSODAR':
+    opt_solver = opt[ args.solver + '_options' ]
+    opt_solver[ 'rtol' ] = args.rtol
+    opt_solver[ 'atol' ] = args.atol
+    if args.maxord is not None:
+        opt_solver[ 'maxordn' ] = args.maxord
+        opt_solver[ 'maxords' ] = args.maxord
+    opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
+elif args.solver == 'RungeKutta34':
+    opt_solver = opt[ args.solver + '_options' ]
+    opt_solver[ 'rtol' ] = args.rtol
+    opt_solver[ 'atol' ] = args.atol
+    opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
 
 # Simulate
-res = fmu.simulate( input = u_fxn, options = opt )
+if args.final_time is not None:
+    res = fmu.simulate( final_time = args.final_time, input = u_fxn, options = opt )
+else:
+    res = fmu.simulate( input = u_fxn, options = opt )
 
 # Clean up empty log file
 try:
@@ -127,9 +155,15 @@ if args.var:
                 except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
                     print( 'Output failed to: ' + key_out )
             else: # Try as file name wildcard pattern or regex
-                m = fnmatch.filter( keys, key ) # File name wildcard pattern
+                bkey = '' # Key with literal brackets protected
+                for c in key:
+                    if c in ( '[', ']' ):
+                        bkey += '[' + c + ']'
+                    else:
+                        bkey += c
+                m = fnmatch.filter( keys, bkey ) # File name wildcard pattern
                 if not m: # Try as regex
-                    re_key = key + ( '' if key.endswith( '$' ) else '$' ) # Match whole string
+                    re_key = bkey + ( '' if key.endswith( '$' ) else '$' ) # Match whole string
                     for k in keys:
                         if re.match( re_key, k ):
                             m.append( k )
