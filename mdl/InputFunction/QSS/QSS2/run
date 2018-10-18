@@ -1,2 +1,2 @@
 #!/bin/bash
-QSS ../../JModelica/InputFunction.fmu --qss=QSS2
+QSS ../../JModelica/InputFunction.fmu --qss=QSS2 --fxn=u:step[1,1,1]

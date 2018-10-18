@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<fmiModelDescription fmiVersion="2.0" modelName="Achilles2_QSS" guid="0a5d4905-8b87-5851-97e5-2c2a01cc9bd7" generationTool="JModelica.org" generationDateAndTime="2018-10-15T15:40:29" variableNamingConvention="structured" numberOfEventIndicators="0">
+  <ModelExchange modelIdentifier="Achilles2_QSS" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="false" canSerializeFMUstate="false" providesDirectionalDerivative="false"/>
+  <LogCategories>
+    <Category name="logLevel1" description="logLevel1 - fatal error"/>
+    <Category name="logLevel2" description="logLevel2 - error"/>
+    <Category name="logLevel3" description="logLevel3 - warning"/>
+    <Category name="logLevel4" description="logLevel4 - info"/>
+    <Category name="logLevel5" description="logLevel5 - verbose"/>
+    <Category name="logLevel6" description="logLevel6 - debug"/>
+  </LogCategories>
+  <DefaultExperiment stopTime="10.0" tolerance="1.0E-4"/>
+  <VendorAnnotations>
+    <Tool name="JModelica.org">
+      <Annotations>
+        <Annotation name="CompilerVersion" value="r11651"/>
+      </Annotations>
+    </Tool>
+    <Tool name="QSS">
+      <Annotations>
+        <Annotation name="qss" value="QSS2"/>
+        <Annotation name="aTol" value="0.0000010000000000"/>
+      </Annotations>
+    </Tool>
+  </VendorAnnotations>
+  <ModelVariables>
+    <!-- Index for next variable = 1 (40) -->
+    <ScalarVariable name="x1" valueReference="41" causality="input" variability="continuous">
+      <Real relativeQuantity="false" start="0.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 2 (41) -->
+    <ScalarVariable name="x2" valueReference="40" causality="output" variability="continuous" initial="exact">
+      <Real relativeQuantity="false" start="2.0"/>
+    </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="2" dependencies=""/>
+    </Outputs>
+  </ModelStructure>
+</fmiModelDescription>
