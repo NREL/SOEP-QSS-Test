@@ -77,10 +77,10 @@ except Exception as err:
 model = os.path.basename( model )
 
 # Set up input function
-def step_fxn( t ): # Step function matching QSS Function_Inp_step( 1.0, 1.0, 0.1 )
+def step_fxn( t ): # Step function matching QSS Function_Inp_step( 1.0, 1.0, 1.0 )
     h_0 = 1.0 # Initial height
     h = 1.0 # Step height
-    d = 0.1 # Step time delta
+    d = 1.0 # Step time delta
     ftd = math.floor( t / d )
     step_num = ( ftd if d * ( ftd + 1.0 ) > t else ftd + 1.0 )
     return h_0 + ( h * step_num )

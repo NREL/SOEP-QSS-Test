@@ -1,0 +1,3 @@
+#!/bin/bash
+#./Achilles -cpu -clock=CPU -steps -s=dassl
+omc simDASSL3.mos
