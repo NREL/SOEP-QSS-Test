@@ -1,6 +1,6 @@
 #!/bin/bash
 # Set up environment for JModelica and runs passed Python script
-# Assumes jm_ipython.sh such as in JModelica/bin is on your PATH
+# Assumes jm_python.sh such as in JModelica/bin is on your PATH
 # Place a custom version of this early in your PATH
 unset _JAVA_OPTIONS # Fedora needs this
 export MODELICAPATH=/opt/JModelica/ThirdParty/MSL:/opt/modelica-buildings
@@ -10,5 +10,5 @@ if [ "$script_py" == "" ]; then
     echo "$1 not found on your PATH"
 else
     shift
-    jm_ipython.sh $script_py "$@"
+    jm_python.sh $script_py "$@"
 fi

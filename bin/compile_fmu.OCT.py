@@ -6,10 +6,10 @@
 #
 # Language: Python 2.7 and 3.x
 #
-# Developed by Objexx Engineering, Inc. (http://objexx.com) under contract to
+# Developed by Objexx Engineering, Inc. (https://objexx.com) under contract to
 # the National Renewable Energy Laboratory of the U.S. Department of Energy
 #
-# Copyright (c) 2017-2018 Objexx Engineerinc, Inc. All rights reserved.
+# Copyright (c) 2017-2019 Objexx Engineering, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -40,7 +40,6 @@
 # Notes
 #  Run from an environment set up for JModelica such as jm_python.sh
 #  Run from an environment with MODELICAPATH set up as in export MODELICAPATH=/opt/JModelica/ThirdParty/MSL:/opt/modelica-buildings
-#  This uses new OCT compiler options to get event indicator variables and annotations
 
 # Imports
 import os, sys
@@ -62,11 +61,7 @@ try:
          model_file,
          version = "2.0",
          compiler_log_level = 'error',
-         compiler_options = {
-          'event_output_vars': True,
-          'event_indicator_structure': True,
-          'generate_html_diagnostics': False
-         }
+         compiler_options = { 'generate_html_diagnostics': False, 'generate_ode_jacobian': True }
         )
     else:
         fmu_file = compile_fmu(
@@ -74,11 +69,7 @@ try:
          model + '.mo',
          version = "2.0",
          compiler_log_level = 'error',
-         compiler_options = {
-          'event_output_vars': True,
-          'event_indicator_structure': True,
-          'generate_html_diagnostics': False
-         }
+         compiler_options = { 'generate_html_diagnostics': False, 'generate_ode_jacobian': True }
         )
 except Exception as msg:
     print( 'Error: ' + str( msg ) )

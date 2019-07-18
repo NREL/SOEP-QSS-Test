@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# JModelica modelDescription.xml Modification for QSS Solver Script
+# OCT modelDescription.xml Modification for QSS Solver Script
 #
 # Project: QSS Solver
 #

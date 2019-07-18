@@ -11,13 +11,13 @@ aTol="1.0e-5"
 # Find tool name(s)
 path1=$(realpath "$1")
 tool1=$(basename "$path1")
-while [ "$tool1" != "Dymola" ] && [ "$tool1" != "JModelica" ] && [ "$tool1" != "Ptolemy" ] && [ "$tool1" != "QSS" ] && [ "$tool1" != "LIQSS1" ] && [ "$tool1" != "LIQSS2" ] && [ "$tool1" != "QSS1" ] && [ "$tool1" != "QSS2" ]; do
+while [ "$tool1" != "Dymola" ] && [ "$tool1" != "JModelica" ] && [ "$tool1" != "OCT" ] && [ "$tool1" != "Ptolemy" ] && [ "$tool1" != "QSS" ] && [ "$tool1" != "LIQSS1" ] && [ "$tool1" != "LIQSS2" ] && [ "$tool1" != "QSS1" ] && [ "$tool1" != "QSS2" ]; do
     path1=$(dirname "$path1")
     tool1=$(basename "$path1")
 done
 path2=$(realpath "$2")
 tool2=$(basename "$path2")
-while [ "$tool2" != "Dymola" ] && [ "$tool2" != "JModelica" ] && [ "$tool2" != "Ptolemy" ] && [ "$tool2" != "QSS" ] && [ "$tool2" != "LIQSS1" ] && [ "$tool2" != "LIQSS2" ] && [ "$tool2" != "QSS1" ] && [ "$tool2" != "QSS2" ]; do
+while [ "$tool2" != "Dymola" ] && [ "$tool2" != "JModelica" ] && [ "$tool2" != "OCT" ] && [ "$tool2" != "Ptolemy" ] && [ "$tool2" != "QSS" ] && [ "$tool2" != "LIQSS1" ] && [ "$tool2" != "LIQSS2" ] && [ "$tool2" != "QSS1" ] && [ "$tool2" != "QSS2" ]; do
     path2=$(dirname "$path2")
     tool2=$(basename "$path2")
 done
@@ -29,11 +29,11 @@ fi
 
 # Find model name(s)
 model1=$(basename $(dirname "$path1"))
-if [ "$model1" == "Dymola" ] || [ "$model1" == "JModelica" ] || [ "$model1" == "Ptolemy" ] || [ "$model1" == "QSS" ]; then
+if [ "$model1" == "Dymola" ] || [ "$model1" == "JModelica" ] || [ "$model1" == "OCT" ] || [ "$model1" == "Ptolemy" ] || [ "$model1" == "QSS" ]; then
     model1=$(basename $(dirname $(dirname "$path1")))
 fi
 model2=$(basename $(dirname "$path2"))
-if [ "$model2" == "Dymola" ] || [ "$model2" == "JModelica" ] || [ "$model2" == "Ptolemy" ] || [ "$model2" == "QSS" ]; then
+if [ "$model2" == "Dymola" ] || [ "$model2" == "JModelica" ] || [ "$model2" == "OCT" ] || [ "$model2" == "Ptolemy" ] || [ "$model2" == "QSS" ]; then
     model2=$(basename $(dirname $(dirname "$path2")))
 fi
 if [ "$model1" == "$model2" ]; then

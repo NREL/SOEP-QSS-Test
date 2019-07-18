@@ -6,10 +6,10 @@
 #
 # Language: Python 2.7 and 3.x
 #
-# Developed by Objexx Engineering, Inc. (http://objexx.com) under contract to
+# Developed by Objexx Engineering, Inc. (https://objexx.com) under contract to
 # the National Renewable Energy Laboratory of the U.S. Department of Energy
 #
-# Copyright (c) 2017-2018 Objexx Engineerinc, Inc. All rights reserved.
+# Copyright (c) 2017-2019 Objexx Engineering, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -319,11 +319,12 @@ def sig_compare( fnam1, fnam2 ):
         parts1 = fnam1.split( os.sep )
         rdirs1 = reversed( parts1[ : -1 ] )
         tool1 = model1 = ''
+        tools = ( 'ana', 'Dymola', 'JModelica', 'OCT', 'Ptolemy', 'PyFMI', 'QSS' )
         for dir in rdirs1:
             if not tool1:
-                if ( dir in ( 'ana', 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ) or ( 'QSS' in dir ):
+                if ( dir in tools ) or ( 'QSS' in dir ):
                     tool1 = dir
-            elif not any( tool in dir for tool in ( 'ana', 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ): # Assume model name precedes tool name
+            elif not any( tool in dir for tool in tools ): # Assume model name precedes tool name
                 model1 = dir
                 break
         try:
@@ -335,9 +336,9 @@ def sig_compare( fnam1, fnam2 ):
         tool2 = model2 = ''
         for dir in rdirs2:
             if not tool2:
-                if ( dir in ( 'ana', 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ) or ( 'QSS' in dir ):
+                if ( dir in tools ) or ( 'QSS' in dir ):
                     tool2 = dir
-            elif not any( tool in dir for tool in ( 'ana', 'Dymola', 'JModelica', 'Ptolemy', 'PyFMI', 'QSS' ) ): # Assume model name precedes tool name
+            elif not any( tool in dir for tool in tools ): # Assume model name precedes tool name
                 model2 = dir
                 break
         try:
