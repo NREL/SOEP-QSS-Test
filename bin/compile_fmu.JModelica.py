@@ -73,4 +73,4 @@ try:
         )
 except Exception as msg:
     print( 'Error: ' + str( msg ) )
-    print( 'Usage: ' + sys.argv[ 0 ] + ' <model_name>  [<mo_file_name>]' )
+    print( 'Usage: ' + sys.argv[ 0 ] + ' <model_name> [<mo_file_name>]' )

@@ -3,4 +3,5 @@
 # Customize for the directory of the Buildings library
 export MODELICAPATH=/opt/OCT/ThirdParty/MSL:/opt/modelica-buildings
 #export MODELICA_BUILDINGS_LIB=/opt/modelica-buildings
+export MODELON_LICENSE_PATH=/opt/OCT/Licenses/NodeLocked
 export PATH=$PATH:$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
