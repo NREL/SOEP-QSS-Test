@@ -4,7 +4,7 @@
 # compile_fmu.OCT.py and mod_xml.OCT.py must be on your PATH
 # Run from the OCT sub-directory of the model directory
 
-# Find tool name and dir
+# Find tool directory and name
 tool_dir=$(realpath $(pwd))
 tool=$(basename "$tool_dir")
 while [ "$tool" != "Dymola" ] && [ "$tool" != "JModelica" ] && [ "$tool" != "OCT" ] && [ "$tool" != "Ptolemy" ] && [ "$tool" != "QSS" ]; do
@@ -12,7 +12,7 @@ while [ "$tool" != "Dymola" ] && [ "$tool" != "JModelica" ] && [ "$tool" != "OCT
     tool=$(basename "$tool_dir")
 done
 
-# Find model name and dir
+# Find model directory and name
 model_dir=$(dirname "$tool_dir")
 model=$(basename "$model_dir")
 

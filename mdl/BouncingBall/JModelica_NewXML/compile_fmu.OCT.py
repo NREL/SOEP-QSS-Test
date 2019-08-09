@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
-# Compiles a Modelica file using the Buildings library with OCT
+# Compiles a Modelica file using the Buildings library with JModelica
 #
 # Project: QSS Solver
 #
 # Language: Python 2.7 and 3.x
 #
-# Developed by Objexx Engineering, Inc. (https://objexx.com) under contract to
+# Developed by Objexx Engineering, Inc. (http://objexx.com) under contract to
 # the National Renewable Energy Laboratory of the U.S. Department of Energy
 #
-# Copyright (c) 2017-2019 Objexx Engineering, Inc. All rights reserved.
+# Copyright (c) 2017-2018 Objexx Engineerinc, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -38,8 +38,9 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Notes
-#  Run from an environment set up for OCT such as jm_python.OCT.sh
-#  Run from an environment with MODELICAPATH set up as in export MODELICAPATH=/opt/OCT/ThirdParty/MSL:/opt/modelica-buildings
+#  Run from an environment set up for JModelica such as jm_python.sh
+#  Run from an environment with MODELICAPATH set up as in export MODELICAPATH=/opt/JModelica/ThirdParty/MSL:/opt/modelica-buildings
+#  This uses new OCT compiler options to get event indicator variables and annotations
 
 # Imports
 import os, sys
@@ -54,21 +55,31 @@ except:
 try:
     model = sys.argv[ 1 ]
     if model.endswith( '.mo' ): model = model[ :-3 ]
-    model_file = sys.argv[ 2 ] if len( sys.argv ) > 2 else model + '.mo'
-    fmu_file = compile_fmu(
-     os.path.basename( model ),
-     model_file,
-     version = "2.0",
-     compiler_log_level = 'error',
-     compiler_options = {
-      'generate_html_diagnostics': False,
-      'generate_ode_jacobian': True,
-      'enable_lazy_evaluation': True,
-      'event_indicator_structure': True,
-      'event_output_vars': True,
-      'time_events': True
-     }
-    )
+    if len( sys.argv ) > 2:
+        model_file = sys.argv[ 2 ]
+        fmu_file = compile_fmu(
+         os.path.basename( model ),
+         model_file,
+         version = "2.0",
+         compiler_log_level = 'error',
+         compiler_options = {
+          'event_output_vars': True,
+          'event_indicator_structure': True,
+          'generate_html_diagnostics': False
+         }
+        )
+    else:
+        fmu_file = compile_fmu(
+         os.path.basename( model ),
+         model + '.mo',
+         version = "2.0",
+         compiler_log_level = 'error',
+         compiler_options = {
+          'event_output_vars': True,
+          'event_indicator_structure': True,
+          'generate_html_diagnostics': False
+         }
+        )
 except Exception as msg:
     print( 'Error: ' + str( msg ) )
-    print( 'Usage: ' + sys.argv[ 0 ] + ' <model_name> [<mo_file_name>]' )
+    print( 'Usage: ' + sys.argv[ 0 ] + ' <model_name>  [<mo_file_name>]' )

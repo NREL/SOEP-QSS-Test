@@ -1,6 +1,6 @@
 #!/bin/bash
-# Set up environment for JModelica and runs passed Python script
-# Assumes jm_python.sh such as in JModelica/bin is on your PATH
+# Set up environment for OCT and runs passed Python script
+# Assumes jm_python.OCT.sh such as in OCT/bin/jm_python.sh is on your PATH
 # Place a custom version of this early in your PATH
 unset _JAVA_OPTIONS # Fedora needs this
 export MODELICAPATH=/opt/OCT/ThirdParty/MSL:/opt/modelica-buildings
