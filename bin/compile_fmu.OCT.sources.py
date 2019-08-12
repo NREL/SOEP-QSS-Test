@@ -67,7 +67,7 @@ try:
       'event_indicator_structure': True,
       'event_output_vars': True,
       'time_events': True,
-      'copy_source_files_to_fmu': True,
+      'source_code_fmu': True,
      }
     )
 except Exception as msg:
