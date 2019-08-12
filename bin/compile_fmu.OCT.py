@@ -66,7 +66,7 @@ try:
       'enable_lazy_evaluation': True,
       'event_indicator_structure': True,
       'event_output_vars': True,
-      'time_events': True
+      'time_events': True,
      }
     )
 except Exception as msg:

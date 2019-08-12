@@ -54,23 +54,17 @@ except:
 try:
     model = sys.argv[ 1 ]
     if model.endswith( '.mo' ): model = model[ :-3 ]
-    if len( sys.argv ) > 2:
-        model_file = sys.argv[ 2 ]
-        fmu_file = compile_fmu(
-         os.path.basename( model ),
-         model_file,
-         version = "2.0",
-         compiler_log_level = 'error',
-         compiler_options = { 'generate_html_diagnostics': False, 'copy_source_files_to_fmu': True }
-        )
-    else:
-        fmu_file = compile_fmu(
-         os.path.basename( model ),
-         model + '.mo',
-         version = "2.0",
-         compiler_log_level = 'error',
-         compiler_options = { 'generate_html_diagnostics': False, 'copy_source_files_to_fmu': True }
-        )
+    model_file = sys.argv[ 2 ] if len( sys.argv ) > 2 else model + '.mo'
+    fmu_file = compile_fmu(
+     os.path.basename( model ),
+     model_file,
+     version = "2.0",
+     compiler_log_level = 'error',
+     compiler_options = {
+      'generate_html_diagnostics': False,
+      'copy_source_files_to_fmu': True,
+     }
+    )
 except Exception as msg:
     print( 'Error: ' + str( msg ) )
     print( 'Usage: ' + sys.argv[ 0 ] + ' <model_name> [<mo_file_name>]' )

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Compiles a Modelica file using the Buildings library with JModelica
+# Compiles a Modelica file using the Buildings library with OCT
 #
 # Project: QSS Solver
 #
@@ -38,8 +38,8 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Notes
-#  Run from an environment set up for JModelica such as jm_python.sh
-#  Run from an environment with MODELICAPATH set up as in export MODELICAPATH=/opt/JModelica/ThirdParty/MSL:/opt/modelica-buildings
+#  Run from an environment set up for OCT such as jm_python.OCT.sh
+#  Run from an environment with MODELICAPATH set up as in export MODELICAPATH=/opt/OCT/ThirdParty/MSL:/opt/modelica-buildings
 
 # Imports
 import os, sys
@@ -62,6 +62,12 @@ try:
      compiler_log_level = 'error',
      compiler_options = {
       'generate_html_diagnostics': False,
+      'generate_ode_jacobian': True,
+      'enable_lazy_evaluation': True,
+      'event_indicator_structure': True,
+      'event_output_vars': True,
+      'time_events': True,
+      'copy_source_files_to_fmu': True,
      }
     )
 except Exception as msg:
