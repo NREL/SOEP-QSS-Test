@@ -55,20 +55,33 @@ try:
     model = sys.argv[ 1 ]
     if model.endswith( '.mo' ): model = model[ :-3 ]
     model_file = sys.argv[ 2 ] if len( sys.argv ) > 2 else model + '.mo'
+    if os.name == 'nt':
+        compiler_options = {
+         'generate_html_diagnostics': False,
+         'generate_ode_jacobian': True,
+         'enable_lazy_evaluation': True,
+         'event_indicator_structure': True,
+         'event_output_vars': True,
+         'time_events': True,
+        }
+    else:
+        compiler_options = {
+         'generate_html_diagnostics': False,
+         'generate_ode_jacobian': True,
+#        'enable_lazy_evaluation': True, # Not currently supported by Linux OCT
+         'event_indicator_structure': True,
+         'event_output_vars': True,
+         'time_events': True,
+        }
     fmu_file = compile_fmu(
      os.path.basename( model ),
      model_file,
      version = "2.0",
      compiler_log_level = 'error',
-     compiler_options = {
-      'generate_html_diagnostics': False,
-      'generate_ode_jacobian': True,
-      'enable_lazy_evaluation': True,
-      'event_indicator_structure': True,
-      'event_output_vars': True,
-      'time_events': True,
-     }
+     compiler_options = compiler_options,
     )
 except Exception as msg:
     print( 'Error: ' + str( msg ) )
-    print( 'Usage: ' + sys.argv[ 0 ] + ' <model_name> [<mo_file_name>]' )
+    print( 'Usage options:' )
+    print( ' ' + os.path.basename( sys.argv[ 0 ] ) + ' <model_name> [<mo_file_name>]' )
+    print( ' ' + os.path.basename( sys.argv[ 0 ] ) + ' <mo_file_name>' )

@@ -10,5 +10,5 @@ if [ "$script_py" == "" ]; then
     echo "$1 not found on your PATH"
 else
     shift
-    jm_python.sh $script_py "$@"
+    jm_python.JModelica.sh $script_py "$@"
 fi
