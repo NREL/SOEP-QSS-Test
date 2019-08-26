@@ -1,0 +1,4 @@
+StateEvent6 Model OCT Notes
+
+OCT is currently unable to compile this model due to the event indicator
+support generating a Java NullPointerException.

@@ -20,14 +20,10 @@ for /D %%t in (%tool_dir:~0,-1%) do set model_dir=%%~dpt
 for /D %%t in (%model_dir:~0,-1%) do set model=%%~nt
 
 rem Compile the FMU
-compile_fmu.OCT.sources.py %model_dir%\%model%.mo %*
-
-rem Add index comment lines to XML
-if exist "%model%.fmu" (
-  unzip -o %model%.fmu modelDescription.xml >nul 2>nul
-  copy /Y modelDescription.xml modelDescription.orig.xml >nul 2>nul
-  mod_xml.OCT.py
-  zip -f %model%.fmu >nul 2>nul
+if exist "%tool_dir%\%model%.mo" (
+  compile_fmu.OCT.sources.py %tool_dir%\%model%.mo %*
+) else (
+  compile_fmu.OCT.sources.py %model_dir%\%model%.mo %*
 )
 
 endlocal

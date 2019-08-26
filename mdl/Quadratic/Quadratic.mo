@@ -1,4 +1,3 @@
-within QSS.Generic;
 model Quadratic "This model simulates a quadratic"
   extends Modelica.Icons.Example;
   Real x(start=0, fixed=true) "State variable";

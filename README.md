@@ -1,8 +1,8 @@
 # QSS Solver Test Repository
 
-This is a library of test models and results for development of the JModelica QSS solver being developed as part of the "Spawn of EnergyPlus" project.
+This is a library of test models and results for development of the QSS solver being developed as part of the "Spawn of EnergyPlus" project.
 The library serves these purposes:
-* Comparison testing *vs* Dymola, JModelica, and Ptolemy
+* Comparison testing *vs* Dymola, JModelica, OPTIMICA, and Ptolemy
 * Regresssion testing new releases
 * Performance testing
 
@@ -17,25 +17,27 @@ The top-level repository directory contains these subdirectories:
 ```
 
 The `bin` directory contains scripts for modeling and testing:
-* `bld_fmu`  Builds the model's `.fmu` with JModelica (wraps `compile_fmu.JModelica.py`)
+* `bld_fmu`.*  Builds the model's `.fmu`
 * `cleanup`  Removes comparison/regression testing output files
 * `comparison`  Compares results from two modeling tools
 * `compile_fmu.Dymola.py`  Compiles `.mo` to .fmu with Dymola
 * `compile_fmu.JModelica.py`  Compiles `.mo` to .fmu with JModelica
+* `compile_fmu.OCT.py`  Compiles `.mo` to .fmu with OPTIMICA
 * `jm`  Wraps `jm_python.sh`: Customize to your system
 * `jmi`  Wraps `jm_ipython.sh`: Customize to your system
 * `mod_xml.JModelica.py`  Adds index comments to JModelica-generated `.fmu` XML files
+* `mod_xml.OCT.py`  Adds index comments to OPTIMICA-generated `.fmu` XML files
 * `regression`  Regression tests results from two versions of a modeling tool
 * `run_fmu`  Runs the model's `.fmu` with PyFMI (wraps `run_fmu.py`)
 * `run_fmu.py`  Runs a model's `.fmu` with PyFMI
 * `run_fmu.step`  Runs the model's `.fmu` with PyFMI using a step input function (wraps `run_fmu.step.py`)
 * `run_fmu.step.py`  Runs a model's `.fmu` with PyFMI using a step input function
-* `setTest`  Sets environment: Customize to your system
+* `setTest`.*  Sets environment: Customize to your system
 * `simdiff.py`  Simulation results comparison tool
 
 ### `bin` Notes
 * Place copies of scripts needing customization for your system's Buildings library location in a directory early in your PATH.
-* The JModelica `jm_python.sh` needs to be on your PATH to use some of these scripts.
+* The JModelica or OPTIMICA `jm_python.sh` needs to be on your PATH to use some of these scripts.
 
 The `mdl` directory contains the models and results with this (tentative) organization for each model:
 ```
@@ -45,12 +47,16 @@ ModelName/
   ModelName.var      Variables list
   Dymola/            Dymola model & results
   JModelica/         JModelica model & results
+  OCT/               OPTIMICA model & results
   Ptolemy/           Ptolemy model & results
   QSS/               QSS model & results
   tst/               Comparison and regression testing results
 ```
 
-Modeling tool and `tst` sub-directories names may have .*RunType* suffixes that indicate the run variation in use, such as time span and tolerances or minor changes to the model structure. This can create large directory trees and complicates comparison between results so it should be used with restraint.
+### `mdl` Notes
+* A custom version of the .mo Modelica file for some models with zero-crossing functions is in the JModelica subdirectory.
+  This version has explicit \_\_zc\_*name* and \_\_zc\_der\_*name* variables added for the zero-crossing functions and their derivative that a prior version of QSS used while waiting for the event indicator variables that OPTIMICA is now able to generate.
+* Modeling tool and `tst` sub-directories names may have .*RunType* suffixes that indicate the run variation in use, such as time span and tolerances or minor changes to the model structure. This can create large directory trees and complicates comparison between results so it should be used with restraint.
 
 Each non-QSS modeling tool (Dymola, JModelica, and Ptolemy) sub-directory has this structure:
 ```
@@ -100,6 +106,10 @@ Notes on each of the modeling tools appear below.
 * FMI/FMIL API extensions to better support QSS solvers are under development at Modelon.
 * PyFMI fails in retrieving some variable results: we don't currently know why.
 
+### OCT (OPTIMICA Compiler Toolkit)
+
+* OCT has event indicator variable generation that QSS uses to track the zero-crossing functions.
+
 ### Ptolemy
 
 * Ptolemy models may be added if desired by LBNL.
@@ -126,9 +136,15 @@ Notes on each of the modeling tools appear below.
 
 ### Building FMUs with JModelica
 
-Run `bld_fmu` from the `JModelica` sub-directory of the model's directory. (This script wraps `compile_fmu.JModelica.py` to simplify usage.)
+Run `bld_fmu.JModelica` from the `JModelica` sub-directory of the model's directory. (This script wraps `compile_fmu.JModelica.py` to simplify usage.)
 
 * This runs the `mod_xml.JModelica.py` script to add index number comments to the FMU's `modelDescription.xml` file.
+
+### Building FMUs with OPTIMICA
+
+Run `bld_fmu.OCT` from the `OCT` sub-directory of the model's directory. (This script wraps `compile_fmu.OCT.py` to simplify usage.)
+
+* This runs the `mod_xml.OCT.py` script to add index number comments to the FMU's `modelDescription.xml` file.
 
 ### Running FMUs with PyFMI
 

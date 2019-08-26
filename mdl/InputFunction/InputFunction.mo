@@ -1,4 +1,3 @@
-within QSS.Generic;
 model InputFunction "This model simulates a first order ODE with an input"
   extends Modelica.Icons.Example;
   Real x(start=0, fixed=true) "State variable";

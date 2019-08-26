@@ -117,13 +117,5 @@ If simulated from 0 to 2s,
 then the model generates 5 state events
 at t=0.00507228, 0.719569, 0.729711, 1.44419, 1.45433.
 </p>
-<p>
-This model requires to modify the XML, and add
-the dependency of conQSS.y on the zero crossing function __zc_z1
-and __zc_z2 as well as the dependency of der(vol.T) on conQSS.y.
-A different approach is to extend the dependency of der(vol.T) on
-__zc_z1 and __zc_z2.
-</p>
-
 </html>"));
 end OnOffController;

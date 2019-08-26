@@ -1,2 +1,2 @@
 #!/bin/bash
-QSS ../../JModelica/BouncingBall.fmu --qss=LIQSS1
+QSS ../../OCT/BouncingBall.fmu --qss=LIQSS1

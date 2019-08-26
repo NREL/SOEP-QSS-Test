@@ -1,4 +1,3 @@
-within QSS.Specific.Events;
 model ZCBoolean2
   "This model tests state event detection with boolean zero crossing"
   extends Modelica.Icons.Example;
@@ -13,12 +12,6 @@ model ZCBoolean2
   Boolean yBoo "Boolean variable";
   Boolean yBooPre "Boolean variable for pre(yBoo)";
   discrete Modelica.Blocks.Interfaces.RealOutput y(start=1.0, fixed=true);
-  Modelica.Blocks.Interfaces.RealOutput __zc_z1 "Zero crossing";
-   Modelica.Blocks.Interfaces.RealOutput __zc_der_z1
-     "Derivative of Zero crossing";
-  Modelica.Blocks.Interfaces.RealOutput __zc_z2 "Zero crossing";
-   Modelica.Blocks.Interfaces.RealOutput __zc_der_z2
-     "Derivative of Zero crossing";
 initial equation
   pre(yBoo) = true;
 equation
@@ -34,15 +27,6 @@ equation
   // Defining the boolean conditional
   // variable for the zero crossing variables
   yBooPre = pre(yBoo);
-  // Defining zero crossing to be exported as output variables
-  // First zero crossing function
-   __zc_z1 = booToRea(yBooPre)*(u - 0.5);
-   // Second zero crossing function
-   __zc_z2 = booToRea(not yBooPre)*(u + 0.5);
-   // Derivative of first zero crossing function
-   __zc_der_z1 = booToRea(yBooPre) * der(u - 0.5);
-   // Derivative of first zero crossing function
-   __zc_der_z2 = booToRea(not yBooPre)* der(u + 0.5);
   annotation (
     experiment(StopTime=10, Tolerance=1e-4),
     Icon(coordinateSystem(preserveAspectRatio=false)),

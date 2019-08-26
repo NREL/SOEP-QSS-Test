@@ -1,2 +1,2 @@
 #!/bin/bash
-QSS ../../JModelica/Achilles.fmu --qss=LIQSS2
+QSS ../../OCT/Achilles.fmu --qss=LIQSS2

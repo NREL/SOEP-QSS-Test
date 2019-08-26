@@ -1,0 +1,7 @@
+Case600 Model OCT Notes
+
+The TRooAir.T variable is local instead of output so not available from QSS simulations.
+
+OCT is currently generating many of the event indicators with no reverse dependencies.
+This has been reported to Modelon. Until this is fixed simulation results from this FMU
+should not be assumed to be accurate.

@@ -1,0 +1,16 @@
+#!/bin/bash
+# Build the local model FMU with JModelica
+# jm script customized for your system must be on your PATH
+# compile_fmu.JModelica.py and mod_xml.JModelica.py must be on your PATH
+# Run from the JModelica sub-directory of the model directory
+
+# Compile the FMU
+jm.JModelica ./compile_fmu.py
+mv -f Modelica_Blocks_Examples_PID_Controller.fmu PID_Controller.fmu
+
+# Add index comment lines to XML
+unzip -o PID_Controller.fmu modelDescription.xml
+cp -f modelDescription.xml modelDescription.orig.xml
+mod_xml.JModelica.py
+sleep 1 && touch modelDescription.xml # zip -f won't work if .xml time stamp matches .fmu
+zip -f PID_Controller.fmu

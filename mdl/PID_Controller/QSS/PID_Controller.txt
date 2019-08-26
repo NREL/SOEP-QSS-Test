@@ -1,6 +1,5 @@
 PID_Controller Model QSS Notes
 
-The zero-crossing variables have not been manually added to this model
-because the new event indicators support being added by Modelon will be
-available soon. The QSS simulations will not be correct until this is
-added.
+
+The OCT FMU should eventually be used by the QSS runs but the OCT
+generated event indicators are not currently correct for this model.

@@ -25,7 +25,11 @@ if [ "$compile_fmu" == "" ]; then
 fi
 
 # Compile the FMU
-jm.JModelica $compile_fmu $model_dir/$model.mo $@
+if [ -f "$tool_dir/$model.mo" ]; then
+  jm.JModelica $compile_fmu $tool_dir/$model.mo $@
+else
+  jm.JModelica $compile_fmu $model_dir/$model.mo $@
+fi
 
 # Add index comment lines to XML
 if [ -f "$model.fmu" ]; then

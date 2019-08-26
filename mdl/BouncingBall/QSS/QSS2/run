@@ -1,2 +1,2 @@
 #!/bin/bash
-QSS ../../JModelica/BouncingBall.fmu --qss=QSS2 --dtZC=1e-12
+QSS ../../OCT/BouncingBall.fmu --qss=QSS2

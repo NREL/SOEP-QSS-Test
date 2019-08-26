@@ -1,2 +1,2 @@
 #!/bin/bash
-QSS ../../JModelica/CoupledSystem.fmu --qss=QSS2
+QSS ../../OCT/CoupledSystem.fmu --qss=QSS2

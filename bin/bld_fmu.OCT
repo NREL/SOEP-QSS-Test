@@ -25,13 +25,8 @@ if [ "$compile_fmu" == "" ]; then
 fi
 
 # Compile the FMU
-jm.OCT $compile_fmu $model_dir/$model.mo $@
-
-# Add index comment lines to XML
-if [ -f "$model.fmu" ]; then
-    unzip -o $model.fmu modelDescription.xml
-    cp -f modelDescription.xml modelDescription.orig.xml
-    mod_xml.OCT.py
-    sleep 1 && touch modelDescription.xml # zip -f won't work if .xml time stamp matches .fmu
-    zip -f $model.fmu
+if [ -f "$tool_dir/$model.mo" ]; then
+  jm.OCT $compile_fmu $tool_dir/$model.mo $@
+else
+  jm.OCT $compile_fmu $model_dir/$model.mo $@
 fi

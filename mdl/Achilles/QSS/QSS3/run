@@ -1,2 +1,2 @@
 #!/bin/bash
-QSS ../../JModelica/Achilles.fmu --qss=QSS3 --dtNum=0.01
+QSS ../../OCT/Achilles.fmu --qss=QSS3 --dtNum=0.01

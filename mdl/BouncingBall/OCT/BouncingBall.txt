@@ -1,4 +1,4 @@
 BouncingBall Model OCT Notes
 
 XML Modifications:
- Ran mod_xml.JModelica.py to add index comments
+ Added the missing event indicator reverse dependency on index 46 (v): OCT bug reported to Modelon

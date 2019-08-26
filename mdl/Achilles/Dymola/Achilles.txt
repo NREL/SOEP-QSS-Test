@@ -1,4 +1,1 @@
 Achilles Model Dymola Notes
-
-XML Modifications
- No XML modifications were required to run the FMU since no zero-crossing or discrete variables are present

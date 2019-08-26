@@ -1,0 +1,9 @@
+#!/bin/bash
+# Build the local model FMU with OCT
+# jm script customized for your system must be on your PATH
+# compile_fmu.OCT.py and mod_xml.OCT.py must be on your PATH
+# Run from the OCT sub-directory of the model directory
+
+# Compile the FMU
+jm.OCT ./compile_fmu.py
+mv -f Modelica_Blocks_Examples_PID_Controller.fmu PID_Controller.fmu

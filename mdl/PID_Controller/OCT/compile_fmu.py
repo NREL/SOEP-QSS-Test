@@ -1,0 +1,71 @@
+#!/usr/bin/env python
+
+# Compiles PID_Controller Example
+#
+# Project: QSS Solver
+#
+# Language: Python 2.7 and 3.x
+#
+# Developed by Objexx Engineering, Inc. (https://objexx.com) under contract to
+# the National Renewable Energy Laboratory of the U.S. Department of Energy
+#
+# Copyright (c) 2017-2019 Objexx Engineerinc, Inc. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# (1) Redistributions of source code must retain the above copyright notice,
+#     this list of conditions and the following disclaimer.
+#
+# (2) Redistributions in binary form must reproduce the above copyright notice,
+#     this list of conditions and the following disclaimer in the documentation
+#     and/or other materials provided with the distribution.
+#
+# (3) Neither the name of the copyright holder nor the names of its
+#     contributors may be used to endorse or promote products derived from this
+#     software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES
+# GOVERNMENT, OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# Notes
+#  Run from an environment set up for OCT such as jm_python.sh
+
+# Imports
+import os
+from pymodelica import compile_fmu
+
+if os.name == 'nt':
+    compiler_options = {
+     'generate_html_diagnostics': False,
+     'generate_ode_jacobian': True,
+     'enable_lazy_evaluation': True,
+     'event_indicator_structure': True,
+     'event_output_vars': True,
+     'time_events': True,
+    }
+else:
+    compiler_options = {
+     'generate_html_diagnostics': False,
+     'generate_ode_jacobian': True,
+#    'enable_lazy_evaluation': True, # Not currently supported by Linux OCT
+     'event_indicator_structure': True,
+     'event_output_vars': True,
+     'time_events': True,
+    }
+
+fmu_file = compile_fmu(
+ 'Modelica.Blocks.Examples.PID_Controller',
+ version = "2.0",
+ compiler_log_level = 'error',
+ compiler_options = compiler_options,
+)

@@ -1,4 +1,3 @@
-within QSS.Generic;
 model CoupledSystem "This model simulates a coupled system of ODEs"
   extends Modelica.Icons.Example;
   Real x1(start=10, fixed=true) "State variable";
