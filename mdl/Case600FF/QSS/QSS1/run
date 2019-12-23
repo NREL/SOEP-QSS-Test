@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS ../../Dymola/Case600FF.fmu --qss=QSS1 --dtOut=100 --out=sfx

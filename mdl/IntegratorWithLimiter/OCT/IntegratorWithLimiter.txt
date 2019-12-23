@@ -1,0 +1,7 @@
+IntegratorWithLimiter Model OCT Notes
+
+OCT event indicator support must be enabled for this model since it
+has a zero-crossing if clause.
+
+The reverse dependency of the event indicator on the y (#43) variable
+is not currently added by OCT so this was done manually.

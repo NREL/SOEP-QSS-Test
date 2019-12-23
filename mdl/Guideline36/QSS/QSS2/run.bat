@@ -1,0 +1,2 @@
+@echo off
+QSS ..\..\OCT\Guideline36.fmu --qss=QSS2 --dtOut=100 --out=sfx

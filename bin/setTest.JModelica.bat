@@ -1,5 +1,5 @@
 @echo off
-rem Set environment for using these scripts	with JModelica
+rem Set environment for using these scripts with JModelica
 rem Customize for the directories on your system
 set MODELICA_BUILDINGS_LIB=C:\Projects\EnergyPlus\SOEP\tst\modelica-buildings
 set MODELICAPATH=C:\JModelica\install\ThirdParty\MSL;%MODELICA_BUILDINGS_LIB%

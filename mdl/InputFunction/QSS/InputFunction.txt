@@ -18,3 +18,7 @@ Notes:
 The OCT FMU was used to generate the QSS results using a script
 that applied the same step input function as the current QSS default.
 The results with the Dymola FMU were identical.
+
+Update: The current OCT as of 2019/12 does not update the x derivative
+after setting the u value so we are using the JModelica FMU until this
+is resolved.

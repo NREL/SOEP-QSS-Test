@@ -1,4 +1,4 @@
 InputFunction Model OCT Notes
 
 The custom run_fmu.step.py script duplicates the step input function
-the QSS solver uses as the current default.
+the QSS runs are using.

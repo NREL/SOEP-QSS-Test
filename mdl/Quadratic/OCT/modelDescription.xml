@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fmiModelDescription fmiVersion="2.0" modelName="Quadratic" guid="5fef339bae2bf066193dfb6ad61a62f3" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2019-08-26T16:56:27" variableNamingConvention="structured" numberOfEventIndicators="0">
-	<ModelExchange modelIdentifier="Quadratic" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="false" canSerializeFMUstate="false" providesDirectionalDerivative="true" />
+<fmiModelDescription fmiVersion="2.0" modelName="Quadratic" guid="c02b83ebd06e27ee23361cbcc532bd26" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2019-12-17T02:06:50" variableNamingConvention="structured" numberOfEventIndicators="0">
+	<ModelExchange modelIdentifier="Quadratic" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="false" canSerializeFMUstate="false" providesDirectionalDerivative="false" />
 	<LogCategories>
 		<Category name="logLevel1" description="logLevel1 - fatal error" />
 		<Category name="logLevel2" description="logLevel2 - error" />

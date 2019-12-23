@@ -1,0 +1,5 @@
+SimpleHouseDiscreteTime Model OCT Notes
+
+OCT generated FMUs with event indicator support do not currently run under PyFMI
+(they get stuck in an infinite FMI initialization loop) so we use separate FMUs
+for PyFMI and QSS simulation.
