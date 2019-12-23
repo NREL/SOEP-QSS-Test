@@ -62,9 +62,9 @@ try:
     compiler_options = {}
     compiler_options[ 'generate_html_diagnostics' ] = False
     compiler_options[ 'disable_smooth_events' ] = True
-    compiler_options[ 'event_indicator_scaling' ] = True
-    compiler_options[ 'event_indicator_structure' ] = True
-    compiler_options[ 'event_output_vars' ] = True
+    compiler_options[ 'event_indicator_scaling' ] = False
+    compiler_options[ 'event_indicator_structure' ] = False
+    compiler_options[ 'event_output_vars' ] = False
     compiler_options[ 'time_events' ] = True
     compiler_options[ 'generate_ode_jacobian' ] = False # For directional derivatives # Doesn't support delay()
 #   if os.name == 'nt': # Not supported in Linux OCT yet

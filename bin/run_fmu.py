@@ -88,15 +88,13 @@ if args.solver == 'CVode':
     opt_solver[ 'discr' ] = args.discr
     opt_solver[ 'rtol' ] = args.rtol
     opt_solver[ 'atol' ] = args.atol
-    if args.maxord is not None:
-        opt_solver[ 'maxord' ] = args.maxord
+    if args.maxord is not None: opt_solver[ 'maxord' ] = args.maxord
 elif args.solver == 'DASSL':
     opt[ 'solver' ] = 'ODASSL'
     opt_solver = opt[ 'ODASSL_options' ]
     opt_solver[ 'rtol' ] = args.rtol
     opt_solver[ 'atol' ] = args.atol
-    if args.maxord is not None:
-        opt_solver[ 'maxord' ] = args.maxord
+    if args.maxord is not None: opt_solver[ 'maxord' ] = args.maxord
 elif args.solver == 'LSODAR':
     opt_solver = opt[ args.solver + '_options' ]
     opt_solver[ 'rtol' ] = args.rtol

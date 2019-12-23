@@ -1,9 +1,8 @@
 @echo off
-rem Build the local model FMU with OCT
-rem compile_fmu.OCT.py must be on your PATH
-rem Run from the OCT sub-directory of the model directory
-
-setlocal
+rem Run the local model FMU with PyFMI
+rem jm script customized for your system must be on your PATH
+rem run_fmu.py must be on your PATH
+rem Run from the modeling tool directory such as MyModel\JModelica
 
 rem Find tool directory and name
 for /D %%d in (%cd%\) do set tool_dir=%%~dpd
@@ -19,11 +18,12 @@ rem Find model directory and name
 for /D %%t in (%tool_dir:~0,-1%) do set model_dir=%%~dpt
 for /D %%t in (%model_dir:~0,-1%) do set model=%%~nt
 
-rem Compile the FMU
-if exist "%tool_dir%%model%.mo" (
-  compile_fmu.OCT.sources.py %tool_dir%%model%.mo %*
+rem Run the simulation with PyFMI
+if exist "%model_dir%%model%.var" (
+  call jm.bat run_fmu.py %tool_dir%%model%.fmu --var %model_dir%%model%.var %*
 ) else (
-  compile_fmu.OCT.sources.py %model_dir%%model%.mo %*
-)
-
-endlocal
+if exist "%tool_dir%%model%.fmu" (
+  call jm.bat run_fmu.py %tool_dir%%model%.fmu %*
+) else (
+  call jm.bat run_fmu.py %*
+))

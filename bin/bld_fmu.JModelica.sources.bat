@@ -20,10 +20,10 @@ for /D %%t in (%tool_dir:~0,-1%) do set model_dir=%%~dpt
 for /D %%t in (%model_dir:~0,-1%) do set model=%%~nt
 
 rem Compile the FMU
-if exist "%tool_dir%\%model%.mo" (
-  compile_fmu.JModelica.sources.py %tool_dir%\%model%.mo %*
+if exist "%tool_dir%%model%.mo" (
+  compile_fmu.JModelica.sources.py %tool_dir%%model%.mo %*
 ) else (
-  compile_fmu.JModelica.sources.py %model_dir%\%model%.mo %*
+  compile_fmu.JModelica.sources.py %model_dir%%model%.mo %*
 )
 
 rem Add index comment lines to XML

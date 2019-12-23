@@ -2,7 +2,7 @@
 # Run the local model FMU with PyFMI
 # jm script customized for your system must be on your PATH
 # run_fmu.py must be on your PATH
-# Run from the modeling tool directory such as MyModel/JModelica
+# Run from the modeling tool directory or below such as MyModel/JModelica/out
 
 # Find tool directory and name
 tool_dir=$(realpath $(pwd))
@@ -26,10 +26,10 @@ if [ "$run_fmu" == "" ]; then
     echo "run_fmu.py not found on your PATH"
 else
     if [ -e "$model_dir/$model.var" ]; then # Use variable list
-        jm $run_fmu $tool_dir/$model.fmu --var $model_dir/$model.var $@
+        jm.JModelica $run_fmu $tool_dir/$model.fmu --var $model_dir/$model.var $@
     elif [ -e "$tool_dir/$model.fmu" ]; then # No variable list
-        jm $run_fmu $tool_dir/$model.fmu $@
+        jm.JModelica $run_fmu $tool_dir/$model.fmu $@
     else # No FMU
-        jm $run_fmu $@
+        jm.JModelica $run_fmu $@
     fi
 fi

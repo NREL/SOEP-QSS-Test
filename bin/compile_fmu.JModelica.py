@@ -38,11 +38,12 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Notes
-#  Run from an environment set up for JModelica such as jm_python.sh
+#  Run from an environment set up for JModelica such as jm_python.JModelca.sh
 #  Run from an environment with MODELICAPATH set up as in export MODELICAPATH=/opt/JModelica/ThirdParty/MSL:/opt/modelica-buildings
 
 # Imports
 import os, sys
+import pymodelica
 from pymodelica import compile_fmu
 
 try:
@@ -51,18 +52,21 @@ except:
     print( 'Error: MODELICAPATH environment variable is not set' )
     sys.exit( 1 )
 
+# Increase JVM memory
+pymodelica.environ['JVM_ARGS'] = '-Xmx4096m'
+
 try:
     model = sys.argv[ 1 ]
     if model.endswith( '.mo' ): model = model[ :-3 ]
     model_file = sys.argv[ 2 ] if len( sys.argv ) > 2 else model + '.mo'
+    compiler_options = {}
+    compiler_options[ 'generate_html_diagnostics' ] = False
     fmu_file = compile_fmu(
      os.path.basename( model ),
      model_file,
      version = "2.0",
-     compiler_log_level = 'error',
-     compiler_options = {
-      'generate_html_diagnostics': False,
-     }
+     compiler_log_level = 'warning',
+     compiler_options = compiler_options,
     )
 except Exception as msg:
     print( 'Error: ' + str( msg ) )
