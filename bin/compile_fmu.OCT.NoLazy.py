@@ -67,8 +67,8 @@ try:
     compiler_options[ 'event_output_vars' ] = True
     compiler_options[ 'time_events' ] = True
     compiler_options[ 'generate_ode_jacobian' ] = False # For directional derivatives # Doesn't support delay()
-    if os.name == 'nt': # Not supported in Linux OCT yet
-        compiler_options[ 'enable_lazy_evaluation' ] = True # Can cause FMU to give wrong derivative # Can cause event indicator infinite loop with incomplete dependencies
+#   if os.name == 'nt': # Not supported in Linux OCT yet
+#       compiler_options[ 'enable_lazy_evaluation' ] = True # Can cause FMU to give wrong derivative # Can cause event indicator infinite loop with incomplete dependencies
     fmu_file = compile_fmu(
      os.path.basename( model ),
      model_file,

@@ -1,6 +1,6 @@
 @echo off
 rem Build the local model FMU with OCT
-rem compile_fmu.OCT.sources.py must be on your PATH
+rem compile_fmu.OCT.NoLazy.py must be on your PATH
 rem Run from the OCT sub-directory of the model directory
 
 setlocal
@@ -21,9 +21,9 @@ for /D %%t in (%model_dir:~0,-1%) do set model=%%~nt
 
 rem Compile the FMU
 if exist "%tool_dir%%model%.mo" (
-  compile_fmu.OCT.sources.py %tool_dir%%model%.mo %*
+  compile_fmu.OCT.NoLazy.py %tool_dir%%model%.mo %*
 ) else (
-  compile_fmu.OCT.sources.py %model_dir%%model%.mo %*
+  compile_fmu.OCT.NoLazy.py %model_dir%%model%.mo %*
 )
 
 endlocal

@@ -10,7 +10,7 @@ initial equation
   h = h0;
 equation
   v = der(h);
-  der(v) = -9.81;
+  der(v) = -9.80665;
   when h < 0 then
     reinit(v, -e*pre(v));
   end when;
@@ -30,12 +30,7 @@ Implemented first version.
 This model simulates the bouncing ball.
 </p>
 <p>
-This model has 12 state events when simulated form 0 to 3s.
-The state events are at t=0.4515236395553223, 0.4515236396127245,
-1.173961461717483, 1.173961461790002, 1.751911718232403,
-1.751911718323203, 2.214271923191991, 2.214271923304014,
-2.584160083998069, 2.584160084137565, 2.880070609653692,
-2.880070609827924.
+This model has 12 state events when simulated from 0 to 3s.
 </p>
 </html>"));
 end BouncingBall;

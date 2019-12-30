@@ -3,6 +3,9 @@ OnOffController Model OCT Notes
 The model has event indicators so the OCT simulation will not be correct
 until OCT event indicator support is complete and validated.
 
+The Buildings library appears to have removed the OnOffControllerQSS class
+that this depends on.
+
 The OCT FMU compile script that imports the Building library gives these errors:
 Error at line 5, column 3, in file 'OnOffController.mo':
   Cannot find class declaration for BaseClasses

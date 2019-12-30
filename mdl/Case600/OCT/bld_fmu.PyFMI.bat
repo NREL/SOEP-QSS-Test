@@ -1,6 +1,6 @@
 @echo off
 rem Build the local model FMU with OCT
-rem compile_fmu.OCT.py and mod_xml.OCT.py must be on your PATH
+rem compile_fmu.OCT.PyFMI.py must be on your PATH
 rem Run from the OCT sub-directory of the model directory
 
 setlocal
@@ -14,10 +14,10 @@ set model=Buildings.ThermalZones.Detailed.Validation.BESTEST.Cases6xx.%mdl%
 set model_file=%MODELICA_BUILDINGS_LIB%\%model:.=\%.mo
 
 rem Compile the FMU
-compile_fmu.%tool%.py %model% %model_file% %*
+compile_fmu.%tool%.PyFMI.py %model% %model_file% %*
 
 rem Rename the FMU
-if exist "%mdl%.fmu" del "%mdl%.fmu" >nul 2>nul
+del %mdl%.fmu >nul 2>nul
 ren %model:.=_%.fmu %mdl%.fmu
 
 endlocal

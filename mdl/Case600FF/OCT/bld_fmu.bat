@@ -17,7 +17,7 @@ rem Compile the FMU
 compile_fmu.%tool%.py %model% %model_file% %*
 
 rem Rename the FMU
-if exist "%mdl%.fmu" del "%mdl%.fmu"
+if exist "%mdl%.fmu" del "%mdl%.fmu" >nul 2>nul
 ren %model:.=_%.fmu %mdl%.fmu
 
 endlocal

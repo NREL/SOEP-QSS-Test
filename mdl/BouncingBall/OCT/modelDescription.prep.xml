@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fmiModelDescription fmiVersion="2.0" modelName="BouncingBall" guid="a62c800d56f11337973a258bd7286f4f" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2019-12-16T18:10:50" variableNamingConvention="structured" numberOfEventIndicators="1">
+<fmiModelDescription fmiVersion="2.0" modelName="BouncingBall" guid="a62c800d56f11337973a258bd7286f4f" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2019-12-23T02:17:34" variableNamingConvention="structured" numberOfEventIndicators="1">
 	<ModelExchange modelIdentifier="BouncingBall" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="false" canSerializeFMUstate="false" providesDirectionalDerivative="false"/>
 	<UnitDefinitions>
 		<Unit name="m">

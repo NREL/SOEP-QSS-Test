@@ -1,7 +1,7 @@
 #!/bin/bash
 # Build the local model FMU with OCT
 # jm script customized for your system must be on your PATH
-# compile_fmu.OCT.py must be on your PATH
+# compile_fmu.OCT.NoLazy.py must be on your PATH
 # Run from the OCT sub-directory of the model directory
 
 # Find tool directory and name
@@ -17,7 +17,7 @@ model_dir=$(dirname "$tool_dir")
 model=$(basename "$model_dir")
 
 # Compile the Modelica file with OCT
-compile_fmu_name="compile_fmu.OCT.py"
+compile_fmu_name="compile_fmu.OCT.NoLazy.py"
 compile_fmu=$(which "$compile_fmu_name")
 if [ "$compile_fmu" == "" ]; then
     echo "$compile_fmu_name not found on your PATH"

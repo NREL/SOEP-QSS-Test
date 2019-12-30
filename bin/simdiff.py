@@ -95,7 +95,7 @@ def sim_diff():
     glob1 = [ fnam for fnam in glob1 if os.path.isfile( fnam ) ]
     inp2 = args.inp2
     if ( '[' in inp2 ) or ( ']' in inp2 ): # Escape the brackets
-        inp2 = re.sub( r'([\[\]])', '[\\2]', inp2 )
+        inp2 = re.sub( r'([\[\]])', '[\\1]', inp2 )
     if os.path.isdir( inp2 ):
         glob2 = glob.glob( os.path.join( inp2, '*.out' ) )
         if not glob2: glob2 = glob.glob( os.path.join( inp2, 'out', '*.out' ) )
