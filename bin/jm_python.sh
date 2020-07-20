@@ -3,7 +3,7 @@
 if test "${JAVA_HOME}" = ""; then
   export JAVA_HOME=/usr/lib/jvm/java-openjdk/
 fi
-JMODELICA_HOME=/opt/JModelica \
+JMODELICA_HOME=/opt/OCT \
 IPOPT_HOME=/opt/ipopt \
 SUNDIALS_HOME=${JMODELICA_HOME}/ThirdParty/Sundials \
 PYTHONPATH=:${JMODELICA_HOME}/Python/::$PYTHONPATH \

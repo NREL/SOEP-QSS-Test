@@ -1,0 +1,6 @@
+TwoFloor_TwoZone Model QSS Notes
+
+As of 2020/07 OCT version the event indicator dependency information
+is incorrect, causing the QSS simulation to have incorrect event indicator
+histories and the event indicator requantizations are dominating the run
+time due to large (incorrect) derivatives.

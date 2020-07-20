@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<fmiModelDescription fmiVersion="2.0" modelName="Achilles2_QSS" guid="572b5d71-36a9-52de-a9c2-6c2f8de6e7e8" generationTool="JModelica.org" generationDateAndTime="2018-10-25T09:58:52" variableNamingConvention="structured" numberOfEventIndicators="0">
-  <ModelExchange modelIdentifier="Achilles2_QSS" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="false" canSerializeFMUstate="false" providesDirectionalDerivative="false"/>
+<fmiModelDescription fmiVersion="2.0" modelName="Achilles2_QSS" guid="f196c489-3e18-5035-ae86-087a7c817fd3" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2020-07-01T02:56:07" variableNamingConvention="structured" numberOfEventIndicators="0">
+  <ModelExchange modelIdentifier="Achilles2_QSS" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="false"/>
   <LogCategories>
     <Category name="logLevel1" description="logLevel1 - fatal error"/>
     <Category name="logLevel2" description="logLevel2 - error"/>
@@ -9,12 +9,16 @@
     <Category name="logLevel5" description="logLevel5 - verbose"/>
     <Category name="logLevel6" description="logLevel6 - debug"/>
   </LogCategories>
-  <DefaultExperiment stopTime="10.0" tolerance="1.0E-4"/>
+  <DefaultExperiment startTime="0.0" stopTime="10.0" tolerance="1.0E-4"/>
   <VendorAnnotations>
-    <Tool name="JModelica.org">
+    <Tool name="Optimica Compiler Toolkit">
       <Annotations>
-        <Annotation name="CompilerVersion" value="r11651"/>
+        <Annotation name="CompilerVersion" value="OCT-stable-r16494_JM-r14295"/>
       </Annotations>
+    </Tool>
+    <Tool name="OCT_StateEvents">
+      <EventIndicators>
+			</EventIndicators>
     </Tool>
     <Tool name="QSS">
       <Annotations>
@@ -24,18 +28,23 @@
     </Tool>
   </VendorAnnotations>
   <ModelVariables>
-    <!-- Index for next variable = 1 (40) -->
-    <ScalarVariable name="x1" valueReference="41" causality="input" variability="continuous">
+    <!-- Variable with index #1 (42) -->
+    <ScalarVariable name="time" valueReference="44" causality="output" variability="continuous">
+      <Real relativeQuantity="false"/>
+    </ScalarVariable>
+    <!-- Variable with index #2 (44) -->
+    <ScalarVariable name="x1" valueReference="45" causality="input" variability="continuous">
       <Real relativeQuantity="false" start="0.0"/>
     </ScalarVariable>
-    <!-- Index for next variable = 2 (41) -->
-    <ScalarVariable name="x2" valueReference="40" causality="output" variability="continuous" initial="exact">
+    <!-- Variable with index #3 (45) -->
+    <ScalarVariable name="x2" valueReference="43" causality="output" variability="continuous" initial="exact">
       <Real relativeQuantity="false" start="2.0"/>
     </ScalarVariable>
   </ModelVariables>
   <ModelStructure>
     <Outputs>
-      <Unknown index="2" dependencies=""/>
+      <Unknown index="1" dependencies=""/>
+      <Unknown index="3" dependencies=""/>
     </Outputs>
   </ModelStructure>
 </fmiModelDescription>

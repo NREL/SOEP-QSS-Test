@@ -2,7 +2,7 @@
 rem Run the local model FMU with PyFMI
 rem jm script customized for your system must be on your PATH
 rem run_fmu.py must be on your PATH
-rem Run from the modeling tool directory such as MyModel\JModelica
+rem Run from the modeling tool directory such as MyModel\OCT
 
 rem Find tool directory and name
 for /D %%d in (%cd%\) do set tool_dir=%%~dpd

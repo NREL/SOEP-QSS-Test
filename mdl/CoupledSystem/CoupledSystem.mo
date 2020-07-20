@@ -8,7 +8,7 @@ equation
   der(x2) = -2*x1;
   der(x3) = -2*(2*x2 + x3);
   annotation (
-    experiment(StopTime=0.1, Tolerance=1e-4),
+    experiment( StartTime=0, StopTime=0.1, Tolerance=1e-4 ),
     Icon(coordinateSystem(preserveAspectRatio=false)),
     Diagram(coordinateSystem(preserveAspectRatio=false)),
     Documentation(revisions="<html>

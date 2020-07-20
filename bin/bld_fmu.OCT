@@ -1,6 +1,6 @@
 #!/bin/bash
 # Build the local model FMU with OCT
-# jm script customized for your system must be on your PATH
+# jm.OCT script customized for your system must be on your PATH
 # compile_fmu.OCT.py must be on your PATH
 # Run from the OCT sub-directory of the model directory
 
@@ -16,17 +16,16 @@ done
 model_dir=$(dirname "$tool_dir")
 model=$(basename "$model_dir")
 
-# Compile the Modelica file with OCT
-compile_fmu_name="compile_fmu.OCT.py"
-compile_fmu=$(which "$compile_fmu_name")
-if [ "$compile_fmu" == "" ]; then
-    echo "$compile_fmu_name not found on your PATH"
-    exit 1
-fi
-
 # Compile the FMU
-if [ -f "$tool_dir/$model.mo" ]; then
-  jm.OCT $compile_fmu $tool_dir/$model.mo $@
+if [ -f "$tool_dir/$model.ref" ]; then
+  jm.OCT compile_fmu.OCT.py $tool_dir/$model.ref $@
+elif [ -f "$tool_dir/$model.mo" ]; then
+  jm.OCT compile_fmu.OCT.py $tool_dir/$model.mo $@
+elif [ -f "$model_dir/$model.ref" ]; then
+  jm.OCT compile_fmu.OCT.py $model_dir/$model.ref $@
+elif [ -f "$model_dir/$model.mo" ]; then
+  jm.OCT compile_fmu.OCT.py $model_dir/$model.mo $@
 else
-  jm.OCT $compile_fmu $model_dir/$model.mo $@
+  echo "Neither Modelica ($model.mo) nor ref ($model.ref) files found in tool or model directories"
+  exit 1
 fi

@@ -1,15 +1,19 @@
 ZCBoolean2 Model QSS Notes
 
-The QSS runs used the JModelica FMU but the Dymola FMU gives the same results.
-(PyFMI is not simulating either of these FMUs correctly.)
+The OCT-generated FMU's XML file event indicators are missing reverse dependencies on y and yBoo
+and dependencies on u and yBoo (or yBooPre?). If these variables are exposed to QSS in the XML
+then their dependencies should be present.
+
+The dependency on u is "short-circuited" to a dependency on time but u!=time and time
+never requantizes so this doesn't work for QSS.
 
 The QSS runs use dtMax to avoid deactivation:
-QSS ZCBoolean2.fmu --qss=<QSS_method> --dtMax=0.001
+QSS ZCBoolean2.fmu --qss=<QSS_method> --dtMax=0.01
 
 Notes
- x is linear between ZC events so it deactivated and exact in QSS2+ and doesn't need dtInf
- u doesn't have causality="input" in xml: It is an "internal" variable
+ x is linear between ZC events so it's deactivated and exact in QSS2+ and doesn't need dtInf
+ u is a local variable
   Ignore u since it isn't discontinuous so z1/2 integration should be OK without observer updates
   Internal variables with discontinuous functions or discrete events need to be input functions for QSS to operate correctly
- z1/2 have zero 2nd derivatives at t=0 giving large (14s) requantization time (infinity with exact derivatives)
+ Zero-crossing functions have zero 2nd derivatives at t=0 giving large (14s) requantization time (infinity with exact derivatives)
   This is an example of what "near-deactivation": dtInf won't kick in: Need dtMax with current QSS

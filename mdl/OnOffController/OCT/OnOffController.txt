@@ -1,6 +1,6 @@
 OnOffController Model OCT Notes
 
-The model has event indicators so the OCT simulation will not be correct
+The model has event indicators so the QSS simulation will not be correct
 until OCT event indicator support is complete and validated.
 
 The Buildings library appears to have removed the OnOffControllerQSS class

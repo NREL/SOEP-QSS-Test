@@ -1,6 +1,6 @@
 @echo off
 rem Build the local model FMU with JModelica
-rem compile_fmu.JModelica.py and mod_xml.JModelica.py must be on your PATH
+rem compile_fmu.JModelica.sources.py and mod_xml.py must be on your PATH
 rem Run from the JModelica sub-directory of the model directory
 
 setlocal
@@ -20,17 +20,28 @@ for /D %%t in (%tool_dir:~0,-1%) do set model_dir=%%~dpt
 for /D %%t in (%model_dir:~0,-1%) do set model=%%~nt
 
 rem Compile the FMU
+if exist "%tool_dir%%model%.ref" (
+  compile_fmu.JModelica.sources.py %tool_dir%%model%.ref %*
+) else (
 if exist "%tool_dir%%model%.mo" (
   compile_fmu.JModelica.sources.py %tool_dir%%model%.mo %*
 ) else (
+if exist "%model_dir%%model%.ref" (
   compile_fmu.JModelica.sources.py %model_dir%%model%.mo %*
+) else (
+if exist "%model_dir%%model%.mo" (
+  compile_fmu.JModelica.sources.py %model_dir%%model%.mo %*
+) else (
+  echo "Neither Modelica (%model%.mo) nor ref (%model%.ref) files found in tool or model directories"
+  exit /B 1
+))))
 )
 
 rem Add index comment lines to XML
 if exist "%model%.fmu" (
   unzip -o %model%.fmu modelDescription.xml >nul 2>nul
   copy /Y modelDescription.xml modelDescription.orig.xml >nul 2>nul
-  mod_xml.JModelica.py
+  mod_xml.py
   zip -f %model%.fmu >nul 2>nul
 )
 

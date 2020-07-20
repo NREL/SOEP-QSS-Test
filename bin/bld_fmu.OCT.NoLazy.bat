@@ -20,10 +20,20 @@ for /D %%t in (%tool_dir:~0,-1%) do set model_dir=%%~dpt
 for /D %%t in (%model_dir:~0,-1%) do set model=%%~nt
 
 rem Compile the FMU
+if exist "%tool_dir%%model%.ref" (
+  compile_fmu.OCT.NoLazy.py %tool_dir%%model%.ref %*
+) else (
 if exist "%tool_dir%%model%.mo" (
   compile_fmu.OCT.NoLazy.py %tool_dir%%model%.mo %*
 ) else (
+if exist "%model_dir%%model%.ref" (
+  compile_fmu.OCT.NoLazy.py %model_dir%%model%.ref %*
+) else (
+if exist "%model_dir%%model%.mo" (
   compile_fmu.OCT.NoLazy.py %model_dir%%model%.mo %*
-)
+) else (
+  echo "Neither Modelica (%model%.mo) nor ref (%model%.ref) files found in tool or model directories"
+  exit /B 1
+))))
 
 endlocal

@@ -50,5 +50,5 @@ equation
   der(x023) = 0.001 * ( x001 + x002 + x003 + x004 + x005 + x006 + x007 + x008 + x009 + x010 + x011 + x012 + x013 + x014 + x015 + x016 + x017 + x018 + x019 + x020 + x021 + x022 + x023 + x024 + x025 );
   der(x024) = 0.001 * ( x001 + x002 + x003 + x004 + x005 + x006 + x007 + x008 + x009 + x010 + x011 + x012 + x013 + x014 + x015 + x016 + x017 + x018 + x019 + x020 + x021 + x022 + x023 + x024 + x025 );
   der(x025) = 0.001 * ( x001 + x002 + x003 + x004 + x005 + x006 + x007 + x008 + x009 + x010 + x011 + x012 + x013 + x014 + x015 + x016 + x017 + x018 + x019 + x020 + x021 + x022 + x023 + x024 + x025 );
-annotation( experiment( StopTime=100, Tolerance=1e-4 ) );
+annotation( experiment( StartTime=0, StopTime=100, Tolerance=1e-4 ) );
 end Observers;

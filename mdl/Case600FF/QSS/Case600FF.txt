@@ -1,5 +1,7 @@
 Case600FF Model QSS Notes
 
+The 2020/04 OCT FMU slows to a crawl at ~400000 s with second derivatives getting large causing tiny steps
+
 The Dymola FMU was used for QSS simulations.
 
 The key room temperature variables, TRooQSS_K, outputs are the primary

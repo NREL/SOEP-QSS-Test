@@ -9,5 +9,5 @@ equation
   else
     y = 1;
   end if;
-annotation ( experiment( StopTime=2, Tolerance=1e-6 ) );
+annotation ( experiment( StartTime=0, StopTime=2, Tolerance=1e-6 ) );
 end IntegratorWithLimiter;

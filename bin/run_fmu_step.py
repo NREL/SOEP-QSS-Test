@@ -9,7 +9,7 @@
 # Developed by Objexx Engineering, Inc. (https://objexx.com) under contract to
 # the National Renewable Energy Laboratory of the U.S. Department of Energy
 #
-# Copyright (c) 2017-2019 Objexx Engineering, Inc. All rights reserved.
+# Copyright (c) 2017-2020 Objexx Engineering, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -52,8 +52,8 @@ parser.add_argument( 'fmu', help = 'FMU file' )
 parser.add_argument( '--var', help = 'variable file' )
 parser.add_argument( '--solver', help = 'Solver  (CVode|DASSL|LSODAR|RungeKutta34)  [CVode]', default = 'CVode', choices = [ 'CVode', 'DASSL', 'LSODAR', 'RungeKutta34' ] )
 parser.add_argument( '--discr', help = 'CVode discretization method  (BDF|Adams)  [BDF]', default = 'BDF', choices = [ 'BDF', 'Adams' ] )
-parser.add_argument( '--rtol', help = 'Relative tolerance  [1e-4]', type = float, default = 1.0e-4 )
-parser.add_argument( '--atol', help = 'Absolute tolerance  [1e-6]', type = float, default = 1.0e-6 )
+parser.add_argument( '--rtol', help = 'Relative tolerance  [1e-4]', type = float )
+parser.add_argument( '--atol', help = 'Absolute tolerance  [1e-6]', type = float )
 parser.add_argument( '--final_time', help = 'Simulation end time', type = float )
 parser.add_argument( '--maxord', help = 'Max order', type = int )
 parser.add_argument( '--ncp', help = 'Number of communication (output) points  [internal]', type = int )
@@ -96,30 +96,25 @@ if args.ncp is not None: opt[ 'ncp' ] = args.ncp
 if args.solver == 'CVode':
     opt_solver = opt[ args.solver + '_options' ]
     opt_solver[ 'discr' ] = args.discr
-    opt_solver[ 'rtol' ] = args.rtol
-    opt_solver[ 'atol' ] = args.atol
-    if args.maxord is not None:
-        opt_solver[ 'maxord' ] = args.maxord
+    if args.maxord is not None: opt_solver[ 'maxord' ] = args.maxord
 elif args.solver == 'DASSL':
     opt[ 'solver' ] = 'ODASSL'
     opt_solver = opt[ 'ODASSL_options' ]
-    opt_solver[ 'rtol' ] = args.rtol
-    opt_solver[ 'atol' ] = args.atol
-    if args.maxord is not None:
-        opt_solver[ 'maxord' ] = args.maxord
+    if args.maxord is not None: opt_solver[ 'maxord' ] = args.maxord
 elif args.solver == 'LSODAR':
     opt_solver = opt[ args.solver + '_options' ]
-    opt_solver[ 'rtol' ] = args.rtol
-    opt_solver[ 'atol' ] = args.atol
     if args.maxord is not None:
         opt_solver[ 'maxordn' ] = args.maxord
         opt_solver[ 'maxords' ] = args.maxord
     opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
 elif args.solver == 'RungeKutta34':
     opt_solver = opt[ args.solver + '_options' ]
-    opt_solver[ 'rtol' ] = args.rtol
-    opt_solver[ 'atol' ] = args.atol
     opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
+else:
+    print( 'Error: Unsupported solver:', args.solver )
+    sys.exit( 1 )
+if args.rtol is not None: opt_solver[ 'rtol' ] = args.rtol
+if args.atol is not None: opt_solver[ 'atol' ] = args.atol
 
 # Simulate
 if args.final_time is not None:
@@ -144,7 +139,7 @@ print( '\nGenerating output files...' )
 keys = res.keys()
 t = res[ 'time' ]
 if args.var:
-    with open( args.var, 'rU' ) as var_file:
+    with open( args.var, 'r' if sys.version_info >= ( 3, 0 ) else 'rU' ) as var_file:
         for line in var_file:
             key = line.strip()
             if key in keys:
@@ -163,10 +158,14 @@ if args.var:
                         bkey += c
                 m = fnmatch.filter( keys, bkey ) # File name wildcard pattern
                 if not m: # Try as regex
-                    re_key = bkey + ( '' if key.endswith( '$' ) else '$' ) # Match whole string
-                    for k in keys:
-                        if re.match( re_key, k ):
-                            m.append( k )
+                    try:
+                        re_key = re.compile( bkey + ( '' if key.endswith( '$' ) else '$' ) ) # Match whole string
+                    except:
+                        pass # Not a valid regex
+                    else:
+                        for k in keys:
+                            if re_key.match( k ):
+                                m.append( k )
                 if m: # Matches found
                     for k in m:
                         key_out = k + '.out'

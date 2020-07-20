@@ -1,2 +1,2 @@
 @echo off
-QSS ..\..\OCT\CoupledSystem.fmu --qss=QSS2
+QSS ..\..\OCT\CoupledSystem.fmu --qss=QSS2 %* >run.log 2>&1

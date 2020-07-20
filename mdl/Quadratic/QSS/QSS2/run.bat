@@ -1,2 +1,2 @@
 @echo off
-QSS ..\..\JModelica\Quadratic.fmu --qss=QSS2
+QSS ..\..\OCT\Quadratic.fmu --qss=QSS2 %* >run.log 2>&1

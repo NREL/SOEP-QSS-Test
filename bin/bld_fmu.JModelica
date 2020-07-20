@@ -1,7 +1,7 @@
 #!/bin/bash
 # Build the local model FMU with JModelica
-# jm script customized for your system must be on your PATH
-# compile_fmu.JModelica.py and mod_xml.JModelica.py must be on your PATH
+# jm.JModelica script customized for your system must be on your PATH
+# compile_fmu.JModelica.py and mod_xml.py must be on your PATH
 # Run from the JModelica sub-directory of the model directory
 
 # Find tool directory and name
@@ -16,26 +16,25 @@ done
 model_dir=$(dirname "$tool_dir")
 model=$(basename "$model_dir")
 
-# Compile the Modelica file with JModelica
-compile_fmu_name="compile_fmu.JModelica.py"
-compile_fmu=$(which "$compile_fmu_name")
-if [ "$compile_fmu" == "" ]; then
-    echo "$compile_fmu_name not found on your PATH"
-    exit 1
-fi
-
 # Compile the FMU
-if [ -f "$tool_dir/$model.mo" ]; then
-  jm.JModelica $compile_fmu $tool_dir/$model.mo $@
+if [ -f "$tool_dir/$model.ref" ]; then
+  jm.JModelica compile_fmu.JModelica.py $tool_dir/$model.ref $@
+elif [ -f "$tool_dir/$model.mo" ]; then
+  jm.JModelica compile_fmu.JModelica.py $tool_dir/$model.mo $@
+elif [ -f "$model_dir/$model.ref" ]; then
+  jm.JModelica compile_fmu.JModelica.py $model_dir/$model.ref $@
+elif [ -f "$model_dir/$model.mo" ]; then
+  jm.JModelica compile_fmu.JModelica.py $model_dir/$model.mo $@
 else
-  jm.JModelica $compile_fmu $model_dir/$model.mo $@
+  echo "Neither Modelica ($model.mo) nor ref ($model.ref) files found in tool or model directories"
+  exit 1
 fi
 
 # Add index comment lines to XML
 if [ -f "$model.fmu" ]; then
     unzip -o $model.fmu modelDescription.xml
     cp -f modelDescription.xml modelDescription.orig.xml
-    mod_xml.JModelica.py
+    mod_xml.py
     sleep 1 && touch modelDescription.xml # zip -f won't work if .xml time stamp matches .fmu
     zip -f $model.fmu
 fi

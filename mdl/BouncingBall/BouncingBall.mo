@@ -15,7 +15,7 @@ equation
     reinit(v, -e*pre(v));
   end when;
 annotation (
-  experiment(StopTime=3, Tolerance=1e-4),
+  experiment( StartTime=0, StopTime=3, Tolerance=1e-4 ),
   Icon(coordinateSystem(preserveAspectRatio=false)),
   Diagram(coordinateSystem(preserveAspectRatio=false)),
   Documentation(revisions="<html>

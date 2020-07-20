@@ -1,0 +1,11 @@
+HeatingCoolingHotWaterSmall Model QSS Notes
+
+As of 2020/07 OCT version the event indicator dependency information
+is incorrect, causing the QSS simulation to give incorrect results
+and very slow run times.
+
+The QSS run gives warnings about initial values from the xml not
+equaling the initial values from the fmi2GetContinuousStates call.
+
+The QSS run gives this warning: Number of FMU-ME event indicators (175)
+is not equal to the number of zero-crossing variables found (46)

@@ -1,0 +1,5 @@
+HeatingCoolingHotWaterSmall Model OCT Notes
+
+OCT gives a number of warnings when generating the FMU.
+
+The PyFMI run generates some Kinsol errors.

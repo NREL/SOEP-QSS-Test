@@ -2,3 +2,7 @@ FloorOpenLoop Model Notes
 
 This is a building thermal model that is a good validation case for the
 QSS solver.
+
+This model used to be in the Buildings library as
+Buildings.Experimental.EnergyPlus.Examples.VAVReheatRefBldgSmallOffice.FloorOpenLoop
+but has been removed so we build the local copy.

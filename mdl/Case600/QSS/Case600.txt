@@ -3,6 +3,10 @@ Case600 Model QSS Notes
 The OCT FMU was used for QSS simulations since it has the event indicators
 for zero crossings.
 
+As of the 2020/06 OCT version the generated event indicators include incorrect
+reverse dependencies on an "event indicator" variable that isn't listed in
+EventIndicators but is not a QSS variable or derivative so QSS terminates.
+
 The key room temperature variable, TRooAir.T, is not set up in the FMU as an
 output variable so it is not available from the QSS runs.
 

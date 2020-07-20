@@ -1,3 +1,3 @@
 #ifndef FMU_QSS_GUID
-#define FMU_QSS_GUID "ea06e2ec-5c74-50ef-9b93-63ef3707287e"
+#define FMU_QSS_GUID "88158917-2ca6-53ae-b14d-23c0dc481948"
 #endif

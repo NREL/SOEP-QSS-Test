@@ -1,2 +1,5 @@
 FloorOpenLoop Model OCT Notes
 
+Does not currently build with many of these errors:
+ "Cannot find class or component declaration for"
+Probably due to dependencies in the Buildings lib no longer present.

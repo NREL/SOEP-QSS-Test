@@ -1,0 +1,3 @@
+TwoFloor_TwoZone Model OCT Notes
+
+As of 2020/07 OCT is not generating complete/correct event indicator dependencies.

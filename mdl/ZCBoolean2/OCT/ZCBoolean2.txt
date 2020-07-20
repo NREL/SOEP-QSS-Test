@@ -1,6 +1,1 @@
 ZCBoolean2 Model OCT Notes
-
-OCT is currently unable to compile this model due to the event indicator
-support generating a Java NullPointerException.
-
-The PyFMI simulation is not correct: Investigating

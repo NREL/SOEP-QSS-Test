@@ -5,7 +5,7 @@ model InputFunction "This model simulates a first order ODE with an input"
 equation
   der(x) = u;
   annotation (
-    experiment(StopTime=10, Tolerance=1e-4),
+    experiment( StartTime=0, StopTime=10, Tolerance=1e-4 ),
     Icon(coordinateSystem(preserveAspectRatio=false)),
     Diagram(coordinateSystem(preserveAspectRatio=false)),
     Documentation(revisions="<html>

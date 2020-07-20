@@ -112,6 +112,7 @@ equation
  __Dymola_Commands(file="modelica://Buildings/Resources/Scripts/Dymola/Experimental/EnergyPlus/Examples/VAVReheatRefBldgSmallOffice/FloorOpenLoop.mos"
         "Simulate and plot"),
 experiment(
+      StartTime=0,
       StopTime=172800,
       Tolerance=1e-06,
       __Dymola_Algorithm="Cvode"),

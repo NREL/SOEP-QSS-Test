@@ -23,5 +23,5 @@ This model has 8 state event at 1.35, 2.39,
 3.85, 4.9, 6.35, 7.4, 8.85, 9.9s when simulated from 0 to 10s.
 </p>
 </html>"));
-annotation( experiment( StopTime=10, Tolerance=1e-4 ) );
+annotation( experiment( StartTime=0, StopTime=10, Tolerance=1e-4 ) );
 end StateEvent6;

@@ -1,2 +1,5 @@
 PID_Controller Model OCT Notes
 
+OCT will no longer build this model:
+Error at line 10, column 14, in file 'C:\Projects\EnergyPlus\SOEP\tst\QSS-Test\mdl\PID_Controller\PID_Controller.mo':
+  The binding expression of the variable initType does not match the declared type of the variable

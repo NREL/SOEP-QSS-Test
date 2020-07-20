@@ -1,4 +1,5 @@
 StateEvent6 Model OCT Notes
 
-OCT is currently unable to compile this model due to the event indicator
-support generating a Java NullPointerException.
+OCT is not generating the reverse dependency of the event indicators on the
+y variable so that must be added for QSS simulation to give the correct y
+output.

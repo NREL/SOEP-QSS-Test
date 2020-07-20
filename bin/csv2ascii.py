@@ -9,7 +9,7 @@
 # Developed by Objexx Engineering, Inc. (https://objexx.com) under contract to
 # the National Renewable Energy Laboratory of the U.S. Department of Energy
 #
-# Copyright (c) 2017-2019 Objexx Engineering, Inc. All rights reserved.
+# Copyright (c) 2017-2020 Objexx Engineering, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -45,12 +45,8 @@ def main():
     # Open input file
     if len( sys.argv ) != 2: raise IOError( 'One CSV file argument required' )
     iname = sys.argv[ 1 ]
-    if iname == '':
-        raise IOError( 'No input file specified' )
-    if sys.version_info >= ( 3, 0 ):
-        ifile = open( iname, 'r' )
-    else:
-        ifile = open( iname, 'rU' )
+    if iname == '': raise IOError( 'No input file specified' )
+    ifile = open( iname, 'r' if sys.version_info >= ( 3, 0 ) else 'rU' )
 
     # Open output file
     base = os.path.splitext( os.path.basename( iname ) )[ 0 ]

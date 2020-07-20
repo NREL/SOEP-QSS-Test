@@ -28,7 +28,7 @@ equation
   // variable for the zero crossing variables
   yBooPre = pre(yBoo);
   annotation (
-    experiment(StopTime=10, Tolerance=1e-4),
+    experiment( StartTime=0, StopTime=10, Tolerance=1e-4 ),
     Icon(coordinateSystem(preserveAspectRatio=false)),
     Diagram(coordinateSystem(preserveAspectRatio=false)),
     Documentation(revisions="<html>

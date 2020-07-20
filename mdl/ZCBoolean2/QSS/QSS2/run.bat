@@ -1,0 +1,2 @@
+@echo off
+QSS ..\..\OCT\ZCBoolean2.fmu --qss=QSS2 --dtMax=0.01 --var=..\..\ZCBoolean2.var --out=trFkxo %* >run.log 2>&1

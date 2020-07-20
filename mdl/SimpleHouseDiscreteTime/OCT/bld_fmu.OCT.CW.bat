@@ -3,11 +3,10 @@ rem Build the local model FMU with OCT
 rem compile_fmu.OCT.CW.py must be on your PATH
 rem Run from the OCT sub-directory of the model directory
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-REM THE SimpleHouseDiscreteTime FMU CURRENTLY ONLY WORKS FOR QSS 
-IF LAZY EVALUATION IS ENABLED EVEN THOUGH THIS CAN GIVE WRONG
-DERIVATIVES
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+:: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+:: THE SimpleHouseDiscreteTime FMU CURRENTLY ONLY WORKS FOR QSS IF LAZY
+:: EVALUATION IS ENABLED EVEN THOUGH THIS CAN GIVE WRONG DERIVATIVES
+:: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 setlocal
 

@@ -4,7 +4,7 @@ model Quadratic "This model simulates a quadratic"
 equation
   der(x) = time;
   annotation (
-    experiment(StopTime=10, Tolerance=1e-4),
+    experiment( StartTime=0, StopTime=10, Tolerance=1e-4 ),
     Icon(coordinateSystem(preserveAspectRatio=false)),
     Diagram(coordinateSystem(preserveAspectRatio=false)),
     Documentation(revisions="<html>

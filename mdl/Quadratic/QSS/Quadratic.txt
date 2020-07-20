@@ -1,8 +1,3 @@
 Quadratic Model QSS Notes
 
-The QSS version from Aug 7 2019 is needed at this time to run this model
-because the derivative explicit dependence on time is not yet handled by
-the directional derivative approach used with OCT in the newer code base.
-
-The JModelica FMU was used to generate the QSS results.
-The results using the JModelica and Dymola FMUs were identical.
+The QSS run matches the PyFMI results.

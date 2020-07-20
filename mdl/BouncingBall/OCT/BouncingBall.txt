@@ -1,4 +1,6 @@
 BouncingBall Model OCT Notes
 
 XML Modifications:
- Added the missing event indicator reverse dependency on index 46 (v): OCT bug reported to Modelon
+ 2020/04 OCT r15276: Bounce event indicator reverse dependency on der(v) and der(h) works but causes extra requantizations of h when observer update would suffice: Modelon will address this
+  Same beh with 2020/06 OCT update
+ Older OCT: Bounce event indicator: Added the missing reverse dependency on index 46 (v): OCT bug reported to Modelon

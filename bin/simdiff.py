@@ -9,7 +9,7 @@
 # Developed by Objexx Engineering, Inc. (https://objexx.com) under contract to
 # the National Renewable Energy Laboratory of the U.S. Department of Energy
 #
-# Copyright (c) 2017-2019 Objexx Engineering, Inc. All rights reserved.
+# Copyright (c) 2017-2020 Objexx Engineering, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -152,14 +152,9 @@ def sim_diff():
 
         # Read variable spec list
         vspcs = []
-        if sys.version_info >= ( 3, 0 ):
-            with open( args.var, 'r' ) as var_file:
-                for line in var_file:
-                    vspcs.append( line.strip() )
-        else:
-            with open( args.var, 'rU' ) as var_file:
-                for line in var_file:
-                    vspcs.append( line.strip() )
+        with open( args.var, 'r' if sys.version_info >= ( 3, 0 ) else 'rU' ) as var_file:
+            for line in var_file:
+                vspcs.append( line.strip() )
 
         # Filter input 1
         for vnam in vars1.keys():
@@ -259,18 +254,12 @@ def sig_compare( fnam1, fnam2 ):
 
     # Open the files
     try:
-        if sys.version_info >= ( 3, 0 ):
-            file1 = open( fnam1, 'r' )
-        else:
-            file1 = open( fnam1, 'rU' )
+        file1 = open( fnam1, 'r' if sys.version_info >= ( 3, 0 ) else 'rU' )
     except:
         print( '\nOpen failed: ' + fnam1 )
         return
     try:
-        if sys.version_info >= ( 3, 0 ):
-            file2 = open( fnam2, 'r' )
-        else:
-            file2 = open( fnam2, 'rU' )
+        file2 = open( fnam2, 'r' if sys.version_info >= ( 3, 0 ) else 'rU' )
     except:
         print( '\nOpen failed: ' + fnam2 )
         return

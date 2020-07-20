@@ -1,0 +1,5 @@
+DataCenterContinuousTimeControl Model QSS Notes
+
+As of 2020/07 OCT version the event indicator dependency information
+is incorrect, causing the QSS simulation to give incorrect results
+and very slow run times.
