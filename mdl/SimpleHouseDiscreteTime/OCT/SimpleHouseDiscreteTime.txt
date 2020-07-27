@@ -1,20 +1,4 @@
 SimpleHouseDiscreteTime Model OCT Notes
 
-This model no longer builds with the current OCT due to removal of some of its dependencies in the Buildings library.
-
-OCT generated FMUs with event indicator support do not currently run under PyFMI
-(they get stuck in an infinite FMI initialization loop) so we use separate FMUs
-for PyFMI and QSS simulation.
-
-With 2020/04 OCT dev version from Modelon running FMUs with event indicator support gives:
-Traceback (most recent call last):
-  File "C:\Projects\EnergyPlus\SOEP\tst\bin\run_fmu.CW.py", line 128, in <module>
-    res = fmu.simulate( final_time = args.final_time, options = opt )
-  File "src\pyfmi\fmi.pyx", line 7704, in pyfmi.fmi.FMUModelME2.simulate
-  File "src\pyfmi\fmi.pyx", line 313, in pyfmi.fmi.ModelBase._exec_simulate_algorithm
-  File "src\pyfmi\fmi.pyx", line 307, in pyfmi.fmi.ModelBase._exec_simulate_algorithm
-  File "install/Python\fmi_algorithm_drivers.py", line 318, in __init__
-  File "src\pyfmi\fmi.pyx", line 4563, in pyfmi.fmi.FMUModelBase2.initialize
-  File "src\pyfmi\fmi.pyx", line 4557, in pyfmi.fmi.FMUModelBase2.initialize
-  File "src\pyfmi\fmi.pyx", line 4509, in pyfmi.fmi.FMUModelBase2.enter_initialization_mode
-pyfmi.fmi.FMUException: Enter Initialize returned with an error. Enable logging for more information, (load_fmu(..., log_level=4)).
+After updating to this model to correspond to SimpleHouse it builds against
+the Buildings Library master branch.

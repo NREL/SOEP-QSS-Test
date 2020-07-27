@@ -29,6 +29,6 @@ Error at line 100, column 18, in file '../OnOffController.mo':
 So the JModelica FMU was not yet run.
 
 XML Modifications
- Ran mod_xml.JModelica.py to add index comments
+ Build script ran mod_xml.py to add index comments
  Added der(vol.T) -> ConSS.y dependencies to Derivatives and InitialUnknowns
  Added ConSS.y -> __zc_z1 and __zc_z2 conditional handler dependencies

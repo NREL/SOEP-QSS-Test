@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  fmiVersion="2.0"
+  modelName="QSS.Specific.Events.ZCBoolean2"
+  guid="{c21ae90b-c966-47f1-a243-52c522592621}"
+  description="This model tests state event detection with boolean zero crossing"
+  generationTool="Dymola Version 2018 (64-bit), 2017-04-10"
+  generationDateAndTime="2017-09-14T17:48:20Z"
+  variableNamingConvention="structured"
+  numberOfEventIndicators="4">
+  <ModelExchange
+    modelIdentifier="QSS_Specific_Events_ZCBoolean2"
+    canGetAndSetFMUstate="true"
+    providesDirectionalDerivative="true"/>
+  <TypeDefinitions>
+    <SimpleType
+      name="Modelica.Blocks.Interfaces.RealOutput">
+      <Real/>
+    </SimpleType>
+  </TypeDefinitions>
+  <DefaultExperiment startTime="0.0"
+    stopTime="10.0"
+    tolerance="0.0001"/>
+  <ModelVariables>
+    <!-- Index for next variable = 1 -->
+    <ScalarVariable
+      name="x"
+      valueReference="33554432"
+      initial="exact">
+      <Real start="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 2 -->
+    <ScalarVariable
+      name="der(x)"
+      valueReference="587202560">
+      <Real derivative="1"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 3 -->
+    <ScalarVariable
+      name="u"
+      valueReference="369098752"
+      description="Internal input signal">
+      <Real/>
+    </ScalarVariable>
+    <!-- Index for next variable = 4 -->
+    <ScalarVariable
+      name="der(u)"
+      valueReference="369098753"
+      description="der(Internal input signal)">
+      <Real derivative="3"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 5 -->
+    <ScalarVariable
+      name="yBoo"
+      valueReference="905969666"
+      description="Boolean variable"
+      variability="discrete">
+      <Boolean/>
+    </ScalarVariable>
+    <!-- Index for next variable = 6 -->
+    <ScalarVariable
+      name="yBooPre"
+      valueReference="369098755"
+      description="Boolean variable for pre(yBoo)"
+      variability="discrete">
+      <Boolean/>
+    </ScalarVariable>
+    <!-- Index for next variable = 7 -->
+    <ScalarVariable
+      name="y"
+      valueReference="335544320"
+      causality="output"
+      variability="discrete"
+      initial="exact">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"
+        start="1.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 8 -->
+    <ScalarVariable
+      name="__zc_z1"
+      valueReference="335544321"
+      description="Zero crossing"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 9 -->
+    <ScalarVariable
+      name="__zc_der_z1"
+      valueReference="335544322"
+      description="Derivative of Zero crossing"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 10 -->
+    <ScalarVariable
+      name="__zc_z2"
+      valueReference="335544323"
+      description="Zero crossing"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 11 -->
+    <ScalarVariable
+      name="__zc_der_z2"
+      valueReference="335544324"
+      description="Derivative of Zero crossing"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="7"
+        dependencies=""
+        dependenciesKind=""/>
+      <Unknown index="8"
+        dependencies=""
+        dependenciesKind=""/>
+      <Unknown index="9"
+        dependencies=""
+        dependenciesKind=""/>
+      <Unknown index="10"
+        dependencies=""
+        dependenciesKind=""/>
+      <Unknown index="11"
+        dependencies=""
+        dependenciesKind=""/>
+    </Outputs>
+    <Derivatives>
+      <Unknown index="2"
+        dependencies="7"
+        dependenciesKind="fixed"/>
+    </Derivatives>
+    <DiscreteStates>
+        <Unknown index="5"
+          dependencies="8 10"
+          dependenciesKind="dependent dependent"/>
+        <Unknown index="6"
+          dependencies="8 10"
+          dependenciesKind="dependent dependent"/>
+        <Unknown index="7"
+          dependencies="8 10"
+          dependenciesKind="dependent dependent"/>
+    </DiscreteStates>
+    <InitialUnknowns>
+      <Unknown index="2"
+        dependencies=""
+        dependenciesKind=""/>
+      <Unknown index="7"
+        dependencies=""
+        dependenciesKind=""/>
+      <Unknown index="8"
+        dependencies="6"
+        dependenciesKind="dependent"/>
+      <Unknown index="9"
+        dependencies=""
+        dependenciesKind=""/>
+      <Unknown index="10"
+        dependencies="6"
+        dependenciesKind="dependent"/>
+      <Unknown index="11"
+        dependencies=""
+        dependenciesKind=""/>
+    </InitialUnknowns>
+  </ModelStructure>
+</fmiModelDescription>

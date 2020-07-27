@@ -71,6 +71,23 @@ elif arg.endswith( '.ref' ):
     try:
         with open( arg, 'r' if sys.version_info >= ( 3, 0 ) else 'rU' ) as ref:
             nam = ref.readline().rstrip( '\n' )
+            if nam.startswith( 'Buildings.' ):
+                lib = 'Buildings'
+            elif nam.startswith( 'Modelica.' ):
+                lib = 'Modelica'
+            else:
+                lib = ''
+            if lib == 'Buildings':
+                try:
+                    branch = ref.readline().rstrip( '\n' )
+                except:
+                    branch = ''
+                try:
+                    commit = ref.readline().rstrip( '\n' )
+                except:
+                    commit = ''
+            else:
+                branch = commit = ''
     except Exception as msg:
         print( '\nError: Ref file read failed:', msg )
         print( '\nRef file format is:' )
@@ -99,6 +116,31 @@ try:
          compiler_options = compiler_options
         )
     else: # Modelica file found by searching MODELICAPATH
+        if branch or commit: # Create temporary model-specific Buildings Library
+
+            # Model-specific Buildings Library setup
+            try: # Create directory for model-specific Buildings Library
+                buildings_dir = ( os.getenv( 'TEMP' ) + '\\' if os.name == 'nt' else '~/tmp/' ) + mdl + '_buildings'
+                if not os.path.isdir( buildings_dir ): # Assume existing model-specific Buildings Library is correctly set up to save time
+                    if branch: # Clone the specified Buildings Library branch
+                        os.system( 'git clone -b ' + branch + ' git@github.com:lbl-srg/modelica-buildings.git ' + buildings_dir )
+                    else: # Clone the Buildings Library master branch
+                        os.system( 'git clone git@github.com:lbl-srg/modelica-buildings.git ' + buildings_dir )
+                    if commit: # Check out a specified commit
+                        os.system( 'git -C ' + buildings_dir + ' checkout ' + commit )
+            except Exception as msg:
+                print( 'Buildings Library clone/checkout from .ref file specs failed: ' + msg )
+                sys.exit( 1 )
+
+            # Set up environment to use model-specific Buildings Library
+            os.environ[ 'MODELICA_BUILDINGS_LIB' ] = buildings_dir
+            MODELICAPATH = os.getenv( 'MODELICAPATH' )
+            if MODELICAPATH:
+                os.environ[ 'MODELICAPATH' ] = buildings_dir + ( ';' if os.name == 'nt' else ':' ) + MODELICAPATH
+            else:
+                os.environ[ 'MODELICAPATH' ] = buildings_dir
+            pymodelica.environ[ 'MODELICAPATH' ] = os.getenv( 'MODELICAPATH' )
+
         if not os.getenv( 'MODELICAPATH' ):
             print( 'Error: MODELICAPATH environment variable is not set: Required for reference to library models' )
             sys.exit( 1 )
@@ -136,5 +178,5 @@ try:
                     print( 'Warning: Renaming diagnostics failed:', nam_dia, '->', mdl_dia )
 except Exception as msg:
     print( '\nError: FMU compilation failed:', msg )
-    print( '\nUsage:', os.path.basename( sys.argv[ 0 ] ), '<path\model>.[mo|ref]' )
+    print( '\nUsage:', os.path.basename( sys.argv[ 0 ] ), '<path' + os.sep + 'model>.[mo|ref]' )
     sys.exit( 1 )

@@ -27,7 +27,7 @@ if exist "%tool_dir%%model%.mo" (
   compile_fmu.JModelica.py %tool_dir%%model%.mo %*
 ) else (
 if exist "%model_dir%%model%.ref" (
-  compile_fmu.JModelica.py %model_dir%%model%.mo %*
+  compile_fmu.JModelica.py %model_dir%%model%.ref %*
 ) else (
 if exist "%model_dir%%model%.mo" (
   compile_fmu.JModelica.py %model_dir%%model%.mo %*

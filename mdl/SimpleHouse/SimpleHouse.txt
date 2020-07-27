@@ -1,20 +1,3 @@
 SimpleHouse Model Notes
 
-The OCT FMU won't run under PyFMI with the event indicator support.
-
-The OCT FMU QSS simulation should work once event indicators are functional.
-Adding the missing dependencies is not practical with this many event
-indicators, most of which have no reverse depdencies to help identify
-which zero-crossing functions they correspond to.
-
-
-When blocks:
-
- when {initial(), weaDat.conTim1.canRepeatWeatherFile and weaDat.conTim1.modTim > pre(weaDat.conTim1.tNext)} then
-  weaDat.conTim1.tNext = if weaDat.conTim1.canRepeatWeatherFile then integer(weaDat.conTim1.modTim / weaDat.conTim1.lenWea) * weaDat.conTim1.lenWea + weaDat.conTim1.lenWea else time;
- end when;
-
- when {initial(), weaDat.conTim.canRepeatWeatherFile and weaDat.conTim.modTim > pre(weaDat.conTim.tNext)} then
-  weaDat.conTim.tNext = if weaDat.conTim.canRepeatWeatherFile then integer(weaDat.conTim.modTim / weaDat.conTim.lenWea) * weaDat.conTim.lenWea + weaDat.conTim.lenWea else time;
- end when;
-
+This is a simple house model for QSS testing.

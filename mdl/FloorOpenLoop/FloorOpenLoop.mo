@@ -1,12 +1,11 @@
-within Buildings.Experimental.EnergyPlus.Examples.VAVReheatRefBldgSmallOffice;
+within Buildings.ThermalZones.EnergyPlus.Examples.VAVReheatRefBldgSmallOffice;
 model FloorOpenLoop "Open loop model of one floor"
   extends Modelica.Icons.Example;
 
-  replaceable package Medium = Buildings.Media.Air "Medium for air"
-    annotation (__Dymola_choicesAllMatching=true);
+  replaceable package Medium = Buildings.Media.Air "Medium for air";
 
   parameter String idfName=Modelica.Utilities.Files.loadResource(
-    "modelica://Buildings/Resources/Data/Experimental/EnergyPlus/Validation/RefBldgSmallOfficeNew2004_Chicago.idf")
+    "modelica://Buildings/Resources/Data/ThermalZones/EnergyPlus/Validation/RefBldgSmallOffice/RefBldgSmallOfficeNew2004_Chicago.idf")
     "Name of the IDF file";
   parameter String weaName = Modelica.Utilities.Files.loadResource(
     "modelica://Buildings/Resources/weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.mos")
@@ -16,10 +15,9 @@ model FloorOpenLoop "Open loop model of one floor"
   final parameter Modelica.SIunits.MassFlowRate mOut_flow = 2
     "Outside air infiltration for each room";
 
-  inner Buildings.Experimental.EnergyPlus.Building building(
+  inner Buildings.ThermalZones.EnergyPlus.Building building(
     idfName=idfName,
-    weaName=weaName,
-    energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial)
+    weaName=weaName)
     "Building-level declarations"
     annotation (Placement(transformation(extent={{-80,40},{-60,60}})));
 
@@ -29,7 +27,7 @@ model FloorOpenLoop "Open loop model of one floor"
     "Name of the weather file";
   BoundaryConditions.WeatherData.Bus weaBus "Weather data bus"
     annotation (Placement(transformation(extent={{-50,40},{-30,60}})));
-  Buildings.Experimental.EnergyPlus.Examples.VAVReheatRefBldgSmallOffice.BaseClasses.Floor flo(
+  Buildings.ThermalZones.EnergyPlus.Examples.VAVReheatRefBldgSmallOffice.BaseClasses.Floor flo(
     redeclare package Medium = Medium,
     use_windPressure=false,
     nor(T_start=275.15),
@@ -63,6 +61,7 @@ model FloorOpenLoop "Open loop model of one floor"
     each dp_nominal=10,
     each linearized=true) "Small flow resistance for inlet"
     annotation (Placement(transformation(extent={{4,-30},{24,-10}})));
+
 equation
   connect(weaBus, flo.weaBus) annotation (Line(
       points={{-40,50},{66,50},{66,22},{65,22}},
@@ -108,14 +107,12 @@ equation
       points={{-60,50},{-40,50}},
       color={255,204,51},
       thickness=0.5));
-    annotation (Placement(transformation(extent={{-80,40},{-60,60}})),
- __Dymola_Commands(file="modelica://Buildings/Resources/Scripts/Dymola/Experimental/EnergyPlus/Examples/VAVReheatRefBldgSmallOffice/FloorOpenLoop.mos"
+    annotation (
+ __Dymola_Commands(file="modelica://Buildings/Resources/Scripts/Dymola/ThermalZones/EnergyPlus/Examples/VAVReheatRefBldgSmallOffice/FloorOpenLoop.mos"
         "Simulate and plot"),
 experiment(
-      StartTime=0,
       StopTime=172800,
-      Tolerance=1e-06,
-      __Dymola_Algorithm="Cvode"),
+      Tolerance=1e-06),
 Documentation(info="<html>
 <p>
 Test case of one floor of the small office DOE reference building.

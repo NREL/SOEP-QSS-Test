@@ -1,2 +1,2 @@
 @echo off
-QSS --qss=LIQSS2 ..\..\OCT\SimpleHouseDiscreteTime.fmu --dtOut=3600 --out=sfx
+QSS ..\..\OCT\SimpleHouseDiscreteTime.fmu --qss=LIQSS2 --dtOut=120 --out=sFx --var=..\..\SimpleHouseDiscreteTime.var --statistics --dtNum=1e-3 %* >run.log 2>&1

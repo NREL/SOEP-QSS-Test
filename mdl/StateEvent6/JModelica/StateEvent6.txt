@@ -1,5 +1,5 @@
 StateEvent6 Model JModelica Notes
 
 XML Modifications
- Ran mod_xml.JModelica.py to add index comments
+ Build script ran mod_xml.py to add index comments
  Added dependencies for zero-crossing (__zc_z) and discrete (y) variables

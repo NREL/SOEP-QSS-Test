@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fmiModelDescription fmiVersion="2.0" modelName="Achilles" guid="546d9b7ea308d188631ca91b53a0fb3d" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2020-06-28T02:03:27" variableNamingConvention="structured" numberOfEventIndicators="0">
+<fmiModelDescription fmiVersion="2.0" modelName="Achilles" guid="546d9b7ea308d188631ca91b53a0fb3d" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2020-07-26T16:34:18" variableNamingConvention="structured" numberOfEventIndicators="0">
 	<ModelExchange modelIdentifier="Achilles" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="false" />
 	<LogCategories>
 		<Category name="logLevel1" description="logLevel1 - fatal error" />

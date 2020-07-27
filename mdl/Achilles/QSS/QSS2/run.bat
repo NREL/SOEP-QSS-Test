@@ -1,2 +1,2 @@
 @echo off
-QSS ..\..\OCT\Achilles.fmu --qss=QSS2 %*
+QSS ..\..\OCT\Achilles.fmu --qss=QSS2 %* >run.log 2>&1

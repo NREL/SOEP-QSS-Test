@@ -1,7 +1,7 @@
 model PID_Controller
   "Demonstrates the usage of a Continuous.LimPID controller"
   extends Modelica.Icons.Example;
-  parameter Modelica.SIunits.Angle driveAngle=1.57 "Reference distance to move";
+  parameter Modelica.SIunits.Angle driveAngle=1.570796326794897 "Reference distance to move";
   Modelica.Blocks.Continuous.LimPID PI(
     k=100,
     Ti=0.1,
@@ -38,7 +38,7 @@ model PID_Controller
 initial equation
   der(spring.w_rel) = 0;
 equation
-  connect(spring.flange_b,inertia2. flange_a);
+  connect(spring.flange_b, inertia2.flange_a);
   connect(inertia1.flange_b, spring.flange_a);
   connect(torque.flange, inertia1.flange_a);
   connect(kinematicPTP.y[1], integrator.u);
