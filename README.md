@@ -44,7 +44,7 @@ The `mdl` directory contains the models and results with this (tentative) organi
 ModelName/
   ModelName.txt      Notes
   ModelName.mo       Modelica model
-  ModelName.ref      Buildings Library model name and, optionally, branch and/or commit
+  ModelName.ref      Modelica or Buildings Library model name and, optionally, Buildings Library branch and/or commit
   ModelName.var      Variables to output name list (supports wildcards)
   Dymola/            Dymola model & results
   JModelica/         JModelica model & results
@@ -153,7 +153,7 @@ JModelica lacks this QSS support and is being retired but can still be used for 
 
 FMUs can be built directly from models in the Buildings Library by placing a *ModelName*.ref file alongside the *ModelName*.mo file. The *ModelName*.ref file is a text file with these lines:
 
-	Buildings Library full model name
+	Modelica or Buildings Library full model name
 	Buildings Library branch if not master (optional)
 	Buildings Library commit hash if not HEAD of branch (optional)
 
@@ -162,6 +162,8 @@ Here is the FloorOpenLoop.ref file:
 	Buildings.ThermalZones.EnergyPlus.Examples.VAVReheatRefBldgSmallOffice.FloorOpenLoop
 	issue1129_energyPlus_zone
 This model exists in the issue1129_energyPlus_zone branch in the HEAD commit.
+
+Models that are defined in the local .mo file but depend on a specific branch/commit of the Buildings library should use a ref file as above but with just `Buildings` in the first line.
 
 #### Building FMUs with OPTIMICA
 

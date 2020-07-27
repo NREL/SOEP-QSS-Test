@@ -1,3 +1,4 @@
+within QSS.Specific.Events;
 model OnOffController
   extends Modelica.Icons.Example;
   replaceable package MediumA = Buildings.Media.Air "Medium for air";
@@ -101,7 +102,7 @@ equation
   connect(theCon.port_b, vol.port) annotation (Line(points={{0,60},{32,60},{32,62},
           {60,62}}, color={191,0,0}));
   annotation (
-    experiment(Tolerance=1e-4, StopTime=2),
+    experiment(Tolerance=1e-4, StartTime=0, StopTime=2),
     Icon(coordinateSystem(preserveAspectRatio=false, extent={{-160,-100},{100,100}})),
     Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-160,-100},{100,
             100}})),

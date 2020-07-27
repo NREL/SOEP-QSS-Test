@@ -59,21 +59,24 @@ arg = sys.argv[ 1 ]
 if not os.path.isfile( arg ):
     print( '\nError: Argument is not an existing file' )
     sys.exit( 1 )
-mdl = os.path.splitext( os.path.basename( arg ) )[ 0 ]
+nam = mdl = os.path.splitext( os.path.basename( arg ) )[ 0 ]
 if arg.endswith( '.mo' ):
-    mof = arg
-    if not os.path.isfile( mof ):
-        print( '\nError: Modelica file not found:', mof )
+    mod = arg
+    if not os.path.isfile( mod ):
+        print( '\nError: Modelica file not found:', mod )
         sys.exit( 1 )
-    nam = mdl
 elif arg.endswith( '.ref' ):
-    mof = None
+    mod = None
     try:
         with open( arg, 'r' if sys.version_info >= ( 3, 0 ) else 'rU' ) as ref:
-            nam = ref.readline().rstrip( '\n' )
-            if nam.startswith( 'Buildings.' ):
+            ref = ref.readline().rstrip( '\n' )
+            if ref == 'Buildings': # Uses Buildings Library but model is local .mo
                 lib = 'Buildings'
-            elif nam.startswith( 'Modelica.' ):
+            elif ref.startswith( 'Buildings.' ):
+                nam = ref
+                lib = 'Buildings'
+            elif ref.startswith( 'Modelica.' ):
+                nam = ref
                 lib = 'Modelica'
             else:
                 lib = ''
@@ -115,10 +118,10 @@ compiler_options[ 'generate_ode_jacobian' ] = False # For directional derivative
 # Compile FMU
 try:
     # Compile the FMU
-    if mof: # Pass Modelica file
+    if mod: # Pass Modelica file
         fmu_file = pymodelica.compile_fmu(
          nam,
-         mof,
+         mod,
          version = "2.0",
          compiler_log_level = 'warning',
          compiler_options = compiler_options

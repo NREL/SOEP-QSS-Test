@@ -8,4 +8,5 @@ The QSS runs use "all" outputs to get accurate view of the temperature:
 QSS OnOffController.fmu --qss=<QSS_method> --out=rafx
 
 Notes
- Need "all" or "observer" outputs to show the temperature accurately since it depends only on conQSS.y and so doesn't requantize often
+ Need "all" or "observer" outputs to show the temperature accurately
+  since it depends only on conQSS.y and so doesn't requantize often
