@@ -65,18 +65,20 @@ if arg.endswith( '.mo' ):
     if not os.path.isfile( mod ):
         print( '\nError: Modelica file not found:', mod )
         sys.exit( 1 )
+    branch = commit = None
 elif arg.endswith( '.ref' ):
     mod = None
     try:
         with open( arg, 'r' if sys.version_info >= ( 3, 0 ) else 'rU' ) as ref:
-            ref = ref.readline().rstrip( '\n' )
-            if ref == 'Buildings': # Uses Buildings Library but model is local .mo
+            line_1 = ref.readline().rstrip( '\n' )
+            if line_1 == 'Buildings': # Uses Buildings Library but model is local .mo
                 lib = 'Buildings'
-            elif ref.startswith( 'Buildings.' ):
-                nam = ref
+                mod = arg[:-3] + 'mo'
+            elif line_1.startswith( 'Buildings.' ):
+                nam = line_1
                 lib = 'Buildings'
-            elif ref.startswith( 'Modelica.' ):
-                nam = ref
+            elif line_1.startswith( 'Modelica.' ):
+                nam = line_1
                 lib = 'Modelica'
             else:
                 lib = ''
@@ -94,7 +96,9 @@ elif arg.endswith( '.ref' ):
     except Exception as msg:
         print( '\nError: Ref file read failed:', msg )
         print( '\nRef file format is:' )
-        print( 'Model name in library' )
+        print( '<Model name in Buildings or Modelica Library>|Buildings|<blank to use local .mo file>' )
+        print( '[Buildings library branch name]' )
+        print( '[Buildings library commit hash]' )
         print( '\nRef file example:' )
         print( 'Buildings.ThermalZones.Detailed.Validation.BESTEST.Cases6xx.Case600' )
         sys.exit( 1 )
@@ -115,6 +119,37 @@ compiler_options[ 'generate_ode_jacobian' ] = False # For directional derivative
 #if os.name == 'nt': # Windows
 #    compiler_options[ 'enable_lazy_evaluation' ] = True # Lazy evaluation not supported in Linux OCT yet # Can cause FMU to give wrong derivatives # Can cause event indicator infinite loop with incomplete dependencies
 
+# Set up to use model-specific Buildings Library if branch or commit specified
+if branch or commit:
+
+    # Model-specific Buildings Library setup
+    try: # Create directory for model-specific Buildings Library
+        buildings_dir = ( os.getenv( 'TEMP' ) + '\\' if os.name == 'nt' else '~/tmp/' ) + mdl + '_buildings'
+        if not os.path.isdir( buildings_dir ): # Assume existing model-specific Buildings Library is correctly set up to save time
+            if branch: # Clone the specified Buildings Library branch
+                os.system( 'git clone -b ' + branch + ' git@github.com:lbl-srg/modelica-buildings.git ' + buildings_dir )
+            else: # Clone the Buildings Library master branch
+                os.system( 'git clone git@github.com:lbl-srg/modelica-buildings.git ' + buildings_dir )
+            if commit: # Check out a specified commit
+                os.system( 'git -C ' + buildings_dir + ' checkout ' + commit )
+    except Exception as msg:
+        print( 'Buildings Library clone/checkout from .ref file specs failed: ' + msg )
+        sys.exit( 1 )
+
+    # Set up environment to use model-specific Buildings Library
+    os.environ[ 'MODELICA_BUILDINGS_LIB' ] = buildings_dir
+    MODELICAPATH = os.getenv( 'MODELICAPATH' )
+    if MODELICAPATH:
+        os.environ[ 'MODELICAPATH' ] = buildings_dir + ( ';' if os.name == 'nt' else ':' ) + MODELICAPATH
+    else:
+        os.environ[ 'MODELICAPATH' ] = buildings_dir
+    pymodelica.environ[ 'MODELICAPATH' ] = os.getenv( 'MODELICAPATH' )
+
+# Check for MODELICAPATH environment variable
+if not os.getenv( 'MODELICAPATH' ):
+    print( 'Error: MODELICAPATH environment variable is not set' )
+    sys.exit( 1 )
+
 # Compile FMU
 try:
     # Compile the FMU
@@ -127,34 +162,6 @@ try:
          compiler_options = compiler_options
         )
     else: # Modelica file found by searching MODELICAPATH
-        if branch or commit: # Create temporary model-specific Buildings Library
-
-            # Model-specific Buildings Library setup
-            try: # Create directory for model-specific Buildings Library
-                buildings_dir = ( os.getenv( 'TEMP' ) + '\\' if os.name == 'nt' else '~/tmp/' ) + mdl + '_buildings'
-                if not os.path.isdir( buildings_dir ): # Assume existing model-specific Buildings Library is correctly set up to save time
-                    if branch: # Clone the specified Buildings Library branch
-                        os.system( 'git clone -b ' + branch + ' git@github.com:lbl-srg/modelica-buildings.git ' + buildings_dir )
-                    else: # Clone the Buildings Library master branch
-                        os.system( 'git clone git@github.com:lbl-srg/modelica-buildings.git ' + buildings_dir )
-                    if commit: # Check out a specified commit
-                        os.system( 'git -C ' + buildings_dir + ' checkout ' + commit )
-            except Exception as msg:
-                print( 'Buildings Library clone/checkout from .ref file specs failed: ' + msg )
-                sys.exit( 1 )
-
-            # Set up environment to use model-specific Buildings Library
-            os.environ[ 'MODELICA_BUILDINGS_LIB' ] = buildings_dir
-            MODELICAPATH = os.getenv( 'MODELICAPATH' )
-            if MODELICAPATH:
-                os.environ[ 'MODELICAPATH' ] = buildings_dir + ( ';' if os.name == 'nt' else ':' ) + MODELICAPATH
-            else:
-                os.environ[ 'MODELICAPATH' ] = buildings_dir
-            pymodelica.environ[ 'MODELICAPATH' ] = os.getenv( 'MODELICAPATH' )
-
-        if not os.getenv( 'MODELICAPATH' ):
-            print( 'Error: MODELICAPATH environment variable is not set: Required for reference to library models' )
-            sys.exit( 1 )
         fmu_file = pymodelica.compile_fmu(
          nam,
          version = "2.0",
