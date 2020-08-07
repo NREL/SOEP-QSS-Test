@@ -2,7 +2,7 @@
 rem Set environment for using these scripts with JModelica
 rem Customize for the directories on your system
 set MODELICA_BUILDINGS_LIB=C:\Projects\EnergyPlus\SOEP\tst\modelica-buildings
-set MODELICAPATH=C:\JModelica\install\ThirdParty\MSL;%MODELICA_BUILDINGS_LIB%
+set MODELICAPATH=C:\JModelica\install\ThirdParty\MSL;%MODELICA_BUILDINGS_LIB%;.;..
 set batPath=%~dp0
 set batPath=%batPath:~0,-1%
 set PATH=%PATH%;%batPath%;

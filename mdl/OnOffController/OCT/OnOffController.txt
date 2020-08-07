@@ -3,5 +3,7 @@ OnOffController Model OCT Notes
 The model has event indicators so the QSS simulation will not be correct
 until OCT event indicator support is complete and validated.
 
-The Buildings library has removed the OnOffControllerQSS class
-that this depends on so the OCT FMU was not yet run.
+The event indicator dependencies do not match those of the __zc variables
+added to the JModelica and Dymola versions of the model and they never
+cross zero in the PyFMI runs, which give incorrect results for the state
+variables.

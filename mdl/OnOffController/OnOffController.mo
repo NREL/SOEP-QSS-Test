@@ -1,8 +1,7 @@
-within QSS.Specific.Events;
 model OnOffController
   extends Modelica.Icons.Example;
   replaceable package MediumA = Buildings.Media.Air "Medium for air";
-  BaseClasses.OnOffControllerQSS conQSS(bandwidth=1)
+  OnOffControllerQSS conQSS(bandwidth=1)
     "Controller for sensible heat flow rate"
     annotation (Placement(transformation(extent={{-72,4},{-52,24}})));
   Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor senTemRoo
