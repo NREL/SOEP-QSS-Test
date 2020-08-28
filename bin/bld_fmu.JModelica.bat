@@ -35,7 +35,6 @@ if exist "%model_dir%%model%.mo" (
   echo "Neither Modelica (%model%.mo) nor ref (%model%.ref) files found in tool or model directories"
   exit /B 1
 ))))
-)
 
 rem Add index comment lines to XML
 if exist "%model%.fmu" (
