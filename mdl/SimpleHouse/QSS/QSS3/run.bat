@@ -1,2 +1,2 @@
 @echo off
-QSS --qss=QSS3 ..\..\OCT\SimpleHouse.fmu --dtOut=3600 --out=sx --statistics 
+QSS ..\..\OCT\SimpleHouse.fmu --qss=QSS3 --dtNum=5e-4 --zFac=2 --dtOut=3600 --out=sFx --var=..\..\SimpleHouse.var --statistics >run.log 2>&1

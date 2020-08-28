@@ -1,5 +1,4 @@
 Case600 Model OCT Notes
 
 OCT is currently generating many of the event indicators with no reverse dependencies.
-This has been reported to Modelon. Until this is fixed simulation results from this FMU
-should not be assumed to be accurate.
+Until this is fixed QSS results from this FMU should not be assumed to be accurate.

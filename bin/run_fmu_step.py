@@ -52,11 +52,11 @@ parser.add_argument( 'fmu', help = 'FMU file' )
 parser.add_argument( '--var', help = 'variable file' )
 parser.add_argument( '--solver', help = 'Solver  (CVode|DASSL|LSODAR|RungeKutta34)  [CVode]', default = 'CVode', choices = [ 'CVode', 'DASSL', 'LSODAR', 'RungeKutta34' ] )
 parser.add_argument( '--discr', help = 'CVode discretization method  (BDF|Adams)  [BDF]', default = 'BDF', choices = [ 'BDF', 'Adams' ] )
-parser.add_argument( '--rtol', help = 'Relative tolerance  [1e-4]', type = float )
-parser.add_argument( '--atol', help = 'Absolute tolerance  [1e-6]', type = float )
-parser.add_argument( '--final_time', help = 'Simulation end time', type = float )
+parser.add_argument( '--rtol', help = 'Relative tolerance  [FMU]', type = float )
+parser.add_argument( '--atol', help = 'Absolute tolerance  [FMU]', type = float )
+parser.add_argument( '--final_time', help = 'Simulation end time  [FMU]', type = float )
 parser.add_argument( '--maxord', help = 'Max order', type = int )
-parser.add_argument( '--ncp', help = 'Number of communication (output) points  [internal]', type = int )
+parser.add_argument( '--ncp', help = 'Number of communication (output) points  [500]', type = int )
 args = parser.parse_args()
 
 # Check variable list file
@@ -74,6 +74,7 @@ except Exception as err:
     if err: print( 'Error: ' + str( err ) )
     print( 'FMU file: ' + model + '.fmu' )
     sys.exit( 1 )
+fmu.set_max_log_size( 2073741824 ) # = 2*1024^3 (about 2GB)
 model = os.path.basename( model )
 
 # Set up input function
@@ -125,11 +126,14 @@ else:
 # Clean up empty log file
 try:
     log_file = model + '_log.txt'
-    if os.path.getsize( log_file ) == 0:
+    if os.path.isfile( log_file ) and ( os.path.getsize( log_file ) == 0 ):
         os.remove( log_file )
+except:
+    pass
+try:
     log_files = glob.glob( '*_log.txt' ) # Remove all 0-size log files (FMU internal name might not be model name)
     for log_file in log_files:
-        if os.path.getsize( log_file ) == 0:
+        if os.path.isfile( log_file ) and ( os.path.getsize( log_file ) == 0 ):
             os.remove( log_file )
 except:
     pass

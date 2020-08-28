@@ -1,2 +1,2 @@
 #!/bin/bash
-QSS ../../Dymola/Case600FF.fmu --qss=QSS3 --dtOut=100 --out=sfx --tEnd=5e5 --dtNum=0.01
+QSS ../../Dymola/Case600FF.fmu --qss=QSS3 --dtNum=0.01 --dtOut=100 --out=sFx --statistics --var=../../Case600FF.var $* >run.log 2>&1

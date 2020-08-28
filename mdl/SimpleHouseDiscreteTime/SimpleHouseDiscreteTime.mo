@@ -23,9 +23,8 @@ model SimpleHouseDiscreteTime
     "= false because flow will not reverse in these circuits";
 
   Modelica.Thermal.HeatTransfer.Components.HeatCapacitor walCap(
-    T(fixed=true),
-    C=10*A_wall*0.05*1000*1000)
-    "Thermal mass of walls"
+                    T(fixed=true), C=10*A_wall*0.05*1000*1000)
+                                   "Thermal mass of walls"
     annotation (Placement(transformation(extent={{-10,-10},{10,10}},
         rotation=270,
         origin={142,-8})));
@@ -49,10 +48,10 @@ model SimpleHouseDiscreteTime
     T_b_nominal=273.15 + 40,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     allowFlowReversal=allowFlowReversal,
-    Q_flow_nominal=QHea_nominal)                  "Radiator"
+    Q_flow_nominal=QHea_nominal) "Radiator"
     annotation (Placement(transformation(extent={{104,-116},{124,-96}})));
 
-  Buildings.Fluid.Sources.Boundary_pT bouAir(redeclare package Medium = MediumAir, nPorts=2,
+  Buildings.Fluid.Sources.Boundary_pT bouAir( redeclare package Medium = MediumAir, nPorts=2,
     use_T_in=true) "Air boundary with constant temperature"
     annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
@@ -95,14 +94,14 @@ model SimpleHouseDiscreteTime
   Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor senTemZonAir
     "Zone air temperature sensor"
     annotation (Placement(transformation(extent={{80,170},{60,190}})));
-  Buildings.Fluid.Actuators.Dampers.Exponential vavDam(
+  Buildings.Fluid.Actuators.Dampers.VAVBoxExponential vavDam(
     redeclare package Medium = MediumAir,
+    dp_nominal=dpAir_nominal,
     from_dp=true,
-    m_flow_nominal=mAir_flow_nominal,
-    dpDamper_nominal=10,
-    dpFixed_nominal=dpAir_nominal - 10)
-    "Damper" annotation (Placement(transformation(extent={{-10,10},{10,
-            -10}}, origin={72,120})));
+    m_flow_nominal=mAir_flow_nominal) "Damper" annotation (Placement(
+        transformation(
+        extent={{-10,10},{10,-10}},
+        origin={72,120})));
 
   Buildings.Fluid.Movers.FlowControlled_dp fan(
     redeclare package Medium = MediumAir,
@@ -142,8 +141,7 @@ model SimpleHouseDiscreteTime
     annotation (Placement(transformation(extent={{-60,-36},{-40,-16}})));
   Modelica.Blocks.Math.BooleanToInteger booleanToInt "Boolean to integer"
     annotation (Placement(transformation(extent={{-16,-144},{4,-124}})));
-  Buildings.Controls.Continuous.LimPID conDam(
-      controllerType=Modelica.Blocks.Types.SimpleController.P,
+  Buildings.Controls.Continuous.LimPID conDam(controllerType=Modelica.Blocks.Types.SimpleController.P,
       yMin=0.1) "Controller for damper"
     annotation (Placement(transformation(extent={{-20,80},{0,100}})));
   Modelica.Blocks.Sources.Constant TSetRoo(k=273.15 + 24)
@@ -308,8 +306,8 @@ equation
           {26,-100},{42,-100}}, color={0,0,127}));
   connect(heaWat.port_a, pump.port_b) annotation (Line(points={{44,-106},{40,-106},
           {40,-112},{40,-170},{60,-170}}, color={0,127,255}));
-  connect(const_dp.y, fan.dp_in) annotation (Line(points={{-31,160},{-22,160},{
-          -22,132},{-22,132}},                       color={0,0,127}));
+  connect(const_dp.y, fan.dp_in) annotation (Line(points={{-31,160},{-22,160},{-22,
+          132},{-22,132}},                           color={0,0,127}));
   connect(gaiWin.y, window.Q_flow) annotation (Line(points={{-39,-26},{-34,-26},
           {-30,-26},{-20,-26}}, color={0,0,127}));
   connect(gaiWin.u, weaBus.HGloHor) annotation (Line(points={{-62,-26},{-90,-26},

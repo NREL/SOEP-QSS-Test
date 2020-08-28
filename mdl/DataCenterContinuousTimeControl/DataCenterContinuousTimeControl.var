@@ -1,2 +1,5 @@
 *.vol.T
+roo.rooVol.T
+roo.TAir.T
+TC*.T
 _eventIndicator_*

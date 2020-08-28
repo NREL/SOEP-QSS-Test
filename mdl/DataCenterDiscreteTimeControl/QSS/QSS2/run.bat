@@ -1,2 +1,2 @@
 @echo off
-QSS ..\..\OCT\DataCenterDiscreteTimeControl.fmu --qss=QSS2 --dtNum=1e-4 --zFac=10 --dtOut=100 --out=sFx --var=..\..\DataCenterDiscreteTimeControl.var >run.log 2>&1
+QSS ..\..\OCT\DataCenterDiscreteTimeControl.fmu --qss=QSS2 --dtNum=1e-4 --zFac=2 --dtOut=60 --out=sFx --statistics --var=..\..\DataCenterDiscreteTimeControl.var %* >run.log 2>&1
