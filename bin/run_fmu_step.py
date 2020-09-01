@@ -183,15 +183,16 @@ if args.var:
 else:
     temp_re = re.compile( 'temp_\d+' )
     for key in keys:
-        if ( key[ 0 ] != '_' ) or ( key[ 0:5 ] == '__zc_' ): # Not internal variable
-            if ( key[ 0:4 ] == 'der(' ) and ( key[ -1 ] == ')' ):
-                pass # Skip derivatives
-            elif temp_re.match( key ):
-                pass # Skip temporaries
-            elif key != 'time':
-                key_out = key + '.out'
-                try:
-                    t_v = numpy.c_[ t, res[ key ] ]
-                    numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
-                except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
-                    print( 'Output failed to: ' + key_out )
+        if key.startswith( 'der(' ) and ( key[ -1 ] == ')' ):
+            pass # Skip derivatives
+        elif key.startswith( '_' ) and ( not key.startswith( ( '_eventIndicator', '__zc_' ) ) ):
+            pass # Skip non-zero-crossing internals
+        elif temp_re.match( key ):
+            pass # Skip temporaries
+        elif key != 'time':
+            key_out = key + '.out'
+            try:
+                t_v = numpy.c_[ t, res[ key ] ]
+                numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
+            except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
+                print( 'Output failed to: ' + key_out )

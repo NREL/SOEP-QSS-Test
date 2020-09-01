@@ -1,0 +1,8 @@
+EventIndicator1 Model OCT Notes
+
+The OCT-generated FMU has correct event indicator dependencies
+that short-circuit the discrete variable. If the discrete
+variable is changed to an output the dependencies are not
+short-circuited by OCT.
+
+The default PyFMI CVode simulation uses 514 steps.

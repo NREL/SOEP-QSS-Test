@@ -1,0 +1,12 @@
+EventIndicator4 Model QSS Notes
+
+QSS is not sensitive to the numerical differentiation time step or the
+zero-crossing options in this case where the zero-crossing functions
+actually cross zero.
+
+The discrete variable is currently being tracked as a QSS variable.
+Since it is an output variable in this model it gets updated by QSS
+due to the dependencies in the Outputs section of the XML. But
+variables that will be short-circuited (discrete, integer, boolean, ...)
+should not be tracked by QSS. Once the short-circuiting design is
+finalized the necessary changes will be made in QSS.

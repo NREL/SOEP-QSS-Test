@@ -1,0 +1,9 @@
+EventIndicator2 Model QSS Notes
+
+Event indicator requantizations are reduced using --zFac to avoid having
+them dominate the run.
+
+To obtain approximately the same solution accuracy as the default PyFMI run
+- QSS2 needs 517 steps.
+- QSS3 needs 89 steps but due to numerical differentiation noise it does not
+  achieve the target accuracy without a much tighter tolerance.
