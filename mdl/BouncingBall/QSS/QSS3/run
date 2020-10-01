@@ -1,3 +1,0 @@
-#!/bin/bash
-QSS ../../JModelica/BouncingBall.fmu --qss=QSS3 --dtZC=1e-10 --dtNum=0.0001 --dtOut=0.001 --out=srfx
-# FMU has a hard time detecting zero crossings when predicted with QSS3: probably due to inaacurate numeric 3rd derivatives and large time steps

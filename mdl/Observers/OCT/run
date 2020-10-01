@@ -1,2 +1,0 @@
-#!/bin/bash
-run_fmu --ncp=100000 $* >run.log 2>&1

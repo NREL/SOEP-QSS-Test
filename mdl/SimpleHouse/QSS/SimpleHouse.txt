@@ -1,3 +1,7 @@
 SimpleHouse Model QSS Notes
 
-The QSS simulation runs very slowly.
+The QSS simulations run very slowly due to excessive event indicator
+requantizations due to numerical noise. Using --dtND=5e-4 does the
+best but does not eliminate the issue. QSS will not be efficient for
+this model until at least first derivatives of event indicators are
+provided efficiently by the FMU.

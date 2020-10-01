@@ -1,2 +1,0 @@
-#!/bin/bash
-QSS ../../Dymola/StateEvent6.fmu --qss=QSS3 --dtMax=0.001 --dtNum=0.0001

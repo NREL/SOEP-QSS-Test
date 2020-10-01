@@ -1,2 +1,0 @@
-#!/bin/bash
-QSS ../../OCT/Achilles.fmu --qss=LIQSS1

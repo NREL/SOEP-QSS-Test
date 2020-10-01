@@ -1,1 +1,4 @@
 SimpleHouse Model OCT Notes
+
+As of the 2020/08 OCT an FMU built with the generate_ode_jacobian option
+abort under PyFMI with no error message so we build without that option.

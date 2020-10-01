@@ -51,7 +51,10 @@ def main():
     # Open output file
     base = os.path.splitext( os.path.basename( iname ) )[ 0 ]
     oname = base + '.out'
-    ofile = open( oname, 'w' )
+    if sys.version_info >= ( 3, 0 ):
+        ofile = open( oname, 'w', newline = '\n' )
+    else:
+        ofile = open( oname, 'wb' )
 
     # Process the input file
     line = ifile.readline().rstrip( '\n' )

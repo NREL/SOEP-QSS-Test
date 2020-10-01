@@ -1,4 +1,2 @@
 Achilles Model QSS Notes
 
-The QSS runs use the JModelica FMU (results with the Dymola FMU were identical)
-with the default options.

@@ -3,4 +3,4 @@ StateEvent6 Model QSS Notes
 OCT is not generating the reverse dependency of the event indicators on the
 y variable so that must be added for QSS simulation since y can be output.
 
-The QSS runs use --dtMax=0.01 to avoid deactivation.
+The QSS2 runs use --dtMax=0.01 to avoid deactivation.

@@ -1,4 +1,2 @@
 Case600FF Model OCT Notes
 
-The stock Buildings version of the model does not have the TRooQSS_K.T
-variable that was added to the Dymola model.

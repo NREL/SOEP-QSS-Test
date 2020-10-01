@@ -7,7 +7,7 @@ model StateEvent6
   Real x1(start=1.1, fixed=true);
   Real x2(start=-2.5, fixed=true);
   Real x3(start=4, fixed=true);
-  discrete Real y;
+  discrete output Real y;
 equation
   der(x1) = cos(2*3.14*time/2.5);
   der(x2) = 1;

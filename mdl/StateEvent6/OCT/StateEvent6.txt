@@ -1,5 +1,4 @@
 StateEvent6 Model OCT Notes
 
-OCT is not generating the reverse dependency of the event indicators on the
-y variable so that must be added for QSS simulation to give the correct y
-output.
+Since the discrete variable is an output it appears in the event indicator
+reverse dependency so QSS can track it correctly.

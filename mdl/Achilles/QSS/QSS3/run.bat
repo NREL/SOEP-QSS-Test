@@ -1,2 +1,0 @@
-@echo off
-QSS ..\..\OCT\Achilles.fmu --qss=QSS3 --dtNum=0.01

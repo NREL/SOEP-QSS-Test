@@ -1,6 +1,7 @@
 SimpleHouseDiscreteTime Model QSS Notes
 
 The QSS simulation accuracy is hurt by numeric differentiation
-such that it appears conditional/zero-crossing events are missed
-and eventually the solution diverges. A few dtNum time steps were
-tried but none eliminated the issue.
+such that it appears conditional/zero-crossing events are missed.
+A few dtND time steps were tried but none eliminated the issue.
+Since the PyFMI run zero crossings are also not numerically stable
+the model is not yet a good choice for QSS evaluation.

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fmiModelDescription fmiVersion="2.0" modelName="StateEvent6" guid="d070d999c1334239de6cdffa9c2ea45b" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2020-07-03T19:39:16" variableNamingConvention="structured" numberOfEventIndicators="2">
+<fmiModelDescription fmiVersion="2.0" modelName="StateEvent6" guid="b0c38fece774573aa72bb6610f23fc2d" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2020-09-21T03:37:26" variableNamingConvention="structured" numberOfEventIndicators="2">
 	<ModelExchange modelIdentifier="StateEvent6" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="false" />
 	<LogCategories>
 		<Category name="logLevel1" description="logLevel1 - fatal error" />
@@ -13,7 +13,7 @@
 	<VendorAnnotations>
 		<Tool name="Optimica Compiler Toolkit">
 			<Annotations>
-				<Annotation name="CompilerVersion" value="OCT-stable-r16494_JM-r14295" />
+				<Annotation name="CompilerVersion" value="OCT-stable-r17256_JM-r14295" />
 			</Annotations>
 		</Tool>
 		<Tool name="OCT_StateEvents">
@@ -237,12 +237,13 @@
 			<Real relativeQuantity="false" derivative="52" />
 		</ScalarVariable>
 		<!-- Variable with index #54 -->
-		<ScalarVariable name="y" valueReference="53" causality="local" variability="discrete" initial="calculated">
+		<ScalarVariable name="y" valueReference="53" causality="output" variability="discrete" initial="calculated">
 			<Real relativeQuantity="false" />
 		</ScalarVariable>
 	</ModelVariables>
 	<ModelStructure>
 		<Outputs>
+			<Unknown index="54" dependencies="48" />
 			<Unknown index="10" dependencies="48" />
 			<Unknown index="11" dependencies="48" />
 		</Outputs>
@@ -260,6 +261,7 @@
 			<Unknown index="49" dependencies="" />
 			<Unknown index="51" dependencies="" />
 			<Unknown index="53" dependencies="" />
+			<Unknown index="54" dependencies="" />
 		</InitialUnknowns>
 	</ModelStructure>
 </fmiModelDescription>

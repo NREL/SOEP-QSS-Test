@@ -5,5 +5,4 @@ until OCT event indicator support is complete and validated.
 
 The event indicator dependencies do not match those of the __zc variables
 added to the JModelica and Dymola versions of the model and they never
-cross zero in the PyFMI runs, which give incorrect results for the state
-variables.
+fire in the PyFMI runs, giving incorrect results for the state variables.

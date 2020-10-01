@@ -1,4 +1,4 @@
 InputFunction Model OCT Notes
 
-The custom run_fmu_step.py script duplicates the step input function
+The local run.py script duplicates the step input function
 the QSS runs are using.

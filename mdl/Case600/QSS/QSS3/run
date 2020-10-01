@@ -1,2 +1,0 @@
-#!/bin/bash
-QSS ../../JModelica/Case600.fmu --qss=QSS3 --dtOut=100 --out=sfx

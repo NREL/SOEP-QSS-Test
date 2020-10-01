@@ -2,6 +2,3 @@ InputFunction Model Notes
 
 This is a simple model with one continuous state variable with its
 derivative defined by an input function.
-
-The run_fmu.step.py script runs this model's FMUs with PyFMI with a step
-input function that matches the QSS solver runs.

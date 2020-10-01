@@ -1,8 +1,9 @@
 FloorOpenLoop Model OCT Notes
 
-With 2020/07 OCT update this model fails to build on Windows:
+With 2020/08 OCT update this model fails to build on Windows:
 - The C code in Buildings\Resources\C-Sources\EnergyPlus requires
   some porting for Windows compatibility (unistd.h and execinfo.h).
 - Need to set the LIB environment variable for pymodelica to find fmilib_shared.lib:
   set LIB=%LIB%;C:\OCT\install\Python\tests_jmodelica\files\Programs\Load_and_initialize
+- Get error: "Spawn is not yet supported on Windows"
 - Build fails to link dl library so deeper porting would be needed to get this working on Windows.

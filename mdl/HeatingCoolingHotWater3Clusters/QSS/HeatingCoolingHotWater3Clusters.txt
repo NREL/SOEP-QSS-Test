@@ -9,3 +9,6 @@ equaling the initial values from the fmi2GetContinuousStates call.
 
 The QSS run gives this warning: Number of FMU-ME event indicators (212)
 is not equal to the number of zero-crossing variables found (21)
+
+The QSS run appears to be broken due to event indicator problems:
+it runs very slowly and does not have zero crossing events.

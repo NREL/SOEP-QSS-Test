@@ -2,3 +2,6 @@ DataCenterContinuousTimeControl Model Notes
 
 This is a building thermal model that is a good validation case for the
 QSS solver.
+
+The time range starts at a large value which causes small steps to be
+non-advancing in simulations.

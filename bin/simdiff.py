@@ -92,6 +92,8 @@ def sim_diff():
         if not glob1: glob1 = glob.glob( os.path.join( inp1, 'out', '*.out' ) )
     else:
         glob1 = glob.glob( inp1 )
+        if not glob1: glob1 = glob.glob( inp1 + '.out' )
+        if not glob1: glob1 = glob.glob( inp1 + '.*.out' )
     glob1 = [ fnam for fnam in glob1 if os.path.isfile( fnam ) ]
     inp2 = args.inp2
     if ( '[' in inp2 ) or ( ']' in inp2 ): # Escape the brackets
@@ -101,6 +103,8 @@ def sim_diff():
         if not glob2: glob2 = glob.glob( os.path.join( inp2, 'out', '*.out' ) )
     else:
         glob2 = glob.glob( inp2 )
+        if not glob2: glob2 = glob.glob( inp2 + '.out' )
+        if not glob2: glob2 = glob.glob( inp2 + '.*.out' )
     glob2 = [ fnam for fnam in glob2 if os.path.isfile( fnam ) ]
     if not ( glob1 and glob2 ):
         if not glob1: print( '\nNo dirs|files found matching: ' + args.inp1 )
@@ -210,13 +214,19 @@ def sim_diff():
     if args.out:
         try: # Open summary output file
             if not out_name: out_name = 'Summary'
-            sys.stdout = open( out_name + '.sum', 'w' )
+            if sys.version_info >= ( 3, 0 ):
+                sys.stdout = open( out_name + '.sum', 'w', newline = '\n' )
+            else:
+                sys.stdout = open( out_name + '.sum', 'wb' )
         except:
             print( 'Summary file open failed' )
         try:
             for ext in ( '.pass', '.fail' ): # Clean any prior pass/fail files
                 if os.path.isfile( out_name + ext ): os.remove( out_name + ext )
-            PF_file = open( out_name + ( '.pass' if n_failed == 0 else '.fail' ), 'w' )
+            if sys.version_info >= ( 3, 0 ):
+                PF_file = open( out_name + ( '.pass' if n_failed == 0 else '.fail' ), 'w', newline = '\n' )
+            else:
+                PF_file = open( out_name + ( '.pass' if n_failed == 0 else '.fail' ), 'wb' )
             PF_file.close()
         except:
             print( 'Pass/Fail file write failed' )
@@ -380,7 +390,10 @@ def sig_compare( fnam1, fnam2 ):
         else:
             onam += ( '.' if onam else '' ) + vnam1 + ( '-' if vnam1 and vnam2 else '' ) + vnam2
         try:
-            sys.stdout = open( onam + '.rpt', 'w' )
+            if sys.version_info >= ( 3, 0 ):
+                sys.stdout = open( onam + '.rpt', 'w', newline = '\n' )
+            else:
+                sys.stdout = open( onam + '.rpt', 'wb' )
         except:
             print( 'Report file open failed' )
             sys.exit( 1 )
