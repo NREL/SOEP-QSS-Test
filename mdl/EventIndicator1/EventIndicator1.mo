@@ -11,5 +11,5 @@ equation
   elsewhen (x <= 1) then
     y = +1;
   end when;
-  annotation(experiment(StartTime=0, StopTime=5));
+  annotation(experiment(StartTime=0, StopTime=5, Tolerance=1e-4));
 end EventIndicator1;

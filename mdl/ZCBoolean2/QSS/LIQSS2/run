@@ -1,2 +1,0 @@
-#!/bin/bash
-QSS ../../JModelica/ZCBoolean2.fmu --qss=LIQSS2 --dtMax=0.001

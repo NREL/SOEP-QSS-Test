@@ -176,7 +176,7 @@ else:
     sys.exit( 1 )
 if args.rtol is not None: opt_solver[ 'rtol' ] = args.rtol
 if args.atol is not None: opt_solver[ 'atol' ] = args.atol
-if args.soo is not None: opt_solver[ 'store_event_points' ] = False
+opt_solver[ 'store_event_points' ] = not args.soo
 
 # Simulate
 sim_args = { 'options': opt }
@@ -226,40 +226,41 @@ if args.var:
     with open( args.var, 'r' if sys.version_info >= ( 3, 0 ) else 'rU' ) as var_file:
         for line in var_file:
             key = line.strip()
-            if key in keys:
-                key_out = key + '.out'
-                try:
-                    t_v = numpy.c_[ t, res[ key ] ]
-                    numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
-                except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
-                    print( 'Output failed to: ' + key_out )
-            else: # Try as file name wildcard pattern or regex
-                bkey = '' # Key with literal brackets protected
-                for c in key:
-                    if c in ( '[', ']' ):
-                        bkey += '[' + c + ']'
-                    else:
-                        bkey += c
-                m = fnmatch.filter( keys, bkey ) # File name wildcard pattern
-                if not m: # Try as regex
+            if key and ( key[ 0 ] != '#' ):
+                if key in keys:
+                    key_out = key + '.out'
                     try:
-                        re_key = re.compile( bkey + ( '' if key.endswith( '$' ) else '$' ) ) # Match whole string
-                    except:
-                        pass # Not a valid regex
-                    else:
-                        for k in keys:
-                            if re_key.match( k ):
-                                m.append( k )
-                if m: # Matches found
-                    for k in m:
-                        key_out = k + '.out'
+                        t_v = numpy.c_[ t, res[ key ] ]
+                        numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
+                    except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
+                        print( 'Output failed to: ' + key_out )
+                else: # Try as file name wildcard pattern or regex
+                    bkey = '' # Key with literal brackets protected
+                    for c in key:
+                        if c in ( '[', ']' ):
+                            bkey += '[' + c + ']'
+                        else:
+                            bkey += c
+                    m = fnmatch.filter( keys, bkey ) # File name wildcard pattern
+                    if not m: # Try as regex
                         try:
-                            t_v = numpy.c_[ t, res[ k ] ]
-                            numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
-                        except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
-                            print( 'Output failed to: ' + key_out )
-                else: # No matches
-                    print( 'No variables found matching: ' + key )
+                            re_key = re.compile( bkey + ( '' if key.endswith( '$' ) else '$' ) ) # Match whole string
+                        except:
+                            pass # Not a valid regex
+                        else:
+                            for k in keys:
+                                if re_key.match( k ):
+                                    m.append( k )
+                    if m: # Matches found
+                        for k in m:
+                            key_out = k + '.out'
+                            try:
+                                t_v = numpy.c_[ t, res[ k ] ]
+                                numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
+                            except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
+                                print( 'Output failed to: ' + key_out )
+                    else: # No matches
+                        print( 'No variables found matching: ' + key )
 else:
     temp_re = re.compile( 'temp_\d+' )
     for key in keys:

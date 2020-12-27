@@ -1,0 +1,5 @@
+#!/usr/bin/env python
+import subprocess, sys
+args = ' --zFac=4 --dtND=1e-4 --out=sROZDXL ' + ' '.join( sys.argv[1:] )
+with open( 'run.log', 'w' ) as log:
+    subprocess.run( 'run_QSS.py' + args, stdout = log, stderr = subprocess.STDOUT, shell = True )

@@ -43,7 +43,7 @@ equation
    // Derivative of first zero crossing function
    __zc_der_z2 = booToRea(not yBooPre)* der(u + 0.5);
   annotation (
-    experiment(StopTime=10, Tolerance=1e-4),
+    experiment( StartTime=0, StopTime=10, Tolerance=1e-4 ),
     Icon(coordinateSystem(preserveAspectRatio=false)),
     Diagram(coordinateSystem(preserveAspectRatio=false)),
     Documentation(revisions="<html>

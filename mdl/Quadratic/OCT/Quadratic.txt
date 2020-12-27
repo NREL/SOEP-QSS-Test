@@ -1,5 +1,2 @@
 Quadratic Model OCT Notes
 
-The OCT results are accurate at the output times but,
-as with other PyFMI output, there are large gaps between
-outputs.

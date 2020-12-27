@@ -44,7 +44,7 @@
 import os, subprocess, sys
 
 # Set up pass-through arguments
-args = ''
+args = ' --rTol=1e-8'
 red = 'ref.log'
 for arg in sys.argv[1:]:
     if arg.startswith( ( '--red=', '--red:' ) ): # Redirect
@@ -67,11 +67,9 @@ if not tool:
     sys.exit( 1 )
 
 # Run Simulation
-rTol = '1e-8'
 try:
     if sys.version_info >= ( 3, 0 ):
         if tool == 'QSS':
-            args += ' --rTol=' + rTol
             if red: # Redirect
                 if red == 'nul': # Discard
                     subprocess.run( 'run_QSS.py' + args, stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL, shell = True )
@@ -81,7 +79,6 @@ try:
             else: # Don't redirect
                 subprocess.run( 'run_QSS.py' + args, shell = True )
         else: # PyFMI
-            args += ' --rtol=' + rTol
             if red: # Redirect
                 if red == 'nul': # Discard
                     subprocess.run( 'run_PyFMI.py' + args, stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL, shell = True )
@@ -92,7 +89,6 @@ try:
                 subprocess.run( 'run_PyFMI.py' + args, shell = True )
     else:
         if tool == 'QSS':
-            args += ' --rTol=' + rTol
             if red: # Redirect
                 if red == 'nul': # Discard
                     DEVNULL = open( os.devnull, 'w' )
@@ -103,7 +99,6 @@ try:
             else: # Don't redirect
                 subprocess.check_call( 'run_QSS.py' + args, shell = True )
         else: # PyFMI
-            args += ' --rtol=' + rTol
             if red: # Redirect
                 if red == 'nul': # Discard
                     DEVNULL = open( os.devnull, 'w' )

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fmiModelDescription fmiVersion="2.0" modelName="SimpleHouseDiscreteTime" guid="82d616707709a8221acc0a6a03d9b878" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2020-09-21T03:24:35" variableNamingConvention="structured" numberOfEventIndicators="36">
+<fmiModelDescription fmiVersion="2.0" modelName="SimpleHouseDiscreteTime" guid="82d616707709a8221acc0a6a03d9b878" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2020-12-15T01:28:32" variableNamingConvention="structured" numberOfEventIndicators="36">
 	<ModelExchange modelIdentifier="SimpleHouseDiscreteTime" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="false" />
 	<UnitDefinitions>
 		<Unit name="m2">
@@ -270,7 +270,7 @@
 	<VendorAnnotations>
 		<Tool name="Optimica Compiler Toolkit">
 			<Annotations>
-				<Annotation name="CompilerVersion" value="OCT-stable-r17256_JM-r14295" />
+				<Annotation name="CompilerVersion" value="OCT-stable-r19089_JM-r14295" />
 			</Annotations>
 		</Tool>
 		<Tool name="OCT_StateEvents">

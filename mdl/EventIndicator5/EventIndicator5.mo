@@ -11,5 +11,5 @@ equation
   elsewhen sample(0,0.1) and (T < 1.01) then
     y = +1;
   end when;
-  annotation(experiment(StartTime=0, StopTime=10));
+  annotation(experiment(StartTime=0, StopTime=10, Tolerance=1e-4));
 end EventIndicator5;

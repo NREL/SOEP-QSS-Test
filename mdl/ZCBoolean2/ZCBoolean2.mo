@@ -43,7 +43,7 @@ Implemented first version.
 This model has 4 state events at
 t=0.5235s, 3.66519s, 6.80678s,
 9.94838s when simulated from 0 to 10s.
-This model has a variable <code>yBooPre</pre>
+This model has a variable <pre>yBooPre</pre>
 which is used to multiply the zero crossing
 variables so they can be updated when the correct
 conditions are met.

@@ -46,15 +46,17 @@ import argparse, os, subprocess, sys
 
 # Parse arguments
 parser = argparse.ArgumentParser()
-parser.add_argument( '--qss', help = 'QSS options (OCT)  [True]', default = True, action = 'store_true' )
+parser.add_argument( '--qss', help = 'QSS options (OCT)  [On]', default = True, action = 'store_true' )
 parser.add_argument( '--no-qss', help = 'No QSS options (OCT)', dest = 'qss', action = 'store_false' )
-parser.add_argument( '--lazy', help = 'Enable lazy evaluation (OCT)  [' + ( 'True' if os.name == 'nt' else 'False' ) + ']', default = ( os.name == 'nt' ), action = 'store_true' )
+parser.add_argument( '--lazy', help = 'Enable lazy evaluation (OCT)  [On with QSS options]', action = 'store_true' )
 parser.add_argument( '--no-lazy', help = 'Disable lazy evaluation (OCT)', dest = 'lazy', action = 'store_false' )
-parser.add_argument( '--source', help = 'Generate FMU source (JModelica)  [False]', default = False, action = 'store_true' )
-parser.add_argument( '--diag', help = 'Generate HTML diagnostics  [False]', default = False, action = 'store_true' )
-parser.add_argument( '--xml', help = 'Extract modelDescription.xml from FMU  [True]', default = True, action = 'store_true' )
+parser.add_argument( '--source', help = 'Generate FMU source (JModelica)  [Off]', default = False, action = 'store_true' )
+parser.add_argument( '--diag', help = 'Generate HTML diagnostics  [Off]', default = False, action = 'store_true' )
+parser.add_argument( '--xml', help = 'Extract modelDescription.xml from FMU  [On]', default = True, action = 'store_true' )
 parser.add_argument( '--no-xml', help = 'No modelDescription.xml from FMU', dest = 'xml', action = 'store_false' )
 args = parser.parse_args()
+if args.qss: # Set up conditional defaults
+    if args.lazy is None: args.lazy = True
 
 # Set up pass-through arguments
 args = ' '.join( sys.argv[1:] )

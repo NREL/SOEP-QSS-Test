@@ -1,2 +1,2 @@
 @echo off
-QSS ..\..\OCT\HeatingCoolingHotWater3Clusters.fmu --qss=QSS2 --dtND=1e-4 --zFac=10 --dtOut=100 --out=sFx --var=..\..\HeatingCoolingHotWater3Clusters.var >run.log 2>&1
+QSS ..\..\OCT\HeatingCoolingHotWater3Clusters.fmu --qss=QSS2 --dtND=1e-4 --zFac=10 --dtOut=100 --out=SXL --var=..\..\HeatingCoolingHotWater3Clusters.var >run.log 2>&1

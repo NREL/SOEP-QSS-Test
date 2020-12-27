@@ -3,17 +3,12 @@ ZCBoolean2 Model Notes
 This model includes zero-crossing functions and a conditional when block with boolean expressions.
 
 Variables:
-x	1	Real		state	O-> y	der(x)=y
-u	3	Internal	sin(t)
-yBoo	5	Disc+Bool		H-> z1, z2
-yBooPre	6	Disc+Bool		H-> z1, z2
-y	7	Disc+Real		H-> z1, z2
-z1	8	ZC			O-> u (internal)	real(yBooPre)*u-0.5
-z2	10	ZC			O-> u (internal)	real(yBooPre)*u+0.5
+x        State    Real      der(x)=y
+u        Real     Internal	 sin(t)  (marked as an input but given an equation so causality is local)
+y        Discrete Real
+yBoo     Discrete Boolean
+yBooPre  Discrete Boolean
 
 Notes:
-ZCs:
- ZC at 0.5235 has no effect on y because it is already 1 (but it toggles yBoo causing z1/2 to change trajectories)
- 3 ZCs that are not FMU events (due to yBoo in conditionals) are correctly ignored by the FMU
-Added a tolerance to the Modelica file annotation
-
+ Zero crossing at 0.5235 has no effect on y because it is already 1 (but it toggles yBoo causing the zero crossing functions to change trajectories)
+ The 3 zero crossings that are not FMU events (due to yBoo in conditionals) are correctly ignored by the FMU

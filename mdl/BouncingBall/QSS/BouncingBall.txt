@@ -1,4 +1,5 @@
 BouncingBall Model QSS Notes
 
 The OCT FMU was used to generate the QSS results using its event indicator support.
-The OCT FMU requires a missing entry to be added to the event indicator reverseDependencies at this time.
+The OCT FMU event indicator reverseDependencies was refined manually to point to 
+the velocity variable, v, for the more efficient and preferred QSS support.

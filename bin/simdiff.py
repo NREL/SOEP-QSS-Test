@@ -158,7 +158,9 @@ def sim_diff():
         vspcs = []
         with open( args.var, 'r' if sys.version_info >= ( 3, 0 ) else 'rU' ) as var_file:
             for line in var_file:
-                vspcs.append( line.strip() )
+                key = line.strip()
+                if key and ( key[ 0 ] != '#' ):
+                    vspcs.append( key )
 
         # Filter input 1
         for vnam in vars1.keys():

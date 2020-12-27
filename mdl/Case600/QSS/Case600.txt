@@ -3,11 +3,18 @@ Case600 Model QSS Notes
 The OCT FMU was used for QSS simulations since it has the event indicators
 for zero crossings.
 
-As of the 2020/06 OCT version the generated event indicators include incorrect
-reverse dependencies on an "event indicator" variable that isn't listed in
-EventIndicators but is not a QSS variable or derivative so QSS terminates.
-
 The key room temperature variable, TRooAir.T, is not set up in the FMU as an
-output variable so it is not available from the QSS runs.
+output variable so QSS runs must use the inefficient F output flag to get it.
 
-A sampling rate of 100 s is suggested for comparison with the PyFMI solution.
+An output sampling rate of 100 s is suggested.
+
+The simulation actually has almost no zero-crossing events.
+
+The 2020/11 OCT is giving event indicators with very large magnitudes
+(1e60 and DBL_MAX) that was causing overflows in QSS numerical derivative
+computations. Rearranging the ND formuals and using "precise" instead of
+"fast" floating point options allows QSS2 to run this model and produce
+the same results as OCT but the event indicators need to be investigated.
+QSS3 simulations are slowing down probably due to the event indicator
+magnitudes and large 3rd derivatives, which is helped but not solved by
+adjusting the dtND step size.

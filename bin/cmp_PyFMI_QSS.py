@@ -110,7 +110,6 @@ for arg in sys.argv[1:]:
      '--refine',
      '--prune',
      '--perfect',
-     '--statistics',
      '--fxn',
      '--con',
      '--bin',
@@ -121,7 +120,7 @@ for arg in sys.argv[1:]:
     else: # Common argument
         args += ' ' + arg
 pyfmi_args = args + pyfmi_args + ' --soo'
-qss_args = args + qss_args + ' --qss=' + qss + ' --out=Fsx --statistics'
+qss_args = args + qss_args + ' --qss=' + qss + ' --out=sSXL'
 
 # Find model directory and name
 model_dir = os.getcwd()

@@ -4,7 +4,7 @@
 #
 # Project: QSS Solver
 #
-# Language: Python 2.7 and 3.5+
+# Language: Python 3.5+
 #
 # Developed by Objexx Engineering, Inc. (https://objexx.com) under contract to
 # the National Renewable Energy Laboratory of the U.S. Department of Energy

@@ -1,0 +1,532 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription fmiVersion="2.0" modelName="UpstreamSampler" guid="cf28f2148ebd4069940fc18900f404d5" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2020-12-07T22:33:46" variableNamingConvention="structured" numberOfEventIndicators="18">
+	<ModelExchange modelIdentifier="UpstreamSampler" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="false" />
+	<UnitDefinitions>
+		<Unit name="s">
+			<BaseUnit s="1" />
+		</Unit>
+		<Unit name="Hz">
+			<BaseUnit s="-1" />
+		</Unit>
+		<Unit name="rad">
+			<BaseUnit />
+			<DisplayUnit name="deg" factor="57.29577951308232" />
+		</Unit>
+	</UnitDefinitions>
+	<LogCategories>
+		<Category name="logLevel1" description="logLevel1 - fatal error" />
+		<Category name="logLevel2" description="logLevel2 - error" />
+		<Category name="logLevel3" description="logLevel3 - warning" />
+		<Category name="logLevel4" description="logLevel4 - info" />
+		<Category name="logLevel5" description="logLevel5 - verbose" />
+		<Category name="logLevel6" description="logLevel6 - debug" />
+	</LogCategories>
+	<VendorAnnotations>
+		<Tool name="Optimica Compiler Toolkit">
+			<Annotations>
+				<Annotation name="CompilerVersion" value="OCT-stable-r19089_JM-r14295" />
+			</Annotations>
+		</Tool>
+		<Tool name="OCT_StateEvents">
+			<EventIndicators>
+				<Element index="10" reverseDependencies="" />
+				<Element index="20" reverseDependencies="" />
+				<Element index="21" reverseDependencies="" />
+				<Element index="22" reverseDependencies="" />
+				<Element index="23" reverseDependencies="" />
+				<Element index="24" reverseDependencies="" />
+				<Element index="25" reverseDependencies="" />
+				<Element index="26" reverseDependencies="" />
+				<Element index="27" reverseDependencies="" />
+				<Element index="11" reverseDependencies="" />
+				<Element index="12" reverseDependencies="" />
+				<Element index="13" reverseDependencies="" />
+				<Element index="14" reverseDependencies="" />
+				<Element index="15" reverseDependencies="" />
+				<Element index="16" reverseDependencies="" />
+				<Element index="17" reverseDependencies="" />
+				<Element index="18" reverseDependencies="" />
+				<Element index="19" reverseDependencies="" />
+			</EventIndicators>
+		</Tool>
+	</VendorAnnotations>
+	<ModelVariables>
+		<!-- Variable with index #1 -->
+		<ScalarVariable name="_block_jacobian_check" valueReference="536870959" causality="parameter" variability="fixed" initial="exact">
+			<Boolean start="false" />
+		</ScalarVariable>
+		<!-- Variable with index #2 -->
+		<ScalarVariable name="_block_jacobian_check_tol" valueReference="8" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="1.0E-6" />
+		</ScalarVariable>
+		<!-- Variable with index #3 -->
+		<ScalarVariable name="_block_solver_experimental_mode" valueReference="268435489" causality="parameter" variability="fixed" initial="exact">
+			<Integer start="0" />
+		</ScalarVariable>
+		<!-- Variable with index #4 -->
+		<ScalarVariable name="_block_solver_profiling" valueReference="536870960" causality="parameter" variability="fixed" initial="exact">
+			<Boolean start="false" />
+		</ScalarVariable>
+		<!-- Variable with index #5 -->
+		<ScalarVariable name="_cs_experimental_mode" valueReference="268435490" causality="parameter" variability="fixed" initial="exact">
+			<Integer start="0" />
+		</ScalarVariable>
+		<!-- Variable with index #6 -->
+		<ScalarVariable name="_cs_rel_tol" valueReference="9" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="1.0E-6" />
+		</ScalarVariable>
+		<!-- Variable with index #7 -->
+		<ScalarVariable name="_cs_solver" valueReference="268435491" causality="parameter" variability="fixed" initial="exact">
+			<Integer start="0" />
+		</ScalarVariable>
+		<!-- Variable with index #8 -->
+		<ScalarVariable name="_cs_step_size" valueReference="10" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="0.001" />
+		</ScalarVariable>
+		<!-- Variable with index #9 -->
+		<ScalarVariable name="_enforce_bounds" valueReference="536870961" causality="parameter" variability="fixed" initial="exact">
+			<Boolean start="true" />
+		</ScalarVariable>
+		<!-- Variable with index #10 -->
+		<ScalarVariable name="_eventIndicator_1" valueReference="70" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #11 -->
+		<ScalarVariable name="_eventIndicator_10" valueReference="79" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #12 -->
+		<ScalarVariable name="_eventIndicator_11" valueReference="80" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #13 -->
+		<ScalarVariable name="_eventIndicator_12" valueReference="81" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #14 -->
+		<ScalarVariable name="_eventIndicator_13" valueReference="82" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #15 -->
+		<ScalarVariable name="_eventIndicator_14" valueReference="83" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #16 -->
+		<ScalarVariable name="_eventIndicator_15" valueReference="84" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #17 -->
+		<ScalarVariable name="_eventIndicator_16" valueReference="85" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #18 -->
+		<ScalarVariable name="_eventIndicator_17" valueReference="86" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #19 -->
+		<ScalarVariable name="_eventIndicator_18" valueReference="87" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #20 -->
+		<ScalarVariable name="_eventIndicator_2" valueReference="71" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #21 -->
+		<ScalarVariable name="_eventIndicator_3" valueReference="72" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #22 -->
+		<ScalarVariable name="_eventIndicator_4" valueReference="73" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #23 -->
+		<ScalarVariable name="_eventIndicator_5" valueReference="74" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #24 -->
+		<ScalarVariable name="_eventIndicator_6" valueReference="75" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #25 -->
+		<ScalarVariable name="_eventIndicator_7" valueReference="76" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #26 -->
+		<ScalarVariable name="_eventIndicator_8" valueReference="77" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #27 -->
+		<ScalarVariable name="_eventIndicator_9" valueReference="78" causality="output" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #28 -->
+		<ScalarVariable name="_events_default_tol" valueReference="11" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="1.0E-10" />
+		</ScalarVariable>
+		<!-- Variable with index #29 -->
+		<ScalarVariable name="_events_tol_factor" valueReference="12" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="1.0E-4" />
+		</ScalarVariable>
+		<!-- Variable with index #30 -->
+		<ScalarVariable name="_iteration_variable_scaling" valueReference="268435492" causality="parameter" variability="fixed" initial="exact">
+			<Integer start="1" />
+		</ScalarVariable>
+		<!-- Variable with index #31 -->
+		<ScalarVariable name="_log_level" valueReference="268435493" causality="parameter" variability="fixed" initial="exact">
+			<Integer start="3" />
+		</ScalarVariable>
+		<!-- Variable with index #32 -->
+		<ScalarVariable name="_log_start_time" valueReference="13" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="-1.0E20" />
+		</ScalarVariable>
+		<!-- Variable with index #33 -->
+		<ScalarVariable name="_log_stop_time" valueReference="14" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="1.0E20" />
+		</ScalarVariable>
+		<!-- Variable with index #34 -->
+		<ScalarVariable name="_nle_active_bounds_mode" valueReference="268435494" causality="parameter" variability="fixed" initial="exact">
+			<Integer start="0" />
+		</ScalarVariable>
+		<!-- Variable with index #35 -->
+		<ScalarVariable name="_nle_brent_ignore_error" valueReference="536870962" causality="parameter" variability="fixed" initial="exact">
+			<Boolean start="false" />
+		</ScalarVariable>
+		<!-- Variable with index #36 -->
+		<ScalarVariable name="_nle_jacobian_calculation_mode" valueReference="268435495" causality="parameter" variability="fixed" initial="exact">
+			<Integer start="0" />
+		</ScalarVariable>
+		<!-- Variable with index #37 -->
+		<ScalarVariable name="_nle_jacobian_finite_difference_delta" valueReference="15" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="1.490116119384766E-8" />
+		</ScalarVariable>
+		<!-- Variable with index #38 -->
+		<ScalarVariable name="_nle_jacobian_update_mode" valueReference="268435496" causality="parameter" variability="fixed" initial="exact">
+			<Integer start="2" />
+		</ScalarVariable>
+		<!-- Variable with index #39 -->
+		<ScalarVariable name="_nle_solver_check_jac_cond" valueReference="536870963" causality="parameter" variability="fixed" initial="exact">
+			<Boolean start="false" />
+		</ScalarVariable>
+		<!-- Variable with index #40 -->
+		<ScalarVariable name="_nle_solver_default_tol" valueReference="16" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="1.0E-10" />
+		</ScalarVariable>
+		<!-- Variable with index #41 -->
+		<ScalarVariable name="_nle_solver_exit_criterion" valueReference="268435497" causality="parameter" variability="fixed" initial="exact">
+			<Integer start="3" />
+		</ScalarVariable>
+		<!-- Variable with index #42 -->
+		<ScalarVariable name="_nle_solver_max_iter" valueReference="268435498" causality="parameter" variability="fixed" initial="exact">
+			<Integer start="100" />
+		</ScalarVariable>
+		<!-- Variable with index #43 -->
+		<ScalarVariable name="_nle_solver_max_iter_no_jacobian" valueReference="268435499" causality="parameter" variability="fixed" initial="exact">
+			<Integer start="10" />
+		</ScalarVariable>
+		<!-- Variable with index #44 -->
+		<ScalarVariable name="_nle_solver_max_residual_scaling_factor" valueReference="17" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="1.0E10" />
+		</ScalarVariable>
+		<!-- Variable with index #45 -->
+		<ScalarVariable name="_nle_solver_min_residual_scaling_factor" valueReference="18" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="1.0E-10" />
+		</ScalarVariable>
+		<!-- Variable with index #46 -->
+		<ScalarVariable name="_nle_solver_min_tol" valueReference="19" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="1.0E-12" />
+		</ScalarVariable>
+		<!-- Variable with index #47 -->
+		<ScalarVariable name="_nle_solver_regularization_tolerance" valueReference="20" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="-1.0" />
+		</ScalarVariable>
+		<!-- Variable with index #48 -->
+		<ScalarVariable name="_nle_solver_step_limit_factor" valueReference="21" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="10.0" />
+		</ScalarVariable>
+		<!-- Variable with index #49 -->
+		<ScalarVariable name="_nle_solver_tol_factor" valueReference="22" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="1.0E-4" />
+		</ScalarVariable>
+		<!-- Variable with index #50 -->
+		<ScalarVariable name="_nle_solver_use_last_integrator_step" valueReference="536870964" causality="parameter" variability="fixed" initial="exact">
+			<Boolean start="true" />
+		</ScalarVariable>
+		<!-- Variable with index #51 -->
+		<ScalarVariable name="_nle_solver_use_nominals_as_fallback" valueReference="536870965" causality="parameter" variability="fixed" initial="exact">
+			<Boolean start="true" />
+		</ScalarVariable>
+		<!-- Variable with index #52 -->
+		<ScalarVariable name="_rescale_after_singular_jac" valueReference="536870966" causality="parameter" variability="fixed" initial="exact">
+			<Boolean start="true" />
+		</ScalarVariable>
+		<!-- Variable with index #53 -->
+		<ScalarVariable name="_rescale_each_step" valueReference="536870967" causality="parameter" variability="fixed" initial="exact">
+			<Boolean start="false" />
+		</ScalarVariable>
+		<!-- Variable with index #54 -->
+		<ScalarVariable name="_residual_equation_scaling" valueReference="268435500" causality="parameter" variability="fixed" initial="exact">
+			<Integer start="1" />
+		</ScalarVariable>
+		<!-- Variable with index #55 -->
+		<ScalarVariable name="_runtime_log_to_file" valueReference="536870968" causality="parameter" variability="fixed" initial="exact">
+			<Boolean start="false" />
+		</ScalarVariable>
+		<!-- Variable with index #56 -->
+		<ScalarVariable name="_sampleItr_1" valueReference="268435553" causality="local" variability="discrete" initial="calculated">
+			<Integer />
+		</ScalarVariable>
+		<!-- Variable with index #57 -->
+		<ScalarVariable name="_sampleItr_2" valueReference="268435554" causality="local" variability="discrete" initial="calculated">
+			<Integer />
+		</ScalarVariable>
+		<!-- Variable with index #58 -->
+		<ScalarVariable name="_time_events_default_tol" valueReference="23" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="2.220446049250313E-14" />
+		</ScalarVariable>
+		<!-- Variable with index #59 -->
+		<ScalarVariable name="_use_Brent_in_1d" valueReference="536870969" causality="parameter" variability="fixed" initial="exact">
+			<Boolean start="true" />
+		</ScalarVariable>
+		<!-- Variable with index #60 -->
+		<ScalarVariable name="_use_jacobian_equilibration" valueReference="536870970" causality="parameter" variability="fixed" initial="exact">
+			<Boolean start="false" />
+		</ScalarVariable>
+		<!-- Variable with index #61 -->
+		<ScalarVariable name="_use_newton_for_brent" valueReference="536870971" causality="parameter" variability="fixed" initial="exact">
+			<Boolean start="true" />
+		</ScalarVariable>
+		<!-- Variable with index #62 -->
+		<ScalarVariable name="con.k" valueReference="0" description="Constant output value" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="0.0" />
+		</ScalarVariable>
+		<!-- Variable with index #63 -->
+		<ScalarVariable name="con.y" valueReference="28" description="Connector of Real output signal" causality="calculatedParameter" variability="fixed" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #64 -->
+		<ScalarVariable name="con1.k" valueReference="1" description="Constant output value" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="1.0" />
+		</ScalarVariable>
+		<!-- Variable with index #65 -->
+		<ScalarVariable name="con1.y" valueReference="29" description="Connector of Real output signal" causality="calculatedParameter" variability="fixed" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #66 -->
+		<ScalarVariable name="con2.k" valueReference="7" description="Constant output value" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="0.1" />
+		</ScalarVariable>
+		<!-- Variable with index #67 -->
+		<ScalarVariable name="con2.y" valueReference="30" description="Connector of Real output signal" causality="calculatedParameter" variability="fixed" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #68 -->
+		<ScalarVariable name="gai.k" valueReference="25" description="Gain value multiplied with input signal" causality="local" variability="constant" initial="exact">
+			<Real relativeQuantity="false" start="0.5" />
+		</ScalarVariable>
+		<!-- Variable with index #69 -->
+		<ScalarVariable name="gai.u" valueReference="66" description="Input signal connector" causality="local" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #70 -->
+		<ScalarVariable name="gai.y" valueReference="67" description="Output signal connector" causality="local" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #71 -->
+		<ScalarVariable name="gre.h" valueReference="26" description="Hysteresis" causality="local" variability="constant" initial="exact">
+			<Real relativeQuantity="false" start="0.0" />
+		</ScalarVariable>
+		<!-- Variable with index #72 -->
+		<ScalarVariable name="gre.pre_y_start" valueReference="536870957" description="Value of pre(y) at initial time" causality="parameter" variability="fixed" initial="exact">
+			<Boolean start="false" />
+		</ScalarVariable>
+		<!-- Variable with index #73 -->
+		<ScalarVariable name="gre.u1" valueReference="67" description="Input u1" causality="local" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #74 -->
+		<ScalarVariable name="gre.u2" valueReference="68" description="Input u2" causality="local" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #75 -->
+		<ScalarVariable name="gre.y" valueReference="536871012" description="Output y" causality="local" variability="discrete" initial="calculated">
+			<Boolean />
+		</ScalarVariable>
+		<!-- Variable with index #76 -->
+		<ScalarVariable name="greHys.h" valueReference="27" description="Hysteresis" causality="local" variability="constant" initial="exact">
+			<Real relativeQuantity="false" start="1.0" />
+		</ScalarVariable>
+		<!-- Variable with index #77 -->
+		<ScalarVariable name="greHys.pre_y_start" valueReference="536870958" description="Value of pre(y) at initial time" causality="parameter" variability="fixed" initial="exact">
+			<Boolean start="false" />
+		</ScalarVariable>
+		<!-- Variable with index #78 -->
+		<ScalarVariable name="greHys.u1" valueReference="67" description="Input u1" causality="local" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #79 -->
+		<ScalarVariable name="greHys.u2" valueReference="68" description="Input u2" causality="local" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #80 -->
+		<ScalarVariable name="greHys.y" valueReference="536871014" description="Output y" causality="local" variability="discrete" initial="calculated">
+			<Boolean />
+		</ScalarVariable>
+		<!-- Variable with index #81 -->
+		<ScalarVariable name="reaToInt.u" valueReference="69" description="Connector of Real input signal" causality="local" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #82 -->
+		<ScalarVariable name="reaToInt.y" valueReference="268435550" description="Connector of Integer output signal" causality="local" variability="discrete" initial="calculated">
+			<Integer />
+		</ScalarVariable>
+		<!-- Variable with index #83 -->
+		<ScalarVariable name="sam1.samplePeriod" valueReference="24" description="Sample period of component" causality="local" variability="constant" initial="exact">
+			<Real relativeQuantity="false" start="0.1" />
+		</ScalarVariable>
+		<!-- Variable with index #84 -->
+		<ScalarVariable name="sam1.u" valueReference="65" description="Continuous input signal" causality="local" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #85 -->
+		<ScalarVariable name="sam1.y" valueReference="90" description="Continuous output signal" causality="local" variability="discrete" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #86 -->
+		<ScalarVariable name="sam2.samplePeriod" valueReference="24" description="Sample period of component" causality="local" variability="constant" initial="exact">
+			<Real relativeQuantity="false" start="0.1" />
+		</ScalarVariable>
+		<!-- Variable with index #87 -->
+		<ScalarVariable name="sam2.u" valueReference="30" description="Continuous input signal" causality="calculatedParameter" variability="fixed" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #88 -->
+		<ScalarVariable name="sam2.y" valueReference="91" description="Continuous output signal" causality="local" variability="discrete" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #89 -->
+		<ScalarVariable name="sin1.amplitude" valueReference="2" description="Amplitude of sine wave" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="1.0" />
+		</ScalarVariable>
+		<!-- Variable with index #90 -->
+		<ScalarVariable name="sin1.freqHz" valueReference="3" description="Frequency of sine wave" causality="parameter" variability="fixed" initial="exact">
+			<Real quantity="Frequency" unit="Hz" relativeQuantity="false" start="0.5" />
+		</ScalarVariable>
+		<!-- Variable with index #91 -->
+		<ScalarVariable name="sin1.offset" valueReference="5" description="Offset of output signal" causality="parameter" variability="fixed" initial="exact">
+			<Real relativeQuantity="false" start="0.0" />
+		</ScalarVariable>
+		<!-- Variable with index #92 -->
+		<ScalarVariable name="sin1.phase" valueReference="4" description="Phase of sine wave" causality="parameter" variability="fixed" initial="exact">
+			<Real quantity="Angle" unit="rad" displayUnit="deg" relativeQuantity="false" start="0.0" />
+		</ScalarVariable>
+		<!-- Variable with index #93 -->
+		<ScalarVariable name="sin1.startTime" valueReference="6" description="Output = offset for time &lt; startTime" causality="parameter" variability="fixed" initial="exact">
+			<Real quantity="Time" unit="s" relativeQuantity="false" start="0.0" />
+		</ScalarVariable>
+		<!-- Variable with index #94 -->
+		<ScalarVariable name="sin1.y" valueReference="65" description="Connector of Real output signal" causality="local" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #95 -->
+		<ScalarVariable name="swi.u1" valueReference="28" description="Real input signal" causality="calculatedParameter" variability="fixed" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #96 -->
+		<ScalarVariable name="swi.u2" valueReference="536871012" description="Boolean switch input signal, if true, y=u1, else y=u3" causality="local" variability="discrete" initial="calculated">
+			<Boolean />
+		</ScalarVariable>
+		<!-- Variable with index #97 -->
+		<ScalarVariable name="swi.u3" valueReference="29" description="Real input signal" causality="calculatedParameter" variability="fixed" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #98 -->
+		<ScalarVariable name="swi.y" valueReference="69" description="Real output signal" causality="local" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #99 -->
+		<ScalarVariable name="temp_00000001" valueReference="92" causality="local" variability="discrete" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #100 -->
+		<ScalarVariable name="temp_00000002" valueReference="268435551" causality="local" variability="discrete" initial="calculated">
+			<Integer />
+		</ScalarVariable>
+		<!-- Variable with index #101 -->
+		<ScalarVariable name="temp_00000003" valueReference="93" causality="local" variability="discrete" initial="calculated">
+			<Real relativeQuantity="false" />
+		</ScalarVariable>
+		<!-- Variable with index #102 -->
+		<ScalarVariable name="temp_00000004" valueReference="268435552" causality="local" variability="discrete" initial="calculated">
+			<Integer />
+		</ScalarVariable>
+		<!-- Variable with index #103 -->
+		<ScalarVariable name="temp_00000005" valueReference="536871015" causality="local" variability="discrete" initial="calculated">
+			<Boolean />
+		</ScalarVariable>
+		<!-- Variable with index #104 -->
+		<ScalarVariable name="temp_00000006" valueReference="536871016" causality="local" variability="discrete" initial="calculated">
+			<Boolean />
+		</ScalarVariable>
+		<!-- Variable with index #105 -->
+		<ScalarVariable name="time" valueReference="64" causality="local" variability="continuous" initial="approx">
+			<Real relativeQuantity="false" start="0.0" />
+		</ScalarVariable>
+		<!-- Variable with index #106 -->
+		<ScalarVariable name="der(time)" valueReference="63" causality="local" variability="continuous" initial="calculated">
+			<Real relativeQuantity="false" derivative="105" />
+		</ScalarVariable>
+	</ModelVariables>
+	<ModelStructure>
+		<Outputs>
+			<Unknown index="10" dependencies="105" />
+			<Unknown index="20" dependencies="105" />
+			<Unknown index="21" dependencies="105" />
+			<Unknown index="22" dependencies="105" />
+			<Unknown index="23" dependencies="105" />
+			<Unknown index="24" dependencies="105" />
+			<Unknown index="25" dependencies="105" />
+			<Unknown index="26" dependencies="105" />
+			<Unknown index="27" dependencies="105" />
+			<Unknown index="11" dependencies="105" />
+			<Unknown index="12" dependencies="105" />
+			<Unknown index="13" dependencies="105" />
+			<Unknown index="14" dependencies="105" />
+			<Unknown index="15" dependencies="105" />
+			<Unknown index="16" dependencies="105" />
+			<Unknown index="17" dependencies="105" />
+			<Unknown index="18" dependencies="105" />
+			<Unknown index="19" dependencies="105" />
+		</Outputs>
+		<Derivatives>
+			<Unknown index="106" dependencies="" />
+		</Derivatives>
+		<InitialUnknowns>
+			<Unknown index="10" dependencies="" />
+			<Unknown index="11" dependencies="62 64 66 89 90 91 92 93" />
+			<Unknown index="12" dependencies="62 64 66 89 90 91 92 93" />
+			<Unknown index="13" dependencies="62 64 66 89 90 91 92 93" />
+			<Unknown index="14" dependencies="62 64 66 89 90 91 92 93" />
+			<Unknown index="15" dependencies="62 64 66 89 90 91 92 93" />
+			<Unknown index="16" dependencies="" />
+			<Unknown index="17" dependencies="" />
+			<Unknown index="18" dependencies="" />
+			<Unknown index="19" dependencies="" />
+			<Unknown index="20" dependencies="66 89 90 91 92 93" />
+			<Unknown index="21" dependencies="" />
+			<Unknown index="22" dependencies="62 64 66 89 90 91 92 93" />
+			<Unknown index="23" dependencies="66 89 90 91 92 93" />
+			<Unknown index="24" dependencies="93" />
+			<Unknown index="25" dependencies="62 64 66 89 90 91 92 93" />
+			<Unknown index="26" dependencies="62 64 66 89 90 91 92 93" />
+			<Unknown index="27" dependencies="62 64 66 89 90 91 92 93" />
+			<Unknown index="63" dependencies="62" />
+			<Unknown index="65" dependencies="64" />
+			<Unknown index="67" dependencies="66" />
+			<Unknown index="87" dependencies="" />
+			<Unknown index="95" dependencies="" />
+			<Unknown index="97" dependencies="" />
+			<Unknown index="105" dependencies="" />
+			<Unknown index="106" dependencies="" />
+		</InitialUnknowns>
+	</ModelStructure>
+</fmiModelDescription>

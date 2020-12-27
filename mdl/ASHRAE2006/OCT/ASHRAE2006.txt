@@ -3,3 +3,7 @@ ASHRAE2006 Model OCT Notes
 OCT gives a number of warnings when generating the FMU.
 
 PyFMI run gives warnings including out of bounds.
+
+The r19089 OCT update and the late-2020 updated model
+generate fewer event indicators and the results are
+mildly changed.

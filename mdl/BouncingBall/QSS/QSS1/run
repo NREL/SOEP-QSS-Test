@@ -1,2 +1,0 @@
-#!/bin/bash
-QSS ../../OCT/BouncingBall.fmu --qss=QSS1

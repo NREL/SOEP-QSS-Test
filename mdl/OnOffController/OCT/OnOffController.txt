@@ -3,6 +3,6 @@ OnOffController Model OCT Notes
 The model has event indicators so the QSS simulation will not be correct
 until OCT event indicator support is complete and validated.
 
-The event indicator dependencies do not match those of the __zc variables
-added to the JModelica and Dymola versions of the model and they never
-fire in the PyFMI runs, giving incorrect results for the state variables.
+The PyFMI runs do not produce correct results because the event indicators
+do not fire. The event indicator dependencies do not match those of the __zc
+variables added to the JModelica and Dymola versions of the model.

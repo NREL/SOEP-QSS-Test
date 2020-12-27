@@ -19,3 +19,8 @@ dpRetDuc.m_flow
 dpRetDuc.m_flow_nominal
 fanSup.m_flow
 fanSup.m_flow_nominal
+
+# These are of interest for QSS performance
+pSetDuc.limPID.I.y
+cooCoi.ele[?].vol2.dynBal.m
+cooCoi.ele[?].vol2.dynBal.U

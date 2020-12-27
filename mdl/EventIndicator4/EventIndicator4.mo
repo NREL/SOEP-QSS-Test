@@ -12,5 +12,5 @@ equation
   elsewhen (sin(time) <= -0.5) then
     y = +1;
   end when;
-  annotation(experiment(StartTime=0, StopTime=25));
+  annotation(experiment(StartTime=0, StopTime=25, Tolerance=1e-4));
 end EventIndicator4;

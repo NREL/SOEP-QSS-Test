@@ -2,10 +2,9 @@ DataCenterContinuousTimeControl.txt Model OCT Notes
 
 OCT gives a number of warnings when generating the FMU.
 
-As of the 2020/08 OCT an FMU built with the generate_ode_jacobian option
-abort under PyFMI with no error message so we build the FMU without that
-option enabled.
-
 The OCT PyFMI simulation generates a number of warnings including
 Singular Jacobian and Poor scaling so the solution accuracy is not
 known.
+
+As of the 2020/11 OCT update an FMU built with the generate_ode_jacobian option
+abort under PyFMI with no error message so we build without that option.

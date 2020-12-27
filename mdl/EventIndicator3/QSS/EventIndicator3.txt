@@ -1,11 +1,10 @@
 EventIndicator3 Model QSS Notes
 
-QSS needs a larger numeric differentiation time step than the 1e-6 default
-to get the zero crossings accurate enough for the QSS-FMU coordination to
-work. That protocol is not working reliably: investigating...
+QSS zero crossing success for this model is sensitive to the dtND numerical
+differentiation time step.
 
-When the numeric differentiation time step causes the first zero crossing
-event to occur slightly before the exact t=1 time the FMU calls appear to
+When the numeric differentiation causes the first zero crossing event
+to occur slightly before the exact t=1 time the FMU calls appear to
 show that the FMU detected the zero crossing but the discrete variable
 (and thus the derivative) are not flipped to -1. The QSS-FMU zero
 crossing coordination needs to be investigated/improved.
@@ -13,10 +12,3 @@ crossing coordination needs to be investigated/improved.
 With exact math QSS2 and QSS3 don't do any requantizations since the state
 trajectory is linear between zero-crossing events. In these runs the
 numerical derivatives are accurate enough for no requantizations to occur.
-
-The discrete variable is currently being tracked as a QSS variable but
-with its dependencies short-circuited in the OCT-generated XML it is
-never updated by QSS. Variables that will be short-circuited (discrete,
-integer, boolean, ...) should not be tracked by QSS. Once the short-
-circuiting design is finalized the necessary changes will be made in
-QSS.
