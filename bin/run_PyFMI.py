@@ -211,6 +211,7 @@ try:
         if os.path.isfile( log_file ) and ( os.path.getsize( log_file ) == 0 ):
             os.remove( log_file )
         elif log_file.endswith( model_log ): # Rename log file to local model name
+            if os.path.isfile( model_log ): os.remove( model_log )
             os.rename( log_file, model_log )
 except:
     pass

@@ -112,6 +112,7 @@ for arg in sys.argv[1:]:
      '--perfect',
      '--fxn',
      '--con',
+     '--dep',
      '--bin',
      '--out',
      '--tloc',
