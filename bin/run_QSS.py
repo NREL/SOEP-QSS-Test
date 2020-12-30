@@ -61,7 +61,7 @@ for arg in sys.argv[1:]:
 # Try to deduce QSS solver if not specified
 if not qss: # QSS solver not specified
     solver = ''
-    solvers = ( 'LIQSS1', 'LIQSS2', 'LIQSS3', 'xQSS1', 'xQSS2', 'xQSS3', 'QSS1', 'QSS2', 'QSS3' )
+    solvers = ( 'xLIQSS1', 'xLIQSS2', 'xLIQSS3', 'LIQSS1', 'LIQSS2', 'LIQSS3', 'xQSS1', 'xQSS2', 'xQSS3', 'QSS1', 'QSS2', 'QSS3' )
     solver_dir = os.getcwd()
     solver_dir = os.path.splitext( os.path.basename( os.getcwd() ) )[0]
     if solver_dir in solvers:
@@ -70,6 +70,7 @@ if not qss: # QSS solver not specified
         for slv in solvers:
             if slv in solver_dir:
                 solver = slv
+                break
     if solver: args += ' --qss=' + solver
 
 # Find tool directory and name
