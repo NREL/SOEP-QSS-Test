@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fmiModelDescription fmiVersion="2.0" modelName="BouncingBall" guid="27b0b691e4e138cd47d6d23a2606b0b3" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2020-12-26T15:29:00" variableNamingConvention="structured" numberOfEventIndicators="1">
-	<ModelExchange modelIdentifier="BouncingBall" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="false"/>
+<fmiModelDescription fmiVersion="2.0" modelName="BouncingBall" guid="8161668a800af61cd8a18c81565c15ff" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2021-01-05T22:58:39" variableNamingConvention="structured" numberOfEventIndicators="1">
+	<ModelExchange modelIdentifier="BouncingBall" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="true"/>
 	<UnitDefinitions>
 		<Unit name="m">
 			<BaseUnit m="1"/>

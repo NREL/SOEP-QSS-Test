@@ -1,17 +1,17 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 # Analytical Solution of BouncingBall.mo Model for Comparison
 
 # Notes
 #  This is analytical between impacts but impact states are stored
 #   in floats so over time this becomes less precise
-#  g = 9.81 m/s^2 is used (instead of 9.80665)
+#  g = 9.80665 m/s^2 is used
 #  e = 0.8 is used as the coefficient of restitution
 #  With h0, v0, and t0 at the last impact the equations are:
 #   v = v0 - g * ( t - t0 )
 #   h = h0 + v0 * ( t - t0 ) - 1/2 * g * ( t - t0 )^2
 #  Ball starts at 1 m with 0 velocity: h = 1 - 1/2 * g * t^2
-#   So first impact (h=0): ti = sqrt( 2 / g ) = 0.451523641
+#   So first impact (h=0): ti = sqrt( 2 / g ) = 0.451600756
 #  After first impact all bounces start with h0 = 0 so
 #   h = v0 * ( t - t0 ) - 1/2 * g * ( t - t0 )^2
 #   giving the next impact at ti = t0 + 2 * v0 / g
@@ -19,7 +19,7 @@
 import math
 
 # Constants
-g = 9.81 # FMU uses this instead of 9.80665 so we use it here
+g = 9.80665
 e = 0.8
 dtOut = 1e-4
 tEnd = 3.0

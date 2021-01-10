@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fmiModelDescription fmiVersion="2.0" modelName="Achilles" guid="546d9b7ea308d188631ca91b53a0fb3d" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2020-11-19T15:52:08" variableNamingConvention="structured" numberOfEventIndicators="0">
-	<ModelExchange modelIdentifier="Achilles" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="false" />
+<fmiModelDescription fmiVersion="2.0" modelName="Achilles" guid="76a42c0efc69ea08677d9b20060dcea7" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2021-01-05T22:53:23" variableNamingConvention="structured" numberOfEventIndicators="0">
+	<ModelExchange modelIdentifier="Achilles" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="true" />
 	<LogCategories>
 		<Category name="logLevel1" description="logLevel1 - fatal error" />
 		<Category name="logLevel2" description="logLevel2 - error" />

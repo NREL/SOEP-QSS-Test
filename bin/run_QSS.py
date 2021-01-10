@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Finds and runs the model's OCT FMU with QSS
+# Finds and runs the model's FMU with QSS
 #
 # Project: QSS Solver
 #
@@ -46,9 +46,16 @@ import os, subprocess, sys
 
 # Set up pass-through QSS arguments
 args = var = qss = red = ''
+gen = 'OCT' # Default FMU generator
 for arg in sys.argv[1:]:
     if arg.startswith( ( '--red=', '--red:' ) ): # Redirect
         red = arg[6:].strip()
+    elif arg.lower() == '--oct': # Use OCT FMU
+        gen = 'OCT'
+    elif arg.lower() == '--jmodelica': # Use JModelica FMU
+        gen = 'JModelica'
+    elif arg.lower() == '--dymola': # Use Dymola FMU
+        gen = 'Dymola'
     else: # Pass-through argument
         if arg.startswith( ( '--var=', '--var:' ) ): # Variable file
             var = arg[6:].strip()
@@ -97,7 +104,7 @@ if not model:
     sys.exit( 1 )
 
 # Find the model OCT FMU file
-model_fmu = os.path.join( model_dir, 'OCT', model + '.fmu' )
+model_fmu = os.path.join( model_dir, gen, model + '.fmu' )
 if not os.path.isfile( model_fmu ):
     print( 'Error: FMU not found:', model_fmu )
     sys.exit( 1 )

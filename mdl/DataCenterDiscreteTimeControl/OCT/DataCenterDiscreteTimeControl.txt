@@ -1,3 +1,6 @@
 DataCenterDiscreteTimeControl.txt Model OCT Notes
 
 OCT gives a number of warnings when generating the FMU.
+
+As of the 2020/11 OCT update the PyFMI run when the FMU is built 
+with generate_ode_jacobian aborts with no error message.

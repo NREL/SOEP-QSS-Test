@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fmiModelDescription fmiVersion="2.0" modelName="Buildings.ThermalZones.Detailed.Validation.BESTEST.Cases6xx.Case600FF" guid="b11fe4524113affc5e87c5bbb2d8ed95" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2020-12-30T00:56:08" variableNamingConvention="structured" numberOfEventIndicators="9">
-	<ModelExchange modelIdentifier="Buildings_ThermalZones_Detailed_Validation_BESTEST_Cases6xx_Case600FF" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="false" />
+<fmiModelDescription fmiVersion="2.0" modelName="Buildings.ThermalZones.Detailed.Validation.BESTEST.Cases6xx.Case600FF" guid="9a23e4368819526bdf5f981f54395eda" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2021-01-07T23:52:26" variableNamingConvention="structured" numberOfEventIndicators="9">
+	<ModelExchange modelIdentifier="Buildings_ThermalZones_Detailed_Validation_BESTEST_Cases6xx_Case600FF" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="true" />
 	<UnitDefinitions>
 		<Unit name="rad">
 			<BaseUnit />

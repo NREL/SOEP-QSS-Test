@@ -52,15 +52,18 @@ pymodelica.environ[ 'JVM_ARGS' ] = '-Xmx4096m'
 parser = argparse.ArgumentParser()
 parser.add_argument( '--qss', help = 'QSS options (OCT)  [On]', default = True, action = 'store_true' )
 parser.add_argument( '--no-qss', help = 'No QSS options (OCT)', dest = 'qss', action = 'store_false' )
-parser.add_argument( '--lazy', help = 'Enable lazy evaluation (OCT)  [On with QSS options]', action = 'store_true' )
+parser.add_argument( '--lazy', help = 'Enable lazy evaluation (OCT)  [On if --qss]', default = None, action = 'store_true' )
 parser.add_argument( '--no-lazy', help = 'Disable lazy evaluation (OCT)', dest = 'lazy', action = 'store_false' )
+parser.add_argument( '--dd', help = 'Enable directional derivatives (OCT)  [On if --qss]', default = None, action = 'store_true' )
+parser.add_argument( '--no-dd', help = 'Disable directional derivatives (OCT)', dest = 'dd', action = 'store_false' )
 parser.add_argument( '--source', help = 'Generate FMU source (JModelica)  [Off]', default = False, action = 'store_true' )
 parser.add_argument( '--diag', help = 'Generate HTML diagnostics  [Off]', default = False, action = 'store_true' )
 parser.add_argument( '--xml', help = 'Extract modelDescription.xml from FMU  [On]', default = True, action = 'store_true' )
-parser.add_argument( '--no-xml', help = 'No modelDescription.xml from FMU', dest = 'xml', action = 'store_false' )
+parser.add_argument( '--no-xml', help = 'Don\'t extract modelDescription.xml from FMU', dest = 'xml', action = 'store_false' )
 args = parser.parse_args()
 if args.qss: # Set up conditional defaults
     if args.lazy is None: args.lazy = True
+    if args.dd is None: args.dd = True
 
 # Check Modelica environment is set up
 if not os.getenv( 'MODELICAPATH' ):
@@ -171,8 +174,8 @@ if tool == 'OCT':
     compiler_options[ 'event_output_vars' ] = args.qss
     compiler_options[ 'time_events' ] = args.qss
     compiler_options[ 'time_state_variable' ] = args.qss
-    compiler_options[ 'generate_ode_jacobian' ] = False #args.qss # For directional derivatives # Doesn't support delay() so for automation use we disable it for now # Causes some Buildings library models to abort in PyFMI runs
     compiler_options[ 'enable_lazy_evaluation' ] = args.lazy # Can cause FMU to give wrong derivatives # Can cause event indicator infinite loop with incomplete dependencies
+    compiler_options[ 'generate_ode_jacobian' ] = args.dd # For directional derivatives # Doesn't support delay() # Causes some Buildings library models to abort in PyFMI
     #compiler_options[ 'source_code_fmu' ] = args.source # Not supported in OCT
     #compiler_options[ 'msvs_version' ] = '2017' # This seems to happen automatically when MSVS2017 is installed
     #compiler_options[ 'msvs_version' ] = '2019' # Not supported yet

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fmiModelDescription fmiVersion="2.0" modelName="Buildings.ThermalZones.Detailed.Validation.BESTEST.Cases6xx.Case600" guid="97dbbe82074b635015f98cdb564a2565" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2020-12-12T01:10:17" variableNamingConvention="structured" numberOfEventIndicators="15">
-	<ModelExchange modelIdentifier="Buildings_ThermalZones_Detailed_Validation_BESTEST_Cases6xx_Case600" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="false" />
+<fmiModelDescription fmiVersion="2.0" modelName="Buildings.ThermalZones.Detailed.Validation.BESTEST.Cases6xx.Case600" guid="d8ee0c125b50885483de9a35129a43de" generationTool="Optimica Compiler Toolkit" generationDateAndTime="2021-01-07T23:50:10" variableNamingConvention="structured" numberOfEventIndicators="15">
+	<ModelExchange modelIdentifier="Buildings_ThermalZones_Detailed_Validation_BESTEST_Cases6xx_Case600" needsExecutionTool="false" completedIntegratorStepNotNeeded="false" canBeInstantiatedOnlyOncePerProcess="true" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="true" />
 	<UnitDefinitions>
 		<Unit name="s">
 			<BaseUnit s="1" />
