@@ -9,7 +9,7 @@
 # Developed by Objexx Engineering, Inc. (https://objexx.com) under contract to
 # the National Renewable Energy Laboratory of the U.S. Department of Energy
 #
-# Copyright (c) 2017-2020 Objexx Engineering, Inc. All rights reserved.
+# Copyright (c) 2017-2021 Objexx Engineering, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -53,13 +53,14 @@ parser.add_argument( '--no-lazy', help = 'Disable lazy evaluation (OCT)', dest =
 parser.add_argument( '--dd', help = 'Enable directional derivatives (OCT)  [On if --qss]', default = None, action = 'store_true' )
 parser.add_argument( '--no-dd', help = 'Disable directional derivatives (OCT)', dest = 'dd', action = 'store_false' )
 parser.add_argument( '--source', help = 'Generate FMU source (JModelica)  [Off]', default = False, action = 'store_true' )
-parser.add_argument( '--diag', help = 'Generate HTML diagnostics  [Off]', default = False, action = 'store_true' )
+parser.add_argument( '--diag', help = 'Generate HTML diagnostics  [On if --qss]', default = None, action = 'store_true' )
 parser.add_argument( '--xml', help = 'Extract modelDescription.xml from FMU  [On]', default = True, action = 'store_true' )
 parser.add_argument( '--no-xml', help = 'Don\'t extract modelDescription.xml from FMU', dest = 'xml', action = 'store_false' )
 args = parser.parse_args()
 if args.qss: # Set up conditional defaults
     if args.lazy is None: args.lazy = True
     if args.dd is None: args.dd = True
+    if args.diag is None: args.diag = True
 
 # Set up pass-through arguments
 args = ' '.join( sys.argv[1:] )
