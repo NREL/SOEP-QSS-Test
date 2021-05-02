@@ -1,0 +1,14 @@
+#!/bin/bash
+# Set up environment for OCT and runs passed Python script
+# Assumes jm_ipython.OCT.sh such as in OCT/bin/jm_ipython.sh is on your PATH
+# Place a custom version of this early in your PATH
+unset _JAVA_OPTIONS # Fedora needs this
+export MODELICAPATH=/opt/OCT/ThirdParty/MSL:/opt/modelica-buildings
+export MODELICA_BUILDINGS_LIB=/opt/modelica-buildings
+script_py=$(which "$1")
+if [ "$script_py" == "" ]; then
+    echo "$1 not found on your PATH"
+else
+    shift
+    jm_ipython.OCT.sh $script_py "$@"
+fi

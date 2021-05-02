@@ -1,0 +1,339 @@
+#!/usr/bin/env python
+
+# Runs an FMU with PyFMI
+#
+# Project: QSS Solver
+#
+# Language: Python 2.7 and 3.x
+#
+# Developed by Objexx Engineering, Inc. (https://objexx.com) under contract to
+# the National Renewable Energy Laboratory of the U.S. Department of Energy
+#
+# Copyright (c) 2017-2021 Objexx Engineering, Inc. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# (1) Redistributions of source code must retain the above copyright notice,
+#     this list of conditions and the following disclaimer.
+#
+# (2) Redistributions in binary form must reproduce the above copyright notice,
+#     this list of conditions and the following disclaimer in the documentation
+#     and/or other materials provided with the distribution.
+#
+# (3) Neither the name of the copyright holder nor the names of its
+#     contributors may be used to endorse or promote products derived from this
+#     software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES
+# GOVERNMENT, OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# Notes
+#  Run from an environment set up for PyFMI such as jm_python.sh
+#  Run from an environment with MODELICAPATH set up
+#  Variable output list file entries can use wildcard or regex syntax
+
+# Imports
+import argparse, fnmatch, glob, math, os, re, sys
+import numpy
+from pyfmi import load_fmu
+
+# Parse arguments
+parser = argparse.ArgumentParser()
+parser.add_argument( '--solver', help = 'Solver  [CVode]', default = 'CVode', choices = [ 'CVode', 'Radau5ODE', 'RungeKutta34', 'Dopri5', 'RodasODE', 'LSODAR', 'ExplicitEuler', 'DASSL' ] )
+parser.add_argument( '--maxord', help = 'Max order', type = int )
+parser.add_argument( '--discr', help = 'CVode discretization method  [BDF]', default = 'BDF', choices = [ 'BDF', 'Adams' ] )
+parser.add_argument( '--inp', help = 'Input function  [step]', choices = [ 'step' ] )
+parser.add_argument( '--rtol', help = 'Relative tolerance  [FMU]', type = float )
+parser.add_argument( '--rTol', help = argparse.SUPPRESS, type = float, dest = 'rtol' )
+parser.add_argument( '--atol', help = 'Absolute tolerance  [FMU]', type = float )
+parser.add_argument( '--aTol', help = argparse.SUPPRESS, type = float, dest = 'atol' )
+parser.add_argument( '--final_time', help = 'Simulation end time  [FMU]', type = float )
+parser.add_argument( '--tEnd', help = argparse.SUPPRESS, type = float, dest = 'final_time' )
+parser.add_argument( '--tend', help = argparse.SUPPRESS, type = float, dest = 'final_time' )
+parser.add_argument( '--dtOut', help = 'Output time step  [computed]', type = float )
+parser.add_argument( '--dtout', help = argparse.SUPPRESS, type = float, dest = 'dtOut' )
+parser.add_argument( '--ncp', help = 'Number of communication (output) points (overrides dtOut) (0 => no sampled points)', type = int )
+parser.add_argument( '--soo', help = 'Sampled output only (no event points)  [False]', default = False, action = 'store_true' )
+parser.add_argument( '--var', help = 'Variable output list file' )
+parser.add_argument( '--log', help = 'Logging level  [3]', type = int, default = 3, choices = [ 0, 1, 2, 3, 4, 5, 6, 7 ] )
+args = parser.parse_args()
+
+# Check Modelica environment is set up
+if not os.getenv( 'MODELICAPATH' ):
+    print( 'Error: Modelica environment is not set up' )
+    sys.exit( 1 )
+
+# Find tool directory and name
+tools = ( 'OCT', 'JModelica' )
+tool_dir = os.getcwd()
+tool = os.path.splitext( os.path.basename( tool_dir ) )[0]
+while tool not in tools: # Move up one directory level
+    tool_dir = os.path.dirname( tool_dir )
+    tool = os.path.splitext( os.path.basename( tool_dir ) )[0]
+    if os.path.splitdrive( tool_dir )[1] == os.sep: # At top of drive/mount
+        tool_dir = tool = ''
+        break
+if not tool:
+    print( 'Error: Not in/under a directory named for a supported FMU simulation tool: ', tools )
+    sys.exit( 1 )
+
+# Check tool environment is set up
+if tool == 'OCT':
+    if not os.getenv( 'OCT_HOME' ):
+        print( 'Error: OCT environment is not set up' )
+        sys.exit( 1 )
+elif tool == 'JModelica':
+    if not os.getenv( 'JMODELICA_HOME' ):
+        print( 'Error: JModelica environment is not set up' )
+        sys.exit( 1 )
+
+# Find model directory and name: Should be one directory level above tool directory
+model_dir = os.path.dirname( tool_dir )
+model = os.path.splitext( os.path.basename( model_dir ) )[0]
+if os.path.splitdrive( model_dir )[1] == os.sep: # At top of drive/mount
+    model_dir = model = ''
+if not model:
+    print( 'Error: Tool directory not in a model directory' )
+    sys.exit( 1 )
+
+# Find the model FMU file
+model_fmu = os.path.join( tool_dir, model + '.fmu' )
+if not os.path.isfile( model_fmu ):
+    print( 'Error: FMU not found:', model_fmu )
+    sys.exit( 1 )
+
+# Find the model variable output list file if present
+if args.var is not None: # Use specified variable output list file
+    model_var = os.path.abspath( args.var )
+    if not os.path.isfile( model_var ):
+        print( 'Error: Specified variable output list file not found:', model_var )
+        sys.exit( 1 )
+else: # Look for default variable output list file
+    model_var = os.path.join( model_dir, model + '.var' )
+    if os.path.isfile( model_var ): args.var = model_var
+
+# Load the FMU
+try:
+    fmu = load_fmu( model_fmu, log_level = args.log )
+except Exception as err:
+    if err: print( 'Error: ' + str( err ) )
+    print( 'FMU file: ' + model_fmu )
+    sys.exit( 1 )
+fmu.set_max_log_size( 2073741824 ) # = 2*1024^3 (about 2GB)
+
+# Set simulation options
+opt = fmu.simulate_options()
+opt[ 'solver' ] = args.solver
+opt[ 'result_handling' ] = 'memory' # No file output: We do that explicitly below to filter by var file
+#opt[ 'result_handling' ] = 'csv'; opt[ 'result_file_name' ] = model + '.csv' # CSV output files
+#opt[ 'result_handling' ] = 'file'; opt[ 'result_file_name' ] = model + '.txt' # ASCII output files
+if args.ncp is not None:
+    opt[ 'ncp' ] = args.ncp
+else: # Use dtOut to set ncp for PyFMI
+    time_span = ( args.final_time if args.final_time is not None else fmu.get_default_experiment_stop_time() ) - fmu.get_default_experiment_start_time()
+    if args.dtOut is None: # Set default dtOut
+        args.dtOut = math.pow( 10.0, round( math.log10( time_span * 0.0002 ) ) )
+    else: # Use specified dtOut
+        if args.dtOut <= 0.0:
+            print( 'Error: Non-positive dtOut time step specified:', args.dtOut )
+            sys.exit( 1 )
+    opt[ 'ncp' ] = int( round( time_span / args.dtOut ) )
+if args.solver == 'CVode':
+    opt_solver = opt[ args.solver + '_options' ]
+    opt_solver[ 'discr' ] = args.discr
+    if args.maxord is not None: opt_solver[ 'maxord' ] = args.maxord
+
+    # Additional arguments for testing
+#   opt_solver[ 'external_event_detection' ] = False
+#   opt_solver[ 'maxh' ] = ( fmu.get_default_experiment_stop_time() - fmu.get_default_experiment_stop_time() ) / float( opt[ 'ncp' ] )
+#   opt_solver[ 'iter' ] = 'Newton'
+#   opt_solver[ 'store_event_points' ] = True # True is default
+elif args.solver == 'Radau5ODE':
+    try:
+        opt_solver = opt[ args.solver + '_options' ]
+    except:
+        print( 'Error: Unsupported solver:', args.solver )
+        sys.exit( 1 )
+    opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
+elif args.solver == 'RungeKutta34':
+    try:
+        opt_solver = opt[ args.solver + '_options' ]
+    except:
+        print( 'Error: Unsupported solver:', args.solver )
+        sys.exit( 1 )
+    opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
+elif args.solver == 'Dopri5':
+    try:
+        opt_solver = opt[ args.solver + '_options' ]
+    except:
+        print( 'Error: Unsupported solver:', args.solver )
+        sys.exit( 1 )
+    opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
+elif args.solver == 'RodasODE':
+    try:
+        opt_solver = opt[ args.solver + '_options' ]
+    except:
+        print( 'Error: Unsupported solver:', args.solver )
+        sys.exit( 1 )
+    opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
+elif args.solver == 'LSODAR':
+    try:
+        opt_solver = opt[ args.solver + '_options' ]
+    except:
+        print( 'Error: Unsupported solver:', args.solver )
+        sys.exit( 1 )
+    if args.maxord is not None:
+        opt_solver[ 'maxordn' ] = args.maxord
+        opt_solver[ 'maxords' ] = args.maxord
+    opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
+elif args.solver == 'ExplicitEuler':
+    try:
+        opt_solver = opt[ args.solver + '_options' ]
+    except:
+        print( 'Error: Unsupported solver:', args.solver )
+        sys.exit( 1 )
+    opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
+elif args.solver == 'DASSL':
+    opt[ 'solver' ] = 'ODASSL'
+    try:
+        opt_solver = opt[ 'ODASSL_options' ]
+    except:
+        print( 'Error: Unsupported solver:', args.solver )
+        sys.exit( 1 )
+    if args.maxord is not None: opt_solver[ 'maxord' ] = args.maxord
+else:
+    print( 'Error: Unsupported solver:', args.solver )
+    sys.exit( 1 )
+if args.rtol is not None: opt_solver[ 'rtol' ] = args.rtol
+if args.atol is not None: opt_solver[ 'atol' ] = args.atol
+opt_solver[ 'store_event_points' ] = not args.soo
+
+# Simulate
+sim_args = { 'options': opt }
+if args.final_time is not None:
+    sim_args[ 'final_time' ] = args.final_time
+if args.inp == 'step':
+    def step_fxn( t ): # Step function matching QSS Function_Inp_step( 1.0, 1.0, 1.0 )
+        h_0 = 1.0 # Initial height
+        h = 1.0 # Step height
+        d = 1.0 # Step time delta
+        ftd = math.floor( t / d )
+        step_num = ( ftd if d * ( ftd + 1.0 ) > t else ftd + 1.0 )
+        return h_0 + ( h * step_num )
+    sim_args[ 'input' ] = ( 'u', step_fxn )
+try:
+    res = fmu.simulate( **sim_args )
+except Exception as err:
+    print( 'Simulation failed: ', err )
+    res = False
+
+# Clean up empty log file
+model_log = model + '_log.txt'
+try:
+    log_file = model_log
+    if os.path.isfile( log_file ) and ( os.path.getsize( log_file ) == 0 ):
+        os.remove( log_file )
+except:
+    pass
+try:
+    log_files = glob.glob( '*_log.txt' ) # Remove all 0-size log files (FMU internal name might not be model name)
+    for log_file in log_files:
+        if os.path.isfile( log_file ) and ( os.path.getsize( log_file ) == 0 ):
+            os.remove( log_file )
+        elif log_file.endswith( model_log ) and ( log_file != model_log ): # Rename log file to local model name
+            if os.path.isfile( model_log ):
+                os.remove( model_log )
+            os.rename( log_file, model_log )
+except:
+    pass
+
+# Terminate if simulation failed
+if res is False: sys.exit( 1 )
+
+# Generate output files
+print( '\nGenerating output files...' )
+keys = res.keys()
+if sys.platform in ( 'win32', 'cygwin' ): # Case-insensitive file name handling
+    keys.sort() # Assure the collision name decorating is deterministic
+    keys_count = { key: 0 for key in keys } # Count number of variables
+    KEYS_count = { key.upper(): 0 for key in keys } # Count of variables with same case-insensitive key
+    for key in keys:
+        KEYS_count[ key.upper() ] += 1
+        keys_count[ key ] = KEYS_count[ key.upper() ]
+    keys_out = {}
+    for key in keys:
+        if KEYS_count[ key.upper() ] == 1: # No case-insentive collision
+            keys_out[ key ] = key
+        else: # Add count to output key
+            key_out = key + '.' + str( keys_count[ key ] )
+            while key_out in keys: # In case the count-appended name conflicts
+                key_out += '_'
+            keys_out[ key ] = key_out
+else:
+    keys_out = { key: key for key in keys }
+t = res[ 'time' ]
+if args.var:
+    with open( args.var, 'r' if sys.version_info >= ( 3, 0 ) else 'rU' ) as var_file:
+        for line in var_file:
+            key = line.strip()
+            if key and ( key[ 0 ] != '#' ):
+                if key in keys:
+                    key_out = keys_out[ key ] + '.out'
+                    try:
+                        t_v = numpy.c_[ t, res[ key ] ]
+                        numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
+                    except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
+                        print( 'Output failed to: ' + key_out )
+                else: # Try as file name wildcard pattern or regex
+                    bkey = '' # Key with literal brackets protected
+                    for c in key:
+                        if c in ( '[', ']' ):
+                            bkey += '[' + c + ']'
+                        else:
+                            bkey += c
+                    m = fnmatch.filter( keys, bkey ) # File name wildcard pattern
+                    if not m: # Try as regex
+                        try:
+                            re_key = re.compile( bkey + ( '' if key.endswith( '$' ) else '$' ) ) # Match whole string
+                        except:
+                            pass # Not a valid regex
+                        else:
+                            for k in keys:
+                                if re_key.match( k ):
+                                    m.append( k )
+                    if m: # Matches found
+                        for k in m:
+                            key_out = keys_out[ k ] + '.out'
+                            try:
+                                t_v = numpy.c_[ t, res[ k ] ]
+                                numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
+                            except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
+                                print( 'Output failed to: ' + key_out )
+                    else: # No matches
+                        print( 'No variables found matching: ' + key )
+else:
+    temp_re = re.compile( 'temp_\d+' )
+    for key in keys:
+        if key.startswith( 'der(' ) and ( key[ -1 ] == ')' ):
+            pass # Skip derivatives
+        elif key.startswith( '_' ) and ( not key.startswith( ( '_eventIndicator', '__zc_' ) ) ):
+            pass # Skip non-zero-crossing internals
+        elif temp_re.match( key ):
+            pass # Skip temporaries
+        elif key != 'time':
+            key_out = keys_out[ key ] + '.out'
+            try:
+                t_v = numpy.c_[ t, res[ key ] ]
+                numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
+            except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
+                print( 'Output failed to: ' + key_out )
