@@ -1,0 +1,10 @@
+StateEvent6 Model JModelica Notes
+
+Since there are two when clauses the model should have 2 zero-crossing functions
+but it works here with 1 because the clause expressions are mutually exclusive
+and the zero-crossing functions for FMUs are set to fire with crossings in either
+direction (since the FMI API doesn't expose crossing direction information).
+
+XML Modifications
+ Build script ran mod_xml.py to add index comments
+ Added dependencies for zero-crossing (__zc_z) and discrete (y) variables

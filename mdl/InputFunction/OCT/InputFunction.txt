@@ -1,0 +1,4 @@
+InputFunction Model OCT Notes
+
+The local run.py script duplicates the step input function
+the QSS runs are using.

@@ -1,0 +1,16 @@
+ZCBoolean2 Model JModelica Notes
+
+Variables:
+x	1	Real		state	O-> y	der(x)=y
+u	3	Internal	sin(t)
+yBoo	5	Disc+Bool		H-> z1, z2
+yBooPre	6	Disc+Bool		H-> z1, z2
+y	7	Disc+Real		H-> z1, z2
+__zc_z1	8	ZC			O-> u (internal)	real(yBooPre)*u-0.5
+__zc_z2	10	ZC			O-> u (internal)	real(yBooPre)*u+0.5
+
+XML Modifications
+ Build script ran mod_xml.py to add index comments
+ Added dependencies for zero-crossing (__zc) and discrete (y) variables
+
+The PyFMI simulation is not correct: Investigating

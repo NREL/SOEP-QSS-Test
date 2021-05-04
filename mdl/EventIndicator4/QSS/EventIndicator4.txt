@@ -1,0 +1,7 @@
+EventIndicator4 Model QSS Notes
+
+QSS is not sensitive to the numerical differentiation time step or the
+zero-crossing options in this case where the zero-crossing functions
+actually cross zero.
+
+The sinusoids cause deactivation issues so --dtInf and --dtMax are used.

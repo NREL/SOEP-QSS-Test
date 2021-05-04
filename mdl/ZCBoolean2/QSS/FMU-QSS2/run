@@ -1,0 +1,3 @@
+#!/bin/bash
+FMU-QSS.gen.py ../../OCT/ZCBoolean2.fmu --qss=QSS2
+QSS ZCBoolean2_QSS.fmu --qss=QSS2 --zFac=0.5 --dtMax=0.01 --dtND=1e-4 --out=K

@@ -149,10 +149,10 @@ else: # Find Modelica input file from .ref file
             if line_1 == 'Buildings': # Uses Buildings Library but model is local .mo
                 lib = 'Buildings'
                 model_base = model_inp[:-3]
-                if os.path.isfile( os.path.join( model_base, 'mo' ) ):
+                if os.path.isfile( model_base + 'mo' ):
                     mod = model_base + 'mo'
                 else:
-                    print( 'Error: No Modelica (' + model_base + 'mo[f]) file found in .ref file directory' )
+                    print( 'Error: No Modelica (' + model_base + 'mo) file found in .ref file directory' )
                     sys.exit( 1 )
             elif line_1.startswith( 'Buildings.' ):
                 nam = line_1

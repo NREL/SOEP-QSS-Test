@@ -1,0 +1,4 @@
+SimpleHouse Model OCT Notes
+
+As of the 2020/11 OCT update an FMU built with the generate_ode_jacobian option
+aborts under PyFMI and QSS with no error message so we build without that option.

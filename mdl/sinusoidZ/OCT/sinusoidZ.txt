@@ -1,0 +1,6 @@
+sinusoidZ Model OCT Notes
+
+PyFMI (CVode) and QSS cannot detect the zero crossings if the sinusoid
+just touches but doesn't cross zero by a small amount. This is a limitation
+on the FMU side: QSS sees the crossings but the current protocol depends on
+convincing the FMU that a crossing occurred.

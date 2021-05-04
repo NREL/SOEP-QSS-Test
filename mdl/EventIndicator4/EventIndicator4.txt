@@ -1,0 +1,24 @@
+EventIndicator4 Model Notes
+
+This is a simple event indicator test model with a
+zero-crossing function that modifies a state variable
+derivative via a discrete variable.
+
+The zero-crossing functions are sinusoid that cross zero
+(rather than functions that "bounce" off zero) to
+demonstrate that the QSS-FMU zero-crossing approach works
+well in this case and that the "bounce" crossings in other
+models are more challenging.
+
+Notes:
+
+OCT event indicators and their dependencies are correct and
+short-circuit out the local discrete variable dependencies.
+
+The QSS results are good and do almost no requantizations
+for the linear x and time variables as expected in the ideal
+(infinite precision) case.  The sinusoidal event indicator
+functions require requantizations and cause deactivation at
+the start time with QSS2 (a zero highest derivative) and
+near-deactivation with QSS3 (near-zero highest derivative)
+so the --dtInf and --dtMax options are used.

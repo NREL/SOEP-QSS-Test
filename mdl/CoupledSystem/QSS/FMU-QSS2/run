@@ -1,0 +1,3 @@
+#!/bin/bash
+FMU-QSS.gen.py ../../OCT/CoupledSystem.fmu --qss=QSS2
+QSS CoupledSystem_QSS.fmu --qss=QSS2 --out=K

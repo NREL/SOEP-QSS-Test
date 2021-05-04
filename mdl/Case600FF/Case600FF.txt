@@ -1,0 +1,44 @@
+Case600FF Model Notes
+
+This is a building thermal model that is a good validation case for the
+QSS solver.
+
+Although the room is thermally "free floating" (FF) there are a number of
+event indicators in the FMU so the QSS results may not be correct until
+the OCT event indicator support is complete and validated.
+
+A detailed comparison of the Dymola CVODE and QSS solutions was made and
+the out directory has spreadsheets with the comparison using 100 s and
+63072 s sampling intervals.
+
+Thierrys' Notes:
+
+Buildings_ThermalZones_Detailed_Validation_BESTEST_Case600FF.fmu is the
+FMU exported from the BESTEST model Case 600FF (Case600FF.mo).
+Case600FF.mo can not be directly exported as an FMU.  This needs to be
+done from the Buildings library (master branch).  I tried to export and
+save the Case600FF.mo as a total model.  However, when I tried to
+translate the total model, the translation fails because of missing
+libraries.  Hence I put the original Modelica model here for future
+reference until I sort out the translation issue.
+
+
+Performance
+
+Notes:
+ The use of tolerances in QSS and Dymola differ and we have not yet found
+  the best approach to setting them for comparable solution precision.
+
+Timing (QSS1):
+ rTol=aTol=0.0001	1496 s
+ rTol=aTol=0.001	 174 s	Almost 10x faster
+ rTol=0.001 aTol=0.0001	 179 s	So rTol dominates
+
+Timing (QSS2):
+ rTol=0.0001 aTol=1e-6	 364 s
+
+Thierry's Timing (h/w unknown):
+ Dymola:  Tol: 0.0001
+  Native .mo		  42 s
+  FMU			 133 s
+  No discrete vars	  23 s	Not sure if this is .mo or FMU run

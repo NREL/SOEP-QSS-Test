@@ -1,0 +1,5 @@
+EventIndicator1 Model OCT Notes
+
+The OCT-generated FMU has correct event indicator dependencies
+that short-circuit the discrete variable. The dependencies
+match the EventIndicator1 model as expected.

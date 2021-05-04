@@ -1,0 +1,5 @@
+Achilles1-2 QSS Notes
+
+The --con option is used to specify the input-output connections to QSS.
+
+Deactivation occurs for x2 with connected models so the dtInf option is used.

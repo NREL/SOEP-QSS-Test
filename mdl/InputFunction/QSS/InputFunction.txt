@@ -1,0 +1,20 @@
+InputFunction Model QSS Notes
+
+The QSS solver has a few sample input functions for use with FMU models
+since input functions are not encoded within the FMU. The input function
+can be selected at run time with the QSS --fxn option as in:
+  QSS InputFunction.fmu --qss=QSS2 --fxn=u:step[1,1,1]
+or
+  QSS InputFunction.fmu --qss=QSS2 --fxn=u:sin[1,1,1] --dtMax=0.001
+(dtMax is needed with sin due to deactivation at t=0).
+
+Notes:
+* If not specified the input function defaults to a step function.
+* The input function value at the simulation start time must match
+  any input start value specified in the Modelica file.
+* A PyFMI simulation of the FMU must use the same input function
+  to get comparable results.
+
+The OCT FMU was used to generate the QSS results using the run.py
+script that applies the same step input function as the current QSS
+default.

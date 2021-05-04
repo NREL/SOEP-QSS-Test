@@ -1,0 +1,8 @@
+OnOffController Model OCT Notes
+
+The PyFMI runs do not produce correct results because the event indicators
+do not fire. The event indicator dependencies do not match those of the __zc
+variables added to the JModelica and Dymola versions of the model.
+
+The adapted model built with OCT is not running correctly with PyFMI or QSS.
+The zero-crossing functions are not firing for some reason.

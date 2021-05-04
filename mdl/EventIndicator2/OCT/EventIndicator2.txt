@@ -1,0 +1,6 @@
+EventIndicator2 Model OCT Notes
+
+The OCT-generated FMU event indicator reverse dependency is
+on der(x) instead of x. Both work with QSS but making the
+dependency on x would be clearer. In the future QSS could
+distinguish them for better efficiency.

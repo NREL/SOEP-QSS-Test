@@ -1,0 +1,6 @@
+BouncingBall Model JModelica Notes
+
+XML Modifications:
+ Build script ran mod_xml.py to add index comments
+ Added v -> __zc_z conditional hander dependency
+ Added dependenciesKind for consistency with Dymola FMUs

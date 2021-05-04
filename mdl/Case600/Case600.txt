@@ -1,0 +1,3 @@
+Case600 Model Notes
+
+This is a building thermal model that adds a PID controller to Case600FF.

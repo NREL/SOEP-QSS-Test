@@ -1,0 +1,5 @@
+#!/bin/bash
+omc -s Achilles.mo
+make -f Achilles.makefile clean # For GUID check
+make -j8 -f Achilles.makefile
+rm -f *.o

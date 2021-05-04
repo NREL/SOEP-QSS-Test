@@ -1,0 +1,21 @@
+ZCBoolean2 Model QSS Notes
+
+The OCT FMU's event indicators short-circuit local variables out of the dependencies.
+For this model that means that yBoo and yBooPre do not appear in the dependencies.
+QSS generates outputs for (non-state) local variables by treating them as if they
+depend on all QSS variables and setting the FMU state before getting the local
+variable values from the FMU: this works but is inefficient.
+
+The event indicator dependency on u is "short-circuited" to a dependency on time,
+which never requantizes, but the event indicators requantize as needed based on
+the values and derivatives of u rather than getting observer updates from the
+requantization of u.
+
+The QSS2 runs need the --dtMax option to address deactivation of u=sin(t) at t=0
+(its second derivative is zero so the next requantization time is t=infinity).
+The event indicator derivatives are computed with ND so they generally won't
+have exactly zero second derivatives at t=0 so we need --dtMax instead of --dtInf.
+
+Notes
+ x is linear between zero-crossing events so it's deactivated and exact in QSS2+.
+ u is a local variable so QSS needs the local variable output option to see it.

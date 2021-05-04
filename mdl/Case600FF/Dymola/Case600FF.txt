@@ -1,0 +1,3 @@
+Case600FF Model Dymola Notes
+
+The Dymola FMU has been run with PyFMI and the Case600FF.var variable list.

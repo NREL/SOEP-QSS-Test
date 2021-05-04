@@ -1,0 +1,3 @@
+#!/bin/bash
+FMU-QSS.gen.py ../../OCT/StateEvent6.fmu --qss=QSS2
+QSS StateEvent6_QSS.fmu --qss=QSS2 --dtMax=0.01 --out=K

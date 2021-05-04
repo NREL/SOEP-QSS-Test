@@ -1,0 +1,4 @@
+SimpleHouseDiscreteTime Model Notes
+
+This is a variation of the SimpleHouse model with a discrete time sampler
+for evaluation of QSS performance.

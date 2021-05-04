@@ -1,0 +1,15 @@
+EventIndicator5 Model Notes
+
+This is a simple event indicator test model with
+a zero-crossing function that modifies a state
+variable derivative via a discrete variable.
+
+Notes:
+
+OCT event indicators and their dependencies are
+correct and short-circuit out the discrete variable
+dependencies. If the discrete variable is changed
+to an output the dependencies are not short-circuited.
+
+The QSS-FMU zero crossing coordination is not
+working in some cases: this needs to be resolved.

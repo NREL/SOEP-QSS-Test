@@ -1,0 +1,6 @@
+IntegratorWithLimiter Model Notes
+
+Simple model for verifying QSS event prediction and step count behavior.
+
+The discrete y variable is made an output so that it appears in the
+reverse dependency of the event indicator.

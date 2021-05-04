@@ -1,0 +1,4 @@
+loadModel(Modelica);
+loadFile("Achilles.mo");
+simulate(Achilles, stopTime=10.0, numberOfIntervals=100000, method=dassl, simflags="-steps -maxIntegrationOrder=3", tolerance=4e-6); getErrorString();
+rm -f *.o

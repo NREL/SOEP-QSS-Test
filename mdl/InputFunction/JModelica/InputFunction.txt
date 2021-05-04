@@ -1,0 +1,8 @@
+InputFunction Model JModelica Notes
+
+The custom run_fmu.step.py script duplicates the step input function
+the QSS solver uses as the current default.
+
+XML Modifications
+ Build script ran mod_xml.py to add index comments
+ No other XML modifications were required to run the FMU since no zero-crossing or discrete variables are present

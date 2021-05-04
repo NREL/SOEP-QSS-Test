@@ -1,0 +1,4 @@
+IntegratorWithLimiter Model JModelica Notes
+
+Explicit zero-crossing variable and derivative were added for QSS.
+The variable y was made discrete so that QSS will track it.

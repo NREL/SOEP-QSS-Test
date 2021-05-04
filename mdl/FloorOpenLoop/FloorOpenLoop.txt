@@ -1,0 +1,7 @@
+FloorOpenLoop Model Notes
+
+This is a building thermal model that is a good validation case for the
+QSS solver.
+
+This model has been removed from the Buildings library and is not yet set
+up to run from an earlier Buildings revision.

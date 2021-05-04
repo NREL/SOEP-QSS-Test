@@ -1,0 +1,17 @@
+Case600FF Model QSS Notes
+
+The 2020/04 OCT FMU slows to a crawl at ~400000 s with second derivatives getting large causing tiny steps
+
+The Dymola FMU was used for QSS simulations.
+
+The key room temperature variables, TRooQSS_K, outputs are the primary
+basis for solution comparison.
+
+A sampling rate of 100 s is suggested for comparison with the PyFMI solution.
+
+The LIQSS solutions drift upward in temperature unless --dtInf deactivation
+control is used. This is due to deactivation of the roo.air.vol.dynBal.mXi[1]
+variable that (in the Dymola xml) has no observees other than itself.
+
+xQSS2 runs are, like LIQSS runs, somewhat noisier. The use of --dtInf with
+xQSS2 is recommended for this case.

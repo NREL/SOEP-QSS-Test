@@ -1,0 +1,16 @@
+_eventIndicator_*
+roo.air.vol.dynBal.mXi[1]
+roo.air.vol.dynBal.U
+roo.conBou[1].opa.T[7]
+roo.conExt[*].opa.T[*]
+roo.conExtWin[*].opa.T[*]
+roo.irRadExc.TOpa[*]
+TRooAir.T
+
+# These use significant QSS run time
+conHea.I.y
+conCoo.I.y
+EHea.y
+ECoo.y
+PHea.mu
+PCoo.mu

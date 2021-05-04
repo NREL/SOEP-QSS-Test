@@ -1,0 +1,7 @@
+EventIndicator2 Model QSS Notes
+
+Event indicator requantizations are reduced using --zFac to avoid having
+them dominate the runs.
+
+Due to numerical differentiation noise QSS3 does not achieve the target
+accuracy without a much tighter tolerance.

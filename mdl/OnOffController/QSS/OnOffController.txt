@@ -1,0 +1,14 @@
+OnOffController Model QSS Notes
+
+The QSS runs using the Dymola FMU work correctly.
+The available JModelica FMU depends on libgfortran.so3 and so cannot be
+run on current Fedora and the JModelica FMU build is failing.
+
+The current OCT-generated FMU is not working correctly with PyFMI or QSS.
+The FMU is not detecting zero crossings.
+
+Notes
+
+Need "observer" QSS outputs to show the temperature accurately without
+sampled outputs since it depends only on conQSS.y and so doesn't
+requantize often.

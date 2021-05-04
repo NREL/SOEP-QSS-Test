@@ -1,0 +1,13 @@
+EventIndicator2 Model Notes
+
+This is a simple event indicator test model with
+a zero-crossing function that modifies a state
+variable via the reinit function.
+
+Notes:
+
+OCT event indicator reverse dependency is on der(x).
+It would be clearer if it were on x, but QSS treats
+them the same way.
+
+The QSS results are good.

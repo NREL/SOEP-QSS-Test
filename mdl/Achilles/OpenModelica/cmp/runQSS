@@ -1,0 +1,3 @@
+#!/bin/bash
+#./Achilles -cpu -clock=CPU -steps -s=qss
+omc simQSS.mos

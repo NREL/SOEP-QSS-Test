@@ -1,0 +1,45 @@
+ZCBoolean2 Model Dymola Notes
+
+Variables:
+x	1	Real		state	O-> y	der(x)=y
+u	3	Internal	sin(t)
+yBoo	5	Disc+Bool		H-> z1, z2
+yBooPre	6	Disc+Bool		H-> z1, z2
+y	7	Disc+Real		H-> z1, z2
+__zc_z1	8	ZC			O-> u (internal)	real(yBooPre)*u-0.5
+__zc_z2	10	ZC			O-> u (internal)	real(yBooPre)*u+0.5
+
+The PyFMI simulation is not correct: Investigating
+The ZCBoolean2.csv file has Dymola simulation output and is correct.
+
+XML Modifications
+ stopTime set to 10
+ Added dependencies for zero-crossing (__zc) and discrete (y) variables (see below)
+
+Dependency on der(x) on y needs to be added:
+    <Derivatives>
+      <Unknown index="2"
+        dependencies="7"
+        dependenciesKind="fixed"/>
+    </Derivatives>
+
+Dependency of yBoo, yBooPre, and y on __zc_z1 and __zc_z2 need to be added:
+    <DiscreteStates>
+        <Unknown index="5"
+          dependencies="8 10"
+          dependenciesKind="dependent dependent"/>
+        <Unknown index="6"
+          dependencies="8 10"
+          dependenciesKind="dependent dependent"/>
+        <Unknown index="7"
+          dependencies="8 10"
+          dependenciesKind="dependent dependent"/>
+    </DiscreteStates>
+
+Dependency of __zc_zc1 and __zc_zc2 on yBooPre needs to be added
+      <Unknown index="8"
+        dependencies="6"
+        dependenciesKind="dependent"/>
+      <Unknown index="10"
+        dependencies="6"
+        dependenciesKind="dependent"/>

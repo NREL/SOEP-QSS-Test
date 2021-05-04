@@ -1,0 +1,6 @@
+Achilles Model Notes
+
+This is a simple 2-variable model of the decaying, oscillatory
+"Achilles and the Tortoise" equations:
+ x1' = 1.5 * x2 - 0.5 * x1
+ x2' = -x1

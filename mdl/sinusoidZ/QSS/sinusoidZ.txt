@@ -1,0 +1,12 @@
+sinusoidZ Model QSS Notes
+
+The QSS runs have more trouble with FMU zero-crossing detection as the
+sinusoid "dips" below zero are made smaller.
+
+QSS3 has more difficulty with this model due to ND noise. Runs with
+rTol=1e-4 can miss most of the crossings no matter what ND time step
+is used.
+
+With the "dips" and rTol made not too challenging the QSS runs show
+that a zFac>1 can be used successfully to reduce zero-crossing variable
+requantizations without causing more crossings to be missed.

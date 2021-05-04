@@ -1,0 +1,15 @@
+OnOffController Model Notes
+
+This model simulates an on/off controller that controls the room temperature
+of a simple room modeled using a capacitor.
+
+This model is adapted for local use from the OnOffController model in
+https://github.com/lbl-srg/soep/tree/master/models/modelica_for_qss/QSS/Specific/Events
+
+The adapted model built with OCT is not running correctly with PyFMI or QSS.
+The FMU is not detecting zero crossings.
+
+The original model built with Dymola runs correctly with PyFMI and QSS.
+With default tolerances the QSS simulation captures the zero crossing times
+more accurately while the PyFMI simulation output shows the crossings a bit
+late. As the tolerances are reduced the difference is nearly eliminated.

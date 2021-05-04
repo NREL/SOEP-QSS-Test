@@ -1,0 +1,9 @@
+Quadratic Model JModelica Notes
+
+The JModelica results are accurate at the output times but,
+as with other JModelica output, there are large gaps between
+outputs.
+
+XML Modifications
+ Build script ran mod_xml.py to add index comments
+ No other XML modifications were required to run the FMU since no zero-crossing or discrete variables are present

@@ -1,0 +1,4 @@
+IntegratorWithLimiter Model OCT Notes
+
+The discrete y variable is made an output so that it appears in the
+reverse dependency of the event indicator.

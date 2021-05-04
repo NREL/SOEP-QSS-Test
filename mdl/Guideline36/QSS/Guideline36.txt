@@ -1,0 +1,3 @@
+Guideline36 Model QSS Notes
+
+Runs very slowly.

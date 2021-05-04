@@ -1,0 +1,4 @@
+CoupledSystem Model Dymola Notes
+
+XML Modifications
+ stopTime set to 0.1

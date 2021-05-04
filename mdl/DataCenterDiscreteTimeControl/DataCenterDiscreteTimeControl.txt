@@ -1,0 +1,7 @@
+DataCenterDiscreteTimeControl Model Notes
+
+This is a building thermal model that is a good validation case for the
+QSS solver.
+
+The time range starts at a large value which causes some small steps to
+be non-advancing in PyFMI simulations ("t + h = t on the next step").

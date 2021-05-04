@@ -1,0 +1,4 @@
+StateEvent6 Model OCT Notes
+
+Since the discrete variable is an output it appears in the event indicator
+reverse dependency so QSS can track it correctly.

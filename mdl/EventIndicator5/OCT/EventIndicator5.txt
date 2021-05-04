@@ -1,0 +1,8 @@
+EventIndicator5 Model OCT Notes
+
+The OCT-generated FMU has correct event indicator dependencies.
+
+OCT generates 4 event indicators for the 2 sampler clauses,
+2 of which move between -.2 and -.1, never reaching zero.
+Eliminating those extra event indicators will improve QSS
+efficiency.

@@ -1,0 +1,3 @@
+Quadratic Model QSS Notes
+
+The QSS run matches the PyFMI results.

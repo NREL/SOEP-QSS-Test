@@ -1,0 +1,32 @@
+EventIndicator1 Model Notes
+
+This is a simple event indicator test model with
+a zero-crossing function that modifies a state
+variable derivative via a discrete variable.
+
+Notes:
+
+OCT event indicators and their dependencies are
+correct and short-circuit out the discrete variable
+dependencies. If the discrete variable is changed
+to an output the dependencies are not short-circuited.
+
+QSS should not track discrete variables that are
+short-circuited since without dependencies they
+are not updated by QSS.
+
+If the discrete variable is made into an output
+the FMU and QSS output for it is updated, but as a
+local variable there are no dependencies in the XML.
+If the discrete variable is tracked by QSS the set
+all variables call before reading local variables
+from the FMU will wipe out changes to it made by the
+FMU at zero-crossing events so using the --tLoc
+option will not work to get the correct discrete
+variable output.
+Other than the discrete variable tracking, the QSS
+results are good and do no requantizations as
+expected in the ideal (infinite precision) case.
+
+The QSS-FMU zero crossing coordination is not
+working in some cases: this needs to be resolved.

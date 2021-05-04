@@ -1,0 +1,26 @@
+EventIndicator3 Model Notes
+
+This is a simple event indicator test model with
+a zero-crossing function that modifies a state
+variable derivative via a discrete variable using
+the pre() operator.
+
+Notes:
+
+OCT event indicators and their dependencies are
+correct and short-circuit out the discrete variable
+dependencies.
+
+The OCT event indicators and PyFMI results match
+the EventIndicator1 model as expected.
+
+QSS should not track discrete variables that are
+short-circuited since without dependencies they
+are not updated by QSS.
+
+Other than the discrete variable tracking, the QSS
+results are good and do no requantizations as
+expected in the ideal (infinite precision) case.
+
+The QSS-FMU zero crossing coordination is not
+working in some cases: this needs to be resolved.

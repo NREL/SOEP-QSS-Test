@@ -1,0 +1,15 @@
+BouncingBall Model QSS Notes
+
+The OCT FMU was used to generate the QSS results using its event indicator support.
+The OCT FMU event indicator reverseDependencies was refined manually to point to
+the velocity variable, v, for the more efficient and preferred QSS support.
+
+QSS3 simulation of BouncingBall can take large requantization steps since the
+ball height is a quadratic function of time between bounce events. (Because QSS
+doesn't get that trajectory information it can generate small 3rd order terms
+in the height trajectory so there can be a few requantizations between bounces.)
+With the large steps the predicted zero-crossing time can be slightly off due to
+roundoff so a larger than default zMul value or, less efficient, a dtInf
+deactivation control is probably needed to get the FMU to detect all the zero
+crossings. The --eidd option is also recommended to make the predicted zero
+crossing times as accurate as possible.

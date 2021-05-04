@@ -1,0 +1,5 @@
+PID_Controller Model Notes
+
+This is the Modelica example with a PID controller.
+
+This is a good test case for QSS+FMU with zero crossings.

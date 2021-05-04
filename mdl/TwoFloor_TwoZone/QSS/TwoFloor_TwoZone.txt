@@ -1,0 +1,8 @@
+TwoFloor_TwoZone Model QSS Notes
+
+Standard QSS demonstrates derivative sensitivities to the use of
+stale quantized trajectories in derivatives, particularly wrt
+self-observer state variables. The experimental QSS variant that
+propagates current continuous trajectories gives much improved
+results but tracking still breaks down. This behavior is seen in
+some of the other Buildings models and is being investigated.

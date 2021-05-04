@@ -1,0 +1,26 @@
+sinusoidZ Model Notes
+
+This model is a zero-crossing "torture test" with a high-frequency
+sinusoidal zero-crossing function and difficult "bounce" crossings.
+
+The high frequency sinusoid does not allow a low order polynomial
+trajectory to have a large time span of accuracy so requantizations
+will be needed to assure accurate zero-crossings as zero is approached.
+
+The sinuoid dependency directly on the time variable, which never
+requantizes, will trip up algorithms that exploit zero-crossing
+dependency requantizations in place of zero-crossing variable
+requantizations.
+
+The sinusoid has significant derivatives of every order so it
+should present the same obstacles to all QSS order methods.
+
+Since zero-crossing variables have no observers and don't have the
+cumulative drift error of integrated state variables we would like
+to avoid many requantizations of them when they are "far" from a
+zero crossing, but robust algorithms to exploit this are tricky
+because, without specific information such as derivative bounds,
+we cannot know from current trajectory information that we are
+actually far from the next zero crossing. Algorithm variants
+designed to do less zero-crossing variable requantization should
+be tested against this model.

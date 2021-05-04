@@ -1,0 +1,34 @@
+OnOffController Model JModelica Notes
+
+The JModelica FMU from the LBNL collection depends on libgfortran.so.3 so it could not be run on Fedora 27 at Objexx.
+
+The JModelica FMU compile script that imports the Building library gives these errors:
+Error at line 5, column 3, in file '../OnOffController.mo':
+  Cannot find class declaration for BaseClasses
+Error at line 5, column 41, in file '../OnOffController.mo':
+  Cannot find component declaration for bandwidth
+Error at line 71, column 32, in file '../OnOffController.mo':
+  Cannot find class or component declaration for reference
+Error at line 73, column 31, in file '../OnOffController.mo':
+  Cannot find class or component declaration for u
+Error at line 75, column 26, in file '../OnOffController.mo':
+  Cannot find class or component declaration for u
+Error at line 77, column 26, in file '../OnOffController.mo':
+  Cannot find class or component declaration for der_u
+Error at line 81, column 26, in file '../OnOffController.mo':
+  Cannot find class or component declaration for y
+Error at line 84, column 18, in file '../OnOffController.mo':
+  Cannot find class or component declaration for _zc_der_z2
+Error at line 96, column 18, in file '../OnOffController.mo':
+  Cannot find class or component declaration for _zc_z1
+Error at line 98, column 18, in file '../OnOffController.mo':
+  Cannot find class or component declaration for _zc_z2
+Error at line 100, column 18, in file '../OnOffController.mo':
+  Cannot find class or component declaration for _zc_der_z1
+
+So the JModelica FMU was not yet run.
+
+XML Modifications
+ Build script ran mod_xml.py to add index comments
+ Added der(vol.T) -> ConSS.y dependencies to Derivatives and InitialUnknowns
+ Added ConSS.y -> __zc_z1 and __zc_z2 conditional handler dependencies

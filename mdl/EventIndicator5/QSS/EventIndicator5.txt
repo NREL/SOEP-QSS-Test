@@ -1,0 +1,10 @@
+EventIndicator5 Model QSS Notes
+
+The event indicator requantizations are triggered by discontinuities
+at the sample times that cause large numerical derivatives.
+
+The QSS3 run is sensitive to the numeric differentiation time step
+to get the zero-crossings detected.
+
+The QSS-FMU zero crossing coordination is not
+working in some cases: this needs to be resolved.

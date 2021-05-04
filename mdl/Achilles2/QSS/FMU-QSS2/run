@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS Achilles2_QSS.fmu --qss=QSS2 --out=K

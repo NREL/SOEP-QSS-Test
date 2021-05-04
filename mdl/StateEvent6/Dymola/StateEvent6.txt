@@ -1,0 +1,5 @@
+StateEvent6 Model Dymola Notes
+
+XML Modifications
+ stopTime was set to 10
+ Added dependencies for zero-crossing (__zc_z) and discrete (y) variables

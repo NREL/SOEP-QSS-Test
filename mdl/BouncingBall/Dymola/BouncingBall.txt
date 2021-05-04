@@ -1,0 +1,5 @@
+BouncingBall Model Dymola Notes
+
+XML Modifications:
+ stopTime set to 3
+ Added v -> __zc_z conditional hander dependency

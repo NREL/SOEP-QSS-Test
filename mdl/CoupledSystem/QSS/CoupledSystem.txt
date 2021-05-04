@@ -1,0 +1,5 @@
+CoupledSystem Model QSS Notes
+
+The OCT FMU was used in the QSS runs.
+
+The QSS2 results were identical using the Dymola and JModelica FMUs.

@@ -1,0 +1,3 @@
+sinusoid Model Notes
+
+This model has fast and slow dynamics to provide a QSS demo.

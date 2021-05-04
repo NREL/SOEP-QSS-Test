@@ -1,0 +1,5 @@
+mLIQSS_1 Model Notes
+
+This is a simple system with 2 continuous state variables that is
+used in the Improving LIQSS paper to demonstrate Jacobian off-diagonal
+coupling limitations of traditional LIQSS solvers.

@@ -6,11 +6,13 @@
 *.con
 *.cerr
 *.cout
+*.csv
 *.d
 *.dll
 *.exe
 *.fail
 *.fmu
+*.gz
 *.h
 *.hh
 *.hpp
@@ -38,6 +40,7 @@
 *.so.*
 *.stp
 *.sum
+*.tar
 *.xls
 *.xlsx
 *.xml

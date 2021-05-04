@@ -1,0 +1,4 @@
+Quadratic Model Notes
+
+This is a simple model with one continuous state variable with
+derivative equal to the time, with exact solution of:  1/2 * t^2.

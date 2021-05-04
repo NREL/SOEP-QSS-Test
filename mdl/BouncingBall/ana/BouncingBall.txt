@@ -1,0 +1,5 @@
+The analytical BouncingBall model uses the analytical solution for
+each bounce phase. The solution accumulates some error due to holding
+values in floating point variables.
+
+The run time on a Haswell quad-core laptop is very small (~0.01 s).

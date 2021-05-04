@@ -1,0 +1,6 @@
+StateEvent6 Model Notes
+
+This is a simple model with 3 continuous state variables and a zero-crossing function
+with an associated conditional when block.
+
+The Modelica file was simplified to enable JModelica to compile it to an FMU.

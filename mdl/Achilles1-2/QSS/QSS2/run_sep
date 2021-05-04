@@ -1,0 +1,2 @@
+#!/bin/bash
+QSS --qss=QSS2 ../../../Achilles1/JModelica/Achilles1.fmu ../../../Achilles2/JModelica/Achilles2.fmu --dtInf=0.001 $* >run_sep.log 2>&1

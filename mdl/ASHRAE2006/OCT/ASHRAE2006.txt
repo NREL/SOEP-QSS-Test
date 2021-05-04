@@ -1,0 +1,13 @@
+ASHRAE2006 Model OCT Notes
+
+OCT gives a number of warnings when generating the FMU.
+
+PyFMI run gives warnings including out of bounds.
+
+The r19089 OCT update and the late-2020 updated model
+generate fewer event indicators and the results are
+mildly changed.
+
+This update fails to run the FMU with PyFMI if the
+generate_ode_jacobian is used, giving:
+Simulation failed:  'The right-hand side function had repeated recoverable errors. At time 80280.000000.'

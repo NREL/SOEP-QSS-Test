@@ -1,0 +1,13 @@
+ASHRAE2006 Model QSS Notes
+
+As of the 2020/11 OCT update the QSS simulation drifts off track unless a small dtMax is
+used and shows derivative sensitivities that cause very slow run times with standard QSS
+solvers. The experimental continuous trajectory propagating QSS variant improves the
+result but does not fully resolve the simulation problems.
+
+Investigation Plan:
+- Compare shorter runs with full QSS diagnostics
+  - Look at variables dominating requantizations
+  - Find first point of divergence and identify cause (missed ZC?)
+    - Get ZC event times out of PyFMI by running with and without --soo arg to run_PyFMI.py
+- Try LIQSS runs to see if stiffness is a factor

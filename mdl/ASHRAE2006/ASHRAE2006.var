@@ -1,0 +1,23 @@
+_eventIndicator_*
+flo.sou.air.vol.T
+flo.eas.air.vol.T
+flo.nor.air.vol.T
+flo.wes.air.vol.T
+flo.cor.air.vol.T
+sou.vav.m_flow
+eas.vav.m_flow
+nor.vav.m_flow
+wes.vav.m_flow
+cor.vav.m_flow_turbulent
+conEco.yOA
+dpRetDuc.m_flow
+dpRetDuc.m_flow_nominal
+fanSup.m_flow
+fanSup.m_flow_nominal
+T*.T
+
+# These are of interest for QSS performance
+pSetDuc.limPID.I.y
+cooCoi.ele[?].vol2.dynBal.*
+fanSup.vol.dynBal.*
+flo.*.air.vol.dynBal.*

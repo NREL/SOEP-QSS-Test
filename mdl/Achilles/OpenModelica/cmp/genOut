@@ -1,0 +1,9 @@
+#!/bin/bash
+DyMatExport.py -e x1 -f CSV -o x1.csv Achilles_res.mat
+DyMatExport.py -e x2 -f CSV -o x2.csv Achilles_res.mat
+DyMatExport.py -e \$solverSteps -f CSV -o steps.csv Achilles_res.mat
+csv2ascii.py x1.csv
+csv2ascii.py x2.csv
+echo "Steps: "
+tail -n 1 steps.csv
+rm -f *.csv

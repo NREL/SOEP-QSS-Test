@@ -1,0 +1,6 @@
+OnOffController Model Dymola Notes
+
+XML Modifications
+ stopTime set to 2
+ Added der(vol.T) -> ConSS.y dependencies to Derivatives and InitialUnknowns
+ Added ConSS.y -> __zc_z1 and __zc_z2 conditional handler dependencies

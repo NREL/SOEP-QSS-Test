@@ -1,0 +1,5 @@
+PID_Controller Model JModelica Notes
+
+The PID_Controller model has event indicators but explicit zero crossing variables
+have not been added to it for QSS use so the JModelica FMU should not be used for
+QSS simulation.

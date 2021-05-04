@@ -1,0 +1,9 @@
+Achilles2 Model Notes
+
+This is the x2 half a simple 2-variable model of the decaying, oscillatory
+"Achilles and the Tortoise" equations:
+ x1' = 1.5 * x2 - 0.5 * x1
+ x2' = -x1
+
+The Achilles model is split into two parts, Achilles1 and Achilles2, to
+demonstrate the use of input/output connections across FMUs.

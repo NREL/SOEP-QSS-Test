@@ -1,0 +1,14 @@
+ZCBoolean2 Model Notes
+
+This model includes zero-crossing functions and a conditional when block with boolean expressions.
+
+Variables:
+x        State    Real      der(x)=y
+u        Real     Internal	 sin(t)  (marked as an input but given an equation so causality is local)
+y        Discrete Real
+yBoo     Discrete Boolean
+yBooPre  Discrete Boolean
+
+Notes:
+ Zero crossing at 0.5235 has no effect on y because it is already 1 (but it toggles yBoo causing the zero crossing functions to change trajectories)
+ The 3 zero crossings that are not FMU events (due to yBoo in conditionals) are correctly ignored by the FMU

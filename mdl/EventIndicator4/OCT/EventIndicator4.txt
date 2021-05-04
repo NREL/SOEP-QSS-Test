@@ -1,0 +1,5 @@
+EventIndicator4 Model OCT Notes
+
+The OCT-generated FMU has correct event indicator dependencies.
+Since the discrete variable is an output in this model OCT doesn't
+short-circuit its dependencies so QSS can correctly track it.
