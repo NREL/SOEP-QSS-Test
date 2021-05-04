@@ -11,7 +11,7 @@ which never requantizes, but the event indicators requantize as needed based on
 the values and derivatives of u rather than getting observer updates from the
 requantization of u.
 
-The QSS2 runs need the --dtMax option to address deactivation of u=sin(t) at t=0
+The QSS2 runs need the --dtInf option to address deactivation of u=sin(t) at t=0
 (its second derivative is zero so the next requantization time is t=infinity).
 The event indicator derivatives are computed with ND so they generally won't
 have exactly zero second derivatives at t=0 so we need --dtMax instead of --dtInf.
