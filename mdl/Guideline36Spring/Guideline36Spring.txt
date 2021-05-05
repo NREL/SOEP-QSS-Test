@@ -1,0 +1,6 @@
+Guideline36Spring Model Notes
+
+This is a building thermal model that is a good validation case for the
+QSS solver.
+
+The model bundles its own E+ to "warmup" state to the starting date.

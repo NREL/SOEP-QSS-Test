@@ -1,8 +1,8 @@
-Guideline36 Model QSS Notes
+Guideline36Spring Model QSS Notes
 
 This model has a large number of event indicators:
- 189 state variables
-1001 event indicators
+  84 state variables
+ 900 event indicators
  Almost all EIs have many (50+) forward and reverse dependencies and most are the same
  Most of these EIs have observer updates after every state requantization so QSS will run slowly
 

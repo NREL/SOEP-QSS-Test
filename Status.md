@@ -2,10 +2,23 @@
 
 ## General
 
+### OCT Version
+
+Unless otherwise indicated the findings below are based on this OCT version: 2020.1-1.18 with the OCT-stable-r19089_JM-r14295 update.
+
+### Buildings Library Version
+
+The contained models and notes should be valid with the Buildings Library repository from Tue May 4 2021 with hash 9c37781c84 (9c37781c84e1f72f557ffdb150fe08f174b3682e).
+* Some models pull an earlier Buildings Library revision to run against.
+* Automatic configuration of the Buildings Library revision when building FMUs is planned but not yet implemented.
+
+### Main Issues
+
 Currently the main issues with OCT+QSS simulations are:
 * Directional derivative support doesn't work with PyFMI and/or QSS for some models
   * Directional derivatives have proven important to the QSS+FMU zero-crossing protocol
-* Too many event indicators are generated for some models
+* Surprisingly many event indicators are generated for some models (Guideline36, Guideline36Spring)
+* Event indicators missing all reverse dependencies (UpstreamSampler)
 * Event indicators aren't working correctly in some models
 * Numerical differentiation can inject significant noise into QSS derivatives (worse with QSS3 than QSS2) causing excess requantizations and simulation inaccuracy
   * Automatic optimal ND step selection is under development and will help with this but since a uniform step is needed for efficiency it can't be optimal for all variables
@@ -13,6 +26,8 @@ Currently the main issues with OCT+QSS simulations are:
 * Buildings library changes can alter or remove models making stable testing challenging
 * An OCT mechanism to tell the FMU compiler to treat specified (non-state) local variables as output variables would allow QSS to avoid a very inefficient process for getting those outputs
 * OCT gives warnings when building FMUs for many of Buildings models that should probably be reviewed and addressed
+
+GitHub Issues for these are pending.
 
 ## Models
 
@@ -23,7 +38,6 @@ Currently the main issues with OCT+QSS simulations are:
 * No problems
 
 ### Achilles1-2: Multiple-FMU Demo
-*
 * No problems
 
 ### Achilles2: Part 2 of Split/Connected Achilles
@@ -98,17 +112,23 @@ Currently the main issues with OCT+QSS simulations are:
 
 ### FloorOpenLoop
 * This model has been removed from the Buildings library and is not yet set up to run from an earlier Buildings revision
-* With the 2020/11 OCT update this model now builds on Windows but fails at PyFMI run time with an "Initialization failed" error (after a number of warnings)
+* OCT builds this model on Windows but it fails at PyFMI run time with an "Initialization failed" error (after a number of warnings)
 
 ### Guideline36
-* With the 2020/11 OCT update PyFMI runs built with generate_ode_jacobian progress very slowly
-* QSS runs progress slowly: Needs investigation
+* PyFMI runs of OCT FMU built with generate_ode_jacobian progress very slowly
+* The FMU has a large number of event indicators with many dependencies
+* QSS runs progress slowly: At least partly due to the event indicators: Needs investigation
+
+### Guideline36Spring
+* PyFMI runs of OCT FMU built with generate_ode_jacobian progress very slowly
+* The FMU has a large number of event indicators with many dependencies
+* QSS runs progress slowly: At least partly due to the event indicators: Needs investigation
 
 ### HeatingCoolingHotWater3Clusters
-* With the 2020/11 OCT the QSS2 run matches well but is slower than CVode (without tolerance matching or binning)
+* The QSS2 run matches well but is slower than CVode (without tolerance matching or binning)
 
 ### HeatingCoolingHotWaterSmall
-* With the 2020/11 OCT the QSS2 run matches well but is slower than CVode (without tolerance matching or binning)
+* The QSS2 run matches well but is slower than CVode (without tolerance matching or binning)
 
 ### InputFunction: 1-State System with Input Function Derivative
 * No problems
@@ -135,14 +155,14 @@ Currently the main issues with OCT+QSS simulations are:
 * No problems
 
 ### SimpleHouse
-* With the 2020/11 OCT update an FMU built with the generate_ode_jacobian option aborts under PyFMI and QSS during initialization with no error message
+* The OCT FMU built with the generate_ode_jacobian option aborts under PyFMI and QSS during initialization with no error message
 * Without directional derivatives the QSS simulations run very slowly due to excessive requantizations caused by event indicator numerical differentiation noise
 * Despite the noise without directional derivatives runs with binning are competitive with CVode for the same accuracy, largely because the zero crossings are more accurate
 
 ### SimpleHouseDiscreteTime
 * This model is a variant of SimpleHouse with a discrete time controller for which QSS is more advantageous
 * This model was removed from the Buildings library and is set up to clone a specific revision of the Buildings library: it would be better to update it and re-add it to the library
-* With the 2020/11 OCT update an FMU built with the generate_ode_jacobian option aborts under PyFMI and QSS during initialization with no error message
+* The OCT FMU built with the generate_ode_jacobian option aborts under PyFMI and QSS during initialization with no error message
 * The normal and "reference" PyFMI (CVode) runs do not have the same zero crossing behavior so the model is not very numerically stable
 * The QSS simulation accuracy is hurt by numeric differentiation and the lack of directional derivatives such that zero-crossing events can be missed: This may be better with the new zero-crossing controls
 * Some variables of interest are (non-state) local FMU variables that require a very inefficient process to extract from a QSS run (due to the lack of dependency information)

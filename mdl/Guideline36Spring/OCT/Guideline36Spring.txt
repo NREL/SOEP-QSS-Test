@@ -1,4 +1,4 @@
-Guideline36 Model OCT Notes
+Guideline36Spring Model OCT Notes
 
 With the 2020/11 OCT update this model built with generate_ode_jacobian
 progresses very slowly in PyFMI runs and generates a large number of
