@@ -25,13 +25,16 @@ Currently the main issues with OCT+QSS simulations are:
   * Event indicators aren't working correctly in some models
   * Extra event indicators (EventIndicator5)
   * Event indicator reverse dependency refinements (BouncingBall, EventIndicator2)
-* Numerical differentiation can inject significant noise into QSS derivatives (worse with QSS3 than QSS2) causing excess requantizations and simulation inaccuracy
+* Numerical differentiation can inject significant noise into QSS derivatives (worse with QSS3 than QSS2) causing excess requantizations and simulation inaccuracy ([#4](https://github.com/NREL/SOEP-QSS-Test/issues/4))
   * Automatic optimal ND step selection is under development and will help with this but since a uniform step is needed for efficiency it can't be optimal for all variables
-* Buildings library changes can alter or remove models making stable testing challenging
-* An OCT mechanism to tell the FMU compiler to treat specified (non-state) local variables as output variables would allow QSS to avoid a very inefficient process for getting those outputs
-* OCT gives warnings when building FMUs for many of Buildings models that should probably be reviewed and addressed
+* OCT output issues ([#5](https://github.com/NREL/SOEP-QSS-Test/issues/5)):
+  * An OCT mechanism to tell the FMU compiler to treat specified (non-state) local variables as output variables would allow QSS to avoid a very inefficient process for getting those outputs
+  * Getting a variable's declared type from the PyFMI API is not working
+* Buildings Library issues ([#6](https://github.com/NREL/SOEP-QSS-Test/issues/6)):
+  * Buildings library changes can alter or remove models making stable testing challenging
+  * OCT gives warnings when building FMUs for many of Buildings models that should probably be reviewed and addressed
 
-GitHub Issues for these are pending.
+"Clearinghouse" Issues for these were created but individual issues within these can also be tracked in separate Issues as needed.
 
 ## Models
 
