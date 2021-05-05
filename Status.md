@@ -15,14 +15,18 @@ The contained models and notes should be valid with the Buildings Library reposi
 ### Main Issues
 
 Currently the main issues with OCT+QSS simulations are:
-* Directional derivative support doesn't work with PyFMI and/or QSS for some models
-  * Directional derivatives have proven important to the QSS+FMU zero-crossing protocol
-* Surprisingly many event indicators are generated for some models (Guideline36, Guideline36Spring)
-* Event indicators missing all reverse dependencies (UpstreamSampler)
-* Event indicators aren't working correctly in some models
+* Derivatives for some Buildings models are sensitive to the standard QSS approach of propagating somewhat "stale" quantized trajectories ([#1](https://github.com/NREL/SOEP-QSS-Test/issues/1))
+* Directional Derivatives ([#2](https://github.com/NREL/SOEP-QSS-Test/issues/2)):
+  * Directional derivatives have proven important to the QSS+FMU zero-crossing protocol and could be used to provide state variable 2nd derivatives if efficiency obstacles are overcome
+  * Directional derivative support doesn't work with PyFMI and/or QSS for some models, failing during FMU initialization or causing very slow PyFMI and QSS progress
+* Event Indicators ([#3](https://github.com/NREL/SOEP-QSS-Test/issues/3)):
+  * Surprisingly many event indicators are generated for some models (Guideline36, Guideline36Spring)
+  * Event indicators missing all reverse dependencies (UpstreamSampler)
+  * Event indicators aren't working correctly in some models
+  * Extra event indicators (EventIndicator5)
+  * Event indicator reverse dependency refinements (BouncingBall, EventIndicator2)
 * Numerical differentiation can inject significant noise into QSS derivatives (worse with QSS3 than QSS2) causing excess requantizations and simulation inaccuracy
   * Automatic optimal ND step selection is under development and will help with this but since a uniform step is needed for efficiency it can't be optimal for all variables
-* Derivatives for some Buildings models are sensitive to the standard QSS approach of propagating somewhat "stale" quantized trajectories
 * Buildings library changes can alter or remove models making stable testing challenging
 * An OCT mechanism to tell the FMU compiler to treat specified (non-state) local variables as output variables would allow QSS to avoid a very inefficient process for getting those outputs
 * OCT gives warnings when building FMUs for many of Buildings models that should probably be reviewed and addressed
