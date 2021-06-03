@@ -1,1 +1,4 @@
 Achilles1 Model OCT Notes
+
+Use the run.py script in the OCT directory to run PyFMI with
+the step function used for the x2 input variable.

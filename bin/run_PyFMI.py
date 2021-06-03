@@ -52,7 +52,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument( '--solver', help = 'Solver  [CVode]', default = 'CVode', choices = [ 'CVode', 'Radau5ODE', 'RungeKutta34', 'Dopri5', 'RodasODE', 'LSODAR', 'ExplicitEuler', 'DASSL' ] )
 parser.add_argument( '--maxord', help = 'Max order', type = int )
 parser.add_argument( '--discr', help = 'CVode discretization method  [BDF]', default = 'BDF', choices = [ 'BDF', 'Adams' ] )
-parser.add_argument( '--inp', help = 'Input function  [step]', choices = [ 'step' ] )
+parser.add_argument( '--inp', help = 'Input variable:function  VAR:step (only step function supported and only one input variable can be given an input currently)' )
 parser.add_argument( '--rtol', help = 'Relative tolerance  [FMU]', type = float )
 parser.add_argument( '--rTol', help = argparse.SUPPRESS, type = float, dest = 'rtol' )
 parser.add_argument( '--atol', help = 'Absolute tolerance  [FMU]', type = float )
@@ -222,15 +222,25 @@ opt_solver[ 'store_event_points' ] = not args.soo
 sim_args = { 'options': opt }
 if args.final_time is not None:
     sim_args[ 'final_time' ] = args.final_time
-if args.inp == 'step':
-    def step_fxn( t ): # Step function matching QSS Function_Inp_step( 1.0, 1.0, 1.0 )
-        h_0 = 1.0 # Initial height
-        h = 1.0 # Step height
-        d = 1.0 # Step time delta
-        ftd = math.floor( t / d )
-        step_num = ( ftd if d * ( ftd + 1.0 ) > t else ftd + 1.0 )
-        return h_0 + ( h * step_num )
-    sim_args[ 'input' ] = ( 'u', step_fxn )
+if args.inp:
+    inp = args.inp
+    try:
+        ( var, fxn ) = inp.split( ':' )
+    except:
+        print( 'Error: Input option not in VAR:FXN format', inp )
+        sys.exit( 1 )
+    if fxn == 'step':
+        def step_fxn( t ): # Step function matching QSS Function_Inp_step( 0.0, 1.0, 1.0 )
+            h_0 = 0.0 # Initial height
+            h = 1.0 # Step height
+            d = 1.0 # Step time delta
+            ftd = math.floor( t / d )
+            step_num = ( ftd if d * ( ftd + 1.0 ) > t else ftd + 1.0 )
+            return h_0 + ( h * step_num )
+        sim_args[ 'input' ] = ( var, step_fxn )
+    else:
+        print( 'Error: Unsupported input function:', fxn, 'Only the step function is currently supported' )
+        sys.exit( 1 )
 try:
     res = fmu.simulate( **sim_args )
 except Exception as err:
@@ -262,7 +272,13 @@ if res is False: sys.exit( 1 )
 
 # Generate output files
 print( '\nGenerating output files...' )
-keys = res.keys()
+try:
+    keys = res.keys()
+except: # Work-around for OCT-r23206_JM-r14295
+    if sys.version_info >= ( 3, 0 ):
+        keys = list( res._result_data.vars )
+    else:
+        keys = res._result_data.vars.keys()
 if sys.platform in ( 'win32', 'cygwin' ): # Case-insensitive file name handling
     keys.sort() # Assure the collision name decorating is deterministic
     keys_count = { key: 0 for key in keys } # Count number of variables

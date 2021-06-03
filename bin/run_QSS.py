@@ -46,6 +46,7 @@ import os, subprocess, sys
 
 # Set up pass-through QSS arguments
 args = var = qss = red = ''
+fmus = []
 gen = 'OCT' # Default FMU generator
 for arg in sys.argv[1:]:
     if arg.startswith( ( '--red=', '--red:' ) ): # Redirect
@@ -56,6 +57,13 @@ for arg in sys.argv[1:]:
         gen = 'JModelica'
     elif arg.lower() == '--dymola': # Use Dymola FMU
         gen = 'Dymola'
+    elif ( arg[0:2] != '--' ) and arg.endswith( ".fmu" ):
+        if os.name == 'nt': # Windows
+            arg = arg.replace( '/', '\\' )
+        else:
+            arg = os.path.splitdrive( arg )[ 1 ] # Discard drive letter
+            arg = arg.replace( '\\', '/' )
+        fmus.append( arg )
     else: # Pass-through argument
         if arg.startswith( ( '--var=', '--var:' ) ): # Variable file
             var = arg[6:].strip()
@@ -104,10 +112,17 @@ if not model:
     sys.exit( 1 )
 
 # Find the model FMU file
-model_fmu = os.path.join( model_dir, gen, model + '.fmu' )
-if not os.path.isfile( model_fmu ):
-    print( 'Error: FMU not found:', model_fmu )
-    sys.exit( 1 )
+if fmus:
+    for fmu in fmus:
+        if not os.path.isfile( fmu ):
+            print( 'Error: FMU not found:', fmu )
+            sys.exit( 1 )
+    model_fmu = ' '.join( fmus )
+else:
+    model_fmu = os.path.join( model_dir, gen, model + '.fmu' )
+    if not os.path.isfile( model_fmu ):
+        print( 'Error: FMU not found:', model_fmu )
+        sys.exit( 1 )
 
 # Find the model variable output list file if present
 if var: # Use specified variable output list file
