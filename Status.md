@@ -6,6 +6,28 @@
 
 Unless otherwise indicated the findings below are based on this OCT version: 2020.1-1.18 with the OCT-stable-r19089_JM-r14295 update.
 
+#### OCT Update OCT-r23206_JM-r14295
+
+Not all models have been tested with this update yet but here is a summary of some changes observed:
+* The ACControl model (with all the when blocks) now builds and runs successfully
+* Some FMU builds give warnings like this (may be a code gen issue or a problem in the Buildings Library file):
+  ```
+  sources/Buildings_Examples_ChillerPlant_DataCenterContinuousTimeControl_funcs.c:826:14: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+       string_v = ModelicaInternal_readLine(fileName_v, tmp_1, &tmp_2);
+  ```
+* Some PyFMI CVode runs give extra output points near startup like:
+  ```
+  0	1
+  1.00000002007889e-08	1.00000001
+  1.00000002007889e-08	1.00000001
+  0.001	1.001
+  ...
+  ```
+  and there are other new (non-startup) output steps that also look like
+  a state event is being shown that wasn't before even though we weren't
+  suppressing output "event points".
+
+
 ### Buildings Library Version
 
 The contained models and notes should be valid with the Buildings Library repository from Tue May 4 2021 with hash 9c37781c84 (9c37781c84e1f72f557ffdb150fe08f174b3682e).
@@ -62,7 +84,7 @@ Currently the main issues with OCT+QSS simulations are:
   * The default --zMul and --dtZMax options suffice with directional derivative support to give accurate/robust zero-crossing detection
 
 ### Case600
-* OCT is currently generating many event indicators with no reverse dependencies
+* OCT is currently generating 5 event indicators with no reverse dependencies
 * The room temperature variable, TRooAir.T, is not set up in the FMU as an output variable so QSS runs must use the inefficient local output support
 * The simulation has almost no zero-crossing events
 * Some event indicators have very large magnitudes (1e60 and DBL_MAX) that are problematic wrt overflows
@@ -108,7 +130,7 @@ Currently the main issues with OCT+QSS simulations are:
 
 ### EventIndicator4: Event Indicator Feature Test
 * The zero-crossing functions are a sinusoid that crosses zero (rather than functions that "bounce" off zero) to check that the QSS+FMU zero-crossing approach works in this (easier) case
-* The sinusoids cause deactivation issues so the --dtInf and --dtMax controls are used
+* The sinusoids cause deactivation issues so the --dtInf control is used
 
 ### EventIndicator5: Event Indicator Feature Test
 * OCT generates 4 event indicators for the 2 sampler clauses, 2 of which move between -.2 and -.1, never reaching zero
