@@ -26,6 +26,7 @@ Not all models have been tested with this update yet but here is a summary of so
   and there are other new (non-startup) output steps that also look like
   a state event is being shown that wasn't before even though we weren't
   suppressing output "event points".
+* Getting the PyFMI results variable list using the prior `res.keys()` method stopped working. The `run_PyFMI.py` script uses this list for output filtering against a name/wildcard/regex list of variables. A work-around was found (getting it from `res._result_data.vars`) so it isn't an obstacle.
 
 
 ### Buildings Library Version
