@@ -1,5 +1,6 @@
 PID_Controller Model QSS Notes
 
-The default dtND of 1e-6 was too small, causing missed zero-crossings
-due to numeric differentiation noise. Increasing dtND fixes this and
-the QSS and OCT solutions match well.
+The default dtND of 1e-6 was too small, causing missed zero crossings
+due to numeric differentiation noise. The default zMul was also too
+small to get all zero crossings to be detected by the FMU.
+After increasing these the QSS and OCT solutions match well.

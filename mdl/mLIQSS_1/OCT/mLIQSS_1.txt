@@ -1,1 +1,6 @@
 mLIQSS_1 Model OCT Notes
+
+The tolerances are set to be near-equivalent to what is
+used in the paper and the LIQSS runs with a (near-)zero
+relative tolerance (PyFMI doesn't allow zero) and an
+absolute tolerance of 1 to match the quantum in the paper.

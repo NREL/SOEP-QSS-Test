@@ -13,8 +13,9 @@ requantization of u.
 
 The QSS2 runs need the --dtInf option to address deactivation of u=sin(t) at t=0
 (its second derivative is zero so the next requantization time is t=infinity).
-The event indicator derivatives are computed with ND so they generally won't
-have exactly zero second derivatives at t=0 so we need --dtMax instead of --dtInf.
+
+The QSS2 runs need the --zMul option to increase the default zero crossing "bump"
+multiplier to have the zero crossings detected by the QSS+FMU protocol.
 
 Notes
  x is linear between zero-crossing events so it's deactivated and exact in QSS2+.

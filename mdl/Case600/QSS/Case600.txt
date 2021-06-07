@@ -8,11 +8,11 @@ output variable so QSS runs must use the inefficient local output support.
 
 The simulation actually has almost no zero-crossing events.
 
-The 2020/11 OCT is giving event indicators with very large magnitudes
-(1e60 and DBL_MAX) that was causing overflows in QSS numerical derivative
-computations. Rearranging the ND formuals and using "precise" instead of
-"fast" floating point options allows QSS2 to run this model and produce
-the same results as OCT but the event indicators need to be investigated.
+OCT is giving event indicators with very large magnitudes (1e60 and DBL_MAX)
+that was causing overflows in QSS numerical derivative computations.
+Rearranging the ND formuals and using "precise" instead of "fast"
+floating point options allows QSS2 to run this model and produce the
+same results as OCT but the event indicators need to be investigated.
 QSS3 simulations are slowing down probably due to the event indicator
 magnitudes and large 3rd derivatives, which is helped but not solved by
 adjusting the dtND step size.

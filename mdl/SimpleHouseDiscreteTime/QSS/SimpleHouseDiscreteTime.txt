@@ -1,5 +1,8 @@
 SimpleHouseDiscreteTime Model QSS Notes
 
+The OCT FMU built with the generate_ode_jacobian option aborts under PyFMI
+and QSS with no error message so we build without that option.
+
 The QSS simulation accuracy is hurt by numeric differentiation
 such that zero-crossing events can be missed. Careful selection
 of the dtND allows the QSS2 and QSS3 simulations to give correct

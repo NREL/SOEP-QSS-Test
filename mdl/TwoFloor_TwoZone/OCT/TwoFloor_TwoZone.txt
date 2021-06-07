@@ -1,1 +1,9 @@
 TwoFloor_TwoZone Model OCT Notes
+
+The OCT-r23206_JM-r14295 FMU built with generate_ode_jacobian aborts in the
+PyFMI CVode run giving a number of errors before giving this and terminating:
+ Evaluating the derivatives failed at <value name="t"> 1.1052023186606659E+005
+
+The FMU built without any QSS options is almost 2x faster than the FMU built
+with QSS options except for generate_ode_jacobian so PyFMI may have a surprising
+overhead for the presence of event indicators.

@@ -1,2 +1,0 @@
-#!/bin/bash
-QSS --qss=QSS2 ../../../Achilles1/JModelica/Achilles1.fmu ../../../Achilles2/JModelica/Achilles2.fmu --con=Achilles2.x1:Achilles1.x1 --con=Achilles1.x2:Achilles2.x2 --dtInf=0.001 --perfect --rTol=1e-8 --aTol=1e-10 $* >run_perfect_speed.log 2>&1

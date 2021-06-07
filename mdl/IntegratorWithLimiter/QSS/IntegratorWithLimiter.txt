@@ -1,2 +1,6 @@
 IntegratorWithLimiter Model QSS Notes
 
+The QSS2+ runs are very fast because the model trajectories are
+linear: it only does 1 requantization and 1 zero crossing event.
+For comparison CVode uses 11 steps (with ncp set to 0 to prevent
+extra steps at sampled output times).

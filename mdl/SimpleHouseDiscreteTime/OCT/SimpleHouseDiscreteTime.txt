@@ -7,5 +7,5 @@ The normal and "reference" PyFMI (CVode) runs do not have the same zero
 crossing behavior (e.g., compare _eventIndicator_32) so the model is
 probably not numerically stable.
 
-As of the 2020/11 OCT update an FMU built with the generate_ode_jacobian option
-aborts under PyFMI with no error message so we build without that option.
+The OCT FMU built with the generate_ode_jacobian option aborts under PyFMI
+and QSS with no error message so we build without that option.

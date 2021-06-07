@@ -1,7 +1,7 @@
 HeatingCoolingHotWaterSmall Model QSS Notes
 
-With the 2020/11 OCT version the QSS results match the PyFMI run
-but is significantly slower than CVode (without tolerance matching).
+The QSS results match the PyFMI run but QSS is significantly 
+slower than CVode (without tolerance matching).
 
 The QSS run gives warnings about initial values from the xml not
 equaling the initial values from the fmi2GetContinuousStates call.

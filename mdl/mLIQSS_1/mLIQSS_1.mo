@@ -4,5 +4,5 @@ model mLIQSS_1 "Simple system demonstrating limitations of LIQSS solvers from Im
 equation
   der(x1) = -x1 - x2 + 0.2;
   der(x2) = +x1 - x2 + 1.2;
-annotation( experiment( StartTime=0, StopTime=20, Tolerance=1e-12 ) );
+annotation( experiment( StartTime=0, StopTime=10, Tolerance=1e-12 ) );
 end mLIQSS_1;

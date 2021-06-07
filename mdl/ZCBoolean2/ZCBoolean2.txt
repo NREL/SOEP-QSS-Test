@@ -4,7 +4,7 @@ This model includes zero-crossing functions and a conditional when block with bo
 
 Variables:
 x        State    Real      der(x)=y
-u        Real     Internal	 sin(t)  (marked as an input but given an equation so causality is local)
+u        Real     Internal  sin(t)  (marked as an input but given an equation so causality is local)
 y        Discrete Real
 yBoo     Discrete Boolean
 yBooPre  Discrete Boolean

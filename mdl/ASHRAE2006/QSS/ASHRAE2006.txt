@@ -1,9 +1,9 @@
 ASHRAE2006 Model QSS Notes
 
-As of the 2020/11 OCT update the QSS simulation drifts off track unless a small dtMax is
-used and shows derivative sensitivities that cause very slow run times with standard QSS
-solvers. The experimental continuous trajectory propagating QSS variant improves the
-result but does not fully resolve the simulation problems.
+The QSS simulation drifts off track unless a small dtMax is used and shows
+derivative sensitivities that cause very slow run times with standard QSS
+solvers. The experimental continuous trajectory propagating QSS variant
+improves the result but does not fully resolve the simulation problems.
 
 Investigation Plan:
 - Compare shorter runs with full QSS diagnostics

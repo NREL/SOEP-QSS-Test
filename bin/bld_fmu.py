@@ -52,6 +52,7 @@ pymodelica.environ[ 'JVM_ARGS' ] = '-Xmx4096m'
 parser = argparse.ArgumentParser()
 parser.add_argument( '--qss', help = 'QSS options (OCT)  [On]', default = True, action = 'store_true' )
 parser.add_argument( '--no-qss', help = 'No QSS options (OCT)', dest = 'qss', action = 'store_false' )
+parser.add_argument( '--pyfmi', help = 'No QSS options (OCT)', dest = 'qss', action = 'store_false' )
 parser.add_argument( '--lazy', help = 'Lazy evaluation (OCT)  [On if --qss]', default = None, action = 'store_true' )
 parser.add_argument( '--no-lazy', help = 'No lazy evaluation (OCT)', dest = 'lazy', action = 'store_false' )
 parser.add_argument( '--dd', help = 'Directional derivatives (OCT)  [On if --qss]', default = None, action = 'store_true' )

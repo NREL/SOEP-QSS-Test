@@ -48,11 +48,18 @@ import numpy
 from pyfmi import load_fmu
 
 # Parse arguments
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser( formatter_class = argparse.RawTextHelpFormatter )
 parser.add_argument( '--solver', help = 'Solver  [CVode]', default = 'CVode', choices = [ 'CVode', 'Radau5ODE', 'RungeKutta34', 'Dopri5', 'RodasODE', 'LSODAR', 'ExplicitEuler', 'DASSL' ] )
 parser.add_argument( '--maxord', help = 'Max order', type = int )
 parser.add_argument( '--discr', help = 'CVode discretization method  [BDF]', default = 'BDF', choices = [ 'BDF', 'Adams' ] )
-parser.add_argument( '--inp', help = 'Input variable:function  VAR:step (only step function supported and only one input variable can be given an input currently)' )
+parser.add_argument( '--fxn', help = '''Input function in the form VARIABLE:FUNCTION
+ VARIABLE  Input variable name
+ FUNCTION  Function name/spec (only step function currently available):
+  step[i,s,t]  Step function with initial value i and changing by s every t seconds
+   step => step[0,1,1]
+ Note: Currently only one variable can be given an input function
+'''
+)
 parser.add_argument( '--rtol', help = 'Relative tolerance  [FMU]', type = float )
 parser.add_argument( '--rTol', help = argparse.SUPPRESS, type = float, dest = 'rtol' )
 parser.add_argument( '--atol', help = 'Absolute tolerance  [FMU]', type = float )
@@ -222,18 +229,26 @@ opt_solver[ 'store_event_points' ] = not args.soo
 sim_args = { 'options': opt }
 if args.final_time is not None:
     sim_args[ 'final_time' ] = args.final_time
-if args.inp:
-    inp = args.inp
+if args.fxn:
     try:
-        ( var, fxn ) = inp.split( ':' )
+        ( var, fxn ) = args.fxn.split( ':' )
     except:
-        print( 'Error: Input option not in VAR:FXN format', inp )
+        print( 'Error: Input option not in VAR:FXN format', args.fxn )
         sys.exit( 1 )
-    if fxn == 'step':
+    if fxn == 'step' or ( fxn.startswith( 'step[' ) and fxn.endswith( ']' ) ):
+        if fxn == 'step': # Default specs to [0,1,1]
+            ( initial, step, delta_t ) = ( 0, 1, 1 )
+        else:
+            try:
+                ( initial, step, delta_t ) = fxn[ 5 : -1 ].strip().split( ',' )
+                ( initial, step, delta_t ) = ( float( initial ), float( step ), float( delta_t ) )
+            except:
+                print( 'Error: Unsupported step function specs:', fxn[ 4 : ].strip(), 'Should be in the form [initial,step,delta-t]' )
+                sys.exit( 1 )
         def step_fxn( t ): # Step function matching QSS Function_Inp_step( 0.0, 1.0, 1.0 )
-            h_0 = 0.0 # Initial height
-            h = 1.0 # Step height
-            d = 1.0 # Step time delta
+            h_0 = initial # Initial height
+            h = step # Step height
+            d = delta_t # Step time delta
             ftd = math.floor( t / d )
             step_num = ( ftd if d * ( ftd + 1.0 ) > t else ftd + 1.0 )
             return h_0 + ( h * step_num )

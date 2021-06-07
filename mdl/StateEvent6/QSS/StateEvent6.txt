@@ -2,3 +2,5 @@ StateEvent6 Model QSS Notes
 
 The QSS2 runs use dtInf to avoid deactivation at startup due to the
 second derivative of x1 being sine(Constant*time).
+
+QSS is faster than CVode (with ncp=0) for this model.

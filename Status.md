@@ -4,11 +4,11 @@
 
 ### OCT Version
 
-Unless otherwise indicated the findings below are based on this OCT version: 2020.1-1.18 with the OCT-stable-r19089_JM-r14295 update.
+Unless otherwise indicated the findings below are based on this OCT version: 2020.1-1.18 with the OCT-r23206_JM-r14295 update.
 
 #### OCT Update OCT-r23206_JM-r14295
 
-Not all models have been tested with this update yet but here is a summary of some changes observed:
+Summary of some changes observed:
 * The ACControl model (with all the when blocks) now builds and runs successfully
 * Some FMU builds give warnings like this (may be a code gen issue or a problem in the Buildings Library file):
   ```
@@ -27,7 +27,7 @@ Not all models have been tested with this update yet but here is a summary of so
   a state event is being shown that wasn't before even though we weren't
   suppressing output "event points".
 * Getting the PyFMI results variable list using the prior `res.keys()` method stopped working. The `run_PyFMI.py` script uses this list for output filtering against a name/wildcard/regex list of variables. A work-around was found (getting it from `res._result_data.vars`) so it isn't an obstacle.
-
+* The TwoFloor_TwoZone CVode run now aborts if the FMU is built with generate_ode_jacobian but during simulation, not initialization.
 
 ### Buildings Library Version
 
@@ -37,7 +37,7 @@ The contained models and notes should be valid with the Buildings Library reposi
 
 ### Main Issues
 
-Currently the main issues with OCT+QSS simulations are:
+Currently the main issue categories with OCT+QSS simulations are:
 * Derivatives for some Buildings models are sensitive to the standard QSS approach of propagating somewhat "stale" quantized trajectories ([#1](https://github.com/NREL/SOEP-QSS-Test/issues/1))
 * Directional Derivatives ([#2](https://github.com/NREL/SOEP-QSS-Test/issues/2)):
   * Directional derivatives have proven important to the QSS+FMU zero-crossing protocol and could be used to provide state variable 2nd derivatives if efficiency obstacles are overcome
@@ -179,20 +179,20 @@ Currently the main issues with OCT+QSS simulations are:
 * Needs "observer" QSS outputs to show the temperature accurately (without sampled outputs) since it depends only on conQSS.y and so doesn't requantize often
 
 ### PID_Controller: Modelica PID Controller Example
-* QSS runs are sensitive to the numerical differentiation time step
+* QSS runs are sensitive to the numerical differentiation time step and zero crossing bump multiplier
 
 ### Quadratic: Simple 1-State System with Quadratic Trajectory
 * No problems
 
 ### SimpleHouse
-* The OCT FMU built with the generate_ode_jacobian option aborts under PyFMI and QSS during initialization with no error message
+* The OCT FMU built with generate_ode_jacobian aborts under PyFMI and QSS during initialization with no error message
 * Without directional derivatives the QSS simulations run very slowly due to excessive requantizations caused by event indicator numerical differentiation noise
 * Despite the noise without directional derivatives runs with binning are competitive with CVode for the same accuracy, largely because the zero crossings are more accurate
 
 ### SimpleHouseDiscreteTime
 * This model is a variant of SimpleHouse with a discrete time controller for which QSS is more advantageous
 * This model was removed from the Buildings library and is set up to clone a specific revision of the Buildings library: it would be better to update it and re-add it to the library
-* The OCT FMU built with the generate_ode_jacobian option aborts under PyFMI and QSS during initialization with no error message
+* The OCT FMU built with generate_ode_jacobian aborts under PyFMI and QSS during initialization with no error message
 * The normal and "reference" PyFMI (CVode) runs do not have the same zero crossing behavior so the model is not very numerically stable
 * The QSS simulation accuracy is hurt by numeric differentiation and the lack of directional derivatives such that zero-crossing events can be missed: This may be better with the new zero-crossing controls
 * Some variables of interest are (non-state) local FMU variables that require a very inefficient process to extract from a QSS run (due to the lack of dependency information)
@@ -204,15 +204,16 @@ Currently the main issues with OCT+QSS simulations are:
 * This model is a zero-crossing "torture test" with a high-frequency sinusoidal zero-crossing function and difficult "touch" crossings
 * This was used to help design the dtZMax control that inserts a requantization close before a predicted zero crossing as needed to assure an accurate crossing time
 * Depending on how close to a true one-point "touch" the zero crossings are PyFMI won't detect some crossings: This is not a flaw but the designed tolerance behavior
-* QSS3 has more difficulty with this model than QSS2 due to numerical differentiation noise
 
 ### StateEvent6: 3-State Model With Conditional
 * The QSS2 runs use the --dtInf control to avoid deactivation at startup due to the second derivative of x1 being sine(Constant*time)
 
 ### TwoFloor_TwoZone
+* The OCT-r23206_JM-r14295 FMU built with generate_ode_jacobian aborts in the PyFMI CVode run giving a number of errors before failing with: Evaluating the derivatives failed at <value name="t"> 1.1052023186606659E+005
 * Standard QSS shows derivative sensitivity of some self-observer variables causing solution noise/drift
   * The experimental QSS variant that propagates the current continuous trajectory improves the behavior but drift still occurs
   * Under investigation
+* The FMU built without any QSS options is almost 2x faster than the FMU built with QSS options except for generate_ode_jacobian so PyFMI may have a surprising overhead for the presence of event indicators.
 
 ### UpstreamSampler: Simple Sampler for Event Indicator Feature
 * The OCT-generated FMU event indicators have no reverse dependencies so QSS cannot simulate it correctly

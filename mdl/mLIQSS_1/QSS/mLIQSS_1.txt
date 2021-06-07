@@ -1,1 +1,6 @@
 mLIQSS_1 Model QSS Notes
+
+The tolerances are set to match what is used in the paper,
+using a rTol=0 and aTol=1 to give a quantum value of 1.
+
+The LIQSS1 results duplicate what is shown in the paper.

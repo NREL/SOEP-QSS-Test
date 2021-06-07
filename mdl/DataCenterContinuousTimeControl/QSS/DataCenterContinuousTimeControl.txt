@@ -3,5 +3,5 @@ DataCenterContinuousTimeControl Model QSS Notes
 Directional derivatives are not working with this model
 so the zero-crossing accuracy and robustness are limited.
 
-As of the 2020/11 OCT update the QSS tracks fairly well but
-displays some noise and runs slowly.
+The QSS results track fairly well but display some noise
+and run slowly.

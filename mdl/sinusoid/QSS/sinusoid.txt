@@ -1,2 +1,7 @@
 sinusoid Model QSS Notes
 
+The sinusoids can cause (near-)deactivation so dtInf or dtMax
+options may be needed for some QSS runs.
+
+QSS is faster than CVode for this model (not tolerance matched)
+with QSS3 ~7x faster.

@@ -1,4 +1,4 @@
 HeatingCoolingHotWater3Clusters Model QSS Notes
 
-With the 2020/11 OCT the QSS runs match well but are slower than
-CVode (QSS2 without tolerance matching).
+The QSS runs match well but are slower than CVode
+(without tolerance matching).

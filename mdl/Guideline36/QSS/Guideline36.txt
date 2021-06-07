@@ -2,7 +2,8 @@ Guideline36 Model QSS Notes
 
 This model has a large number of event indicators:
  189 state variables
-1001 event indicators
+1001 event indicators with OCT-stable-r19089_JM-r14295
+ 734 event indicators with OCT-r23206_JM-r14295
  Almost all EIs have many (50+) forward and reverse dependencies and most are the same
  Most of these EIs have observer updates after every state requantization so QSS will run slowly
 

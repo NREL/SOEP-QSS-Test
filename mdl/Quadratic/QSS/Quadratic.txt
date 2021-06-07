@@ -1,3 +1,9 @@
 Quadratic Model QSS Notes
 
 The QSS run matches the PyFMI results.
+
+The QSS2 run is faster than CVode, doing 527 requantizations
+vs 17 CVode steps (with --ncp=0).
+
+The QSS3 run exploits the quadratic trajectory and does
+no requantizations.

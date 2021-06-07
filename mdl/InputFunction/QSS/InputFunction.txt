@@ -4,9 +4,6 @@ The QSS solver has a few sample input functions for use with FMU models
 since input functions are not encoded within the FMU. The input function
 can be selected at run time with the QSS --fxn option as in:
   QSS InputFunction.fmu --qss=QSS2 --fxn=u:step[1,1,1]
-or
-  QSS InputFunction.fmu --qss=QSS2 --fxn=u:sin[1,1,1] --dtMax=0.001
-(dtMax is needed with sin due to deactivation at t=0).
 
 Notes:
 * If not specified the input function defaults to a step function.
@@ -18,3 +15,9 @@ Notes:
 The OCT FMU was used to generate the QSS results using the run.py
 script that applies the same step input function as the current QSS
 default.
+
+The QSS2+ runs are very fast because the model trajectories are
+linear: it has 10 discrete input events and each causes a 
+requantization of the state variable.
+For comparison CVode uses 166 steps (with ncp set to 0 to prevent
+extra steps at sampled output times).
