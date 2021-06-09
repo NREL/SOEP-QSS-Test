@@ -9,7 +9,7 @@ Unless otherwise indicated the findings below are based on this OCT version: 202
 #### OCT Update OCT-r23206_JM-r14295
 
 Summary of some changes observed:
-* The ACControl model (with all the when blocks) now builds and runs successfully
+* The ACControl model (with all the when blocks) now builds and runs correctly with PyFMI but has issues for QSS (described below)
 * Some FMU builds give warnings like this (may be a code gen issue or a problem in the Buildings Library file):
   ```
   sources/Buildings_Examples_ChillerPlant_DataCenterContinuousTimeControl_funcs.c:826:14: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
