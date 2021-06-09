@@ -1,0 +1,8 @@
+TimeTest Model Notes
+
+Simple model with time variable to verify FMU time behavior.
+
+The QSS runs reveal an issue with discrete variable dependency
+elision. They also show the correct behavior for directional 
+derivative of an event indicator based on time that is not
+correct for the ACControl10 model.

@@ -1,0 +1,10 @@
+ACControl10 Model Notes
+
+This model is adapted from the ACControlDeterministicDymola10 model in set of
+examples used in and provided by the authors of the paper:
+On the Efficiency of Quantization–Based Integration Methods for Building Simulation
+https://usuarios.fceia.unr.edu.ar/~kofman/files/buildings_qss.pdf
+
+The CVode and QSS simulations of this model both give results that vary
+significantly with tolerance and other changes so its value for solver
+comparisons is limited.

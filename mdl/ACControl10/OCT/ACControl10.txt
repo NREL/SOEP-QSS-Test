@@ -1,0 +1,34 @@
+ACControl10 Model OCT Notes
+
+The CVode simulations are not very stable: results change significantly with changes
+in tolerance and whether the FMU is built with QSS and directional derivative options.
+At some point in most runs the temperature derivatives begin flipping signs frequently.
+Because of this variability this model is not a great basis for QSS vs traditional
+solver comparisons.
+
+There appear to be some issues with the event indicators...
+
+All the event indicators have the same 10 reverse dependencies but the model does
+not warrant that. The reverse dependencies are the derivatives of all 10 elements
+of the th[] temperature vector. The 20 event indicators for the temperature-triggered
+AC on/off when statements should each have a reverse dependency on only its own
+der(th[i]) since it alters the on[i] vector element:
+    der(th[i]) = ( THA - th[i] ) / ( RES[i] * CAP[i] ) - ( POT[i] * on[i] ) / CAP[i];
+The unnecessary reverse dependencies are a performance/scalability problem.
+
+The other event indicators, with discrete variables short-circuited, should have
+reverse dependencies on those 20 temperature trigger event indicators, where dtref
+appears.
+
+The event indicator for the when statement
+  when time > nextSample then
+is #22 and the blt.html shows:
+  _eventIndicator_22 := time - nextSample;
+This event indicator has 11 (forward) dependencies on all the th[] variables and
+time but since nextSample itself only depends on time it seems that it should have
+only dependencies on time and nextSample.
+
+The nextSample (forward) dependency of event indicator #22 is short-ciruited out
+because it is a (non-output) discrete variable, but because it doesn't affect any
+state variable directly the QSS event indicator variable is not updating when
+nextSample changes.

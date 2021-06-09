@@ -1,0 +1,3 @@
+TimeTest Model Notes
+
+Simple model with time variable to verify FMU time behavior.

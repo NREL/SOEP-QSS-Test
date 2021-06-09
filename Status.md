@@ -57,9 +57,30 @@ Currently the main issue categories with OCT+QSS simulations are:
   * Buildings library changes can alter or remove models making stable testing challenging
   * OCT gives warnings when building FMUs for many of Buildings models that should probably be reviewed and addressed
 
-"Clearinghouse" Issues for these were created but individual issues within these can also be tracked in separate Issues as needed.
+"Clearinghouse" Issues for these were created but items within these can also be tracked in separate Issues as needed.
 
 ## Models
+
+### ACControl10: 10-Room/AC Model from Paper
+* Based on a model from the paper "On the Efficiency of Quantization–Based Integration Methods for Building Simulation" https://usuarios.fceia.unr.edu.ar/~kofman/files/buildings_qss.pdf
+* Due to the issues noted here QSS cannot correctly simulate this model yet (other than by forcing frequent requantizations by using a small dtMax)
+* Although the results don't match yet QSS does appear to significantly outperform CVode for this model as expected from the paper
+* Once these issues are fixed larger models from the paper will be added and should show an even larger performance advantage for QSS
+* The event indicator (#22) for the conditional "when time > nextSample then" does not get notified in QSS to update when nextSample is incremented because nextSample is discrete and its dependencies are short-circuited out so this seems to be a flaw with the dependency logic
+* This event indicator is also generating an incorrect directional derivative, losing the time contribution, giving an initial QSS trajectory of:
+  ```
+  _eventIndicator_22(0) = -1+0*Δ+0*Δ²
+  ```
+  instead of:
+  ```
+  _eventIndicator_22(0) = -1+1*Δ+0*Δ²
+  ```
+  with the time derivative contribution. The same event indicator in the TimeTest model gives the correct trajectory. Debugging showed that QSS gives the correct der(time) = 1 to the FMI call to get the directional derivative but zero is returned for this model for some reason.
+* All the event indicators have the same 10 reverse dependencies but the model does not warrant that. The reverse dependencies are the derivatives of all 10 elements of the th[] temperature vector. The 20 event indicators for the temperature-triggered AC on/off when statements should each have a reverse dependency on only its own der(th[i]) since it alters the on[i] vector element:
+  ```
+  der(th[i]) = ( THA - th[i] ) / ( RES[i] * CAP[i] ) - ( POT[i] * on[i] ) / CAP[i];
+  ```
+  The unnecessary reverse dependencies are a performance/scalability problem.
 
 ### Achilles: Simple 2-State System
 * No problems
@@ -207,6 +228,10 @@ Currently the main issue categories with OCT+QSS simulations are:
 
 ### StateEvent6: 3-State Model With Conditional
 * The QSS2 runs use the --dtInf control to avoid deactivation at startup due to the second derivative of x1 being sine(Constant*time)
+
+### TimeTest
+* This model demonstrates a problem with short-circuiting discrete variables out of the dependencies
+* This model has the same event indicator as ACControl10 but in this case the directional derivative of the time-based event indicator is correct
 
 ### TwoFloor_TwoZone
 * The OCT-r23206_JM-r14295 FMU built with generate_ode_jacobian aborts in the PyFMI CVode run giving a number of errors before failing with: Evaluating the derivatives failed at <value name="t"> 1.1052023186606659E+005
