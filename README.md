@@ -21,8 +21,8 @@ The top-level repository directory contains these subdirectories:
 ### `bin`
 
 The `bin` directory contains scripts for modeling and testing:
+* `bld.py`  Default `bld_fmu.py` wrapper
 * `bld_fmu.py`  Builds model FMU with OPTIMICA or JModelica depending on the current directory
-* `bld_fmu.<Tool>.py`  Builds model FMU with the specified Tool and options
 * `bld_fmus.py`  Builds all model FMUs with OPTIMICA
 * `cleanup`  Removes comparison/regression testing output files
 * `cmp_CVode_QSS_Buildings.py`  Run and compare CVode and QSS simulations for a set of Buildings library models
@@ -39,7 +39,6 @@ The `bin` directory contains scripts for modeling and testing:
 * `run_PyFMI_red.py`  Runs the model's FMU with PyFMI with optional output redirection via a `--red=LOGFILE` option
 * `run_PyFMI_run.py`  Runs the model's FMU with PyFMI with output redirection to a `run.log` file
 * `run_QSS.py`  Runs the model's OCT FMU with QSS (supports QSS options)
-* `run_QSS_JModelica.py`*  Runs the model's JModelica FMU with QSS (supports QSS options)
 * `set_JModelica`  Sets environment for JModelica: Customize to your system
 * `set_Modelica`  Sets environment for Modelica and the Buildings library: Customize to your system
 * `set_OCT`  Sets environment for OCT: Customize to your system

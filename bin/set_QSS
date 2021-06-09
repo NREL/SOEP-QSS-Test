@@ -1,0 +1,4 @@
+#!/bin/bash
+# Set environment for using these scripts with OCT
+# Customize for your system
+export PATH=$PATH:$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )

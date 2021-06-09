@@ -35,6 +35,54 @@ The contained models and notes should be valid with the Buildings Library reposi
 * Some models pull an earlier Buildings Library revision to run against.
 * Automatic configuration of the Buildings Library revision when building FMUs is planned but not yet implemented.
 
+### Building and Running Models
+
+Unless otherwise noted here or in a GitHub Issue the models can be run as described in the README and below.
+
+Notes:
+* Some scripts in `bin` import Python packages not included in most distributions: they can be obtained via `pip`
+* OCT on Windows uses its own Python environment so scripts that depend on particular Python packages may not work from a console configured for OCT
+
+#### Building FMUs with OCT
+* Run the `set_OCT` script in `bin` (or a custom version adapted for your system) in a console:
+  * Linux: `source bin/set_OCT`
+  * Windows: `bin\set_OCT.bat`
+* From the `OCT` subdirectory of the model's directory under `mdl` you normally run `bld`, which will run the custom `bld.py` build script in that `OCT` directory or, if not present, the default `bld.py` script in `bin`.
+  * To see the options for building the FMU you can run `bld --help`.
+  * The default is to build the FMU with QSS support, which enables event indicator variables and directional derivative support (used only for the event indicators currently)
+    * Some models don't currently work with the directional derivative support included with the QSS options, in which case the custom `bld.py` will use the `--no-dd` option
+    * QSS can run without directional derivative support but zero-crossing accuracy/reliability can be degraded
+  * To get a "normal" FMU you can use the `--no-qss` option or its equivalent `--pyfmi`
+  * Some models/issues might require building the "normal" FMU for PyFMI runs and then building the FMU with QSS options for QSS runs
+
+#### Running Models with PyFMI
+* From a console configured with `set_OCT` and from the model's `OCT` directory or a subdirectory of it you can do the default PyFMI (CVode) simulation with the `run` command
+* The `run` command can run a local custom `run.py` or default to the `run.py` in `bin`
+* If there is a `run.py` in the model's `OCT` directory that is normally the best choice for a default run as it may have options needed/useful for that model
+* The `run.py` scripts will call the `run_PyFMI.py` script in `bin` when under an `OCT` directory
+* To see the supported PyFMI options use the command `run_PyFMI --help`
+* Options allow the choice of solver, method order, tolerances, and outputs
+* `run_PyFMI` generates separate two-column (time and value) ASCII output files for each variable
+* If a model_name`.var` file is present in the model's root directory it is used as a filter to limit the variables PyFMI outputs
+
+#### Running Models with QSS
+* Get the latest QSS from https://github.com/NREL/SOEP-QSS and build it as described in its README
+* Run the `set_QSS` script in `bin` (or a custom version adapted for your system) in a console configured for the QSS build:
+  * Linux: `source bin/set_QSS`
+  * Windows: `bin\set_QSS.bat`
+* The `run` command can run a local custom `run.py` or default to the `run.py` in `bin`
+* If there is a `run.py` in the model's `QSS` (sub)directory that is normally the best choice for a default run as it may have options needed/useful for that model
+* The `run.py` scripts will call the `run_QSS.py` script in `bin` when under a `QSS` directory
+* To see the `run_QSS` options use the command `run_QSS --help`
+  * `run_QSS` also passes QSS options along to QSS
+  * To see the QSS options run `QSS --help`
+* `QSS` generates separate two-column (time and value) ASCII output files for each variable
+* If a model_name`.var` file is present in the model's root directory it is used as a filter to limit the variables QSS outputs
+
+#### Plotting Variable Output Signals
+* There are various plotting tools that can handle the 2-column ASCII signal files
+* ObjexxPlot handles these signals and can be provided by Objexx for Windows or Ubuntu upon request
+
 ### Main Issues
 
 Currently the main issue categories with OCT+QSS simulations are:

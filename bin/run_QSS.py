@@ -49,7 +49,17 @@ args = var = qss = red = ''
 fmus = []
 gen = 'OCT' # Default FMU generator
 for arg in sys.argv[1:]:
-    if arg.startswith( ( '--red=', '--red:' ) ): # Redirect
+    if arg in ( '--help', '-h' ):
+        print( 'usage:', os.path.basename( sys.argv[0] ), '[options] [<model>.fmu]' )
+        print( '  --help, -h  Show this help information' )
+        print( '  --red=REDIRECT  Redirect output to REDIRECT' )
+        print( '  --oct  Run the OCT FMU (the default)' )
+        print( '  --jmodelica  Run the JModelica FMU' )
+        print( '  --dymola  Run the Dymola FMU' )
+        print( '  <model>.fmu  FMU(s) to run (can specify more than 1)' )
+        print( '  Other QSS options (run QSS --help)' )
+        sys.exit( 0 )
+    elif arg.startswith( ( '--red=', '--red:' ) ): # Redirect
         red = arg[6:].strip()
     elif arg.lower() == '--oct': # Use OCT FMU
         gen = 'OCT'

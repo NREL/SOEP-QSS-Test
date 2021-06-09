@@ -1,6 +1,7 @@
 #!/bin/bash
 # Set environment for using these scripts with OCT
 # Customize for your system
+export PATH=$PATH:$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 export JMODELICA_HOME=/opt/OCT
 export IPOPT_HOME=/opt/ipopt
@@ -13,5 +14,3 @@ alias python='python2'
 export MODELICA_BUILDINGS_LIB=/opt/modelica-buildings
 export MODELICAPATH=,:..:${JMODELICA_HOME}/ThirdParty/MSL:${MODELICA_BUILDINGS_LIB}
 export MODELON_LICENSE_PATH=/opt/OCT/Licenses/NodeLocked
-
-export PATH=$PATH:$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
