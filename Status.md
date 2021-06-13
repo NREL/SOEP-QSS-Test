@@ -109,7 +109,7 @@ Currently the main issue categories with OCT+QSS simulations are:
 
 ## Models
 
-### ACControl10: 10-Room/AC Model from Paper
+### [ACControl10](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/ACControl10): 10-Room/AC Model from Paper
 * Based on a model from the paper "On the Efficiency of Quantization–Based Integration Methods for Building Simulation" https://usuarios.fceia.unr.edu.ar/~kofman/files/buildings_qss.pdf
 * Due to the issues noted here QSS cannot correctly simulate this model yet (other than by forcing frequent requantizations by using a small dtMax)
 * Although the results don't match yet QSS does appear to significantly outperform CVode for this model as expected from the paper
@@ -130,30 +130,30 @@ Currently the main issue categories with OCT+QSS simulations are:
   ```
   The unnecessary reverse dependencies are a performance/scalability problem.
 
-### Achilles: Simple 2-State System
-* No problems
-
-### Achilles1: Part 1 of Split/Connected Achilles
-* No problems
-
-### Achilles1-2: Multiple-FMU Demo
-* No problems
-
-### Achilles2: Part 2 of Split/Connected Achilles
-* No problems
-
-### ASHRAE2006
+### [ASHRAE2006](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/ASHRAE2006)
 * Directional derivative support breaks PyFMI
   * CVode: Simulation failed: The right-hand side function had repeated recoverable errors
 * The PyFMI run gives warnings including out of bounds
 * The QSS runs drift off track without a small dtMax and show self-observer derivative sensitivity: Under investigation
 
-### BouncingBall
+### [Achilles](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Achilles): Simple 2-State System
+* No problems
+
+### [Achilles1-2](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Achilles1-2): Multiple-FMU Demo
+* No problems
+
+### [Achilles1](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Achilles1): Part 1 of Split/Connected Achilles
+* No problems
+
+### [Achilles2](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Achilles2): Part 2 of Split/Connected Achilles
+* No problems
+
+### [BouncingBall](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/BouncingBall)
 * The event indicator reverse dependency on der(v) and der(h) works but causes extra requantizations of h when observer update would suffice
 * QSS3 takes very large steps between bounces as expected since the height in quadratic in time
   * The default --zMul and --dtZMax options suffice with directional derivative support to give accurate/robust zero-crossing detection
 
-### Case600
+### [Case600](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Case600)
 * OCT is currently generating 5 event indicators with no reverse dependencies
 * The room temperature variable, TRooAir.T, is not set up in the FMU as an output variable so QSS runs must use the inefficient local output support
 * The simulation has almost no zero-crossing events
@@ -164,101 +164,101 @@ Currently the main issue categories with OCT+QSS simulations are:
     * Or just detect/report magnitude issues and overflows?
 * QSS3 runs are very slow, at least partially due to these event indicator magnitudes giving very large ND 3rd derivatives and thus tiny QSS steps
 
-### Case600FF
+### [Case600FF](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Case600FF)
 * Deactivation (--dtInf) control is needed for some of the QSS runs due to deactivation of the roo.air.vol.dynBal.mXi[1] variable that has no observers other than itself
 * Earlier QSS runs started generating large second derivatives at ~400000 s, causing progress to stall
 * Runs with the latest OCT and QSS will be performed soon
 
-### CoupledSystem: Simple 3-State Model
+### [CoupledSystem](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/CoupledSystem): Simple 3-State Model
 * No problems
 
-### DataCenterContinuousTimeControl
+### [DataCenterContinuousTimeControl](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/DataCenterContinuousTimeControl)
 * Directional derivative support causes the PyFMI and QSS runs to abort during initialization with no error message
 * The QSS runs (without directional derivative based event indicators) track fairly well but display some noise/slowness
 * The time range starts at a large value which causes some small steps to be non-advancing in PyFMI simulations ("t + h = t on the next step")
 
-### DataCenterDiscreteTimeControl
+### [DataCenterDiscreteTimeControl](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/DataCenterDiscreteTimeControl)
 * Directional derivative support causes the PyFMI and QSS runs to abort during initialization with no error message
 * The QSS runs (without directional derivative based event indicators) track fairly well but display some noise/slowness
 * The time range starts at a large value which causes some small steps to be non-advancing in PyFMI simulations ("t + h = t on the next step")
 
-### EventIndicator1: Event Indicator Feature Test
+### [EventIndicator1](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/EventIndicator1): Event Indicator Feature Test
 * With exact math QSS2 and QSS3 wouldn't do any requantizations since the state trajectory is linear between zero-crossing events and in these runs the numerical derivatives are accurate enough for no requantizations to occur
 * QSS zero crossing success for this model is sensitive to the dtND numerical differentiation time step
 * With a earlier run the zero-crossing protocol could fail with the FMU indicating a zero crossing was detected but not flipping the discrete variable (and thus the derivative): Unclear what was going on in the FMU that could allow this: Needs investigation
 
-### EventIndicator2: Event Indicator Feature Test
+### [EventIndicator2](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/EventIndicator2): Event Indicator Feature Test
 * The OCT event indicator reverse dependency is on der(x) but it would be clearer if it were on x and in the future QSS could exploit that distinction for better efficiency
 * QSS run event indicator requantizations are reduced using QSS options to avoid having them unnecessarily dominate the run times
 * Due to numerical differentiation noise QSS3 does not achieve the target accuracy without a much tighter tolerance
 
-### EventIndicator3: Event Indicator Feature Test
+### [EventIndicator3](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/EventIndicator3): Event Indicator Feature Test
 * With exact math QSS2 and QSS3 wouldn't do any requantizations since the state trajectory is linear between zero-crossing events and in these runs the numerical derivatives are accurate enough for no requantizations to occur
 * QSS zero crossing success for this model is sensitive to the numerical differentiation time step
 * The QSS+FMU zero crossing coordination was not working in some cases: Needs investigation: Might be better now with new controls
 * With a earlier run the zero-crossing protocol could fail with the FMU indicating a zero crossing was detected but not flipping the discrete variable (and thus the derivative): Unclear what was going on in the FMU that could allow this: Needs investigation
 
-### EventIndicator4: Event Indicator Feature Test
+### [EventIndicator4](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/EventIndicator4): Event Indicator Feature Test
 * The zero-crossing functions are a sinusoid that crosses zero (rather than functions that "bounce" off zero) to check that the QSS+FMU zero-crossing approach works in this (easier) case
 * The sinusoids cause deactivation issues so the --dtInf control is used
 
-### EventIndicator5: Event Indicator Feature Test
+### [EventIndicator5](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/EventIndicator5): Event Indicator Feature Test
 * OCT generates 4 event indicators for the 2 sampler clauses, 2 of which move between -.2 and -.1, never reaching zero
   * Eliminating those extra event indicators will improve QSS efficiency
 * The QSS+FMU zero crossing coordination was not working in some cases: Needs investigation: Might be better now with new controls
 * The event indicator requantizations are triggered by discontinuities at the sample times that cause large numerical derivatives
 * The QSS3 run is sensitive to the numerical differentiation time step to get the zero-crossings detected
 
-### FloorOpenLoop
+### [FloorOpenLoop](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/FloorOpenLoop)
 * This model has been removed from the Buildings library and is not yet set up to run from an earlier Buildings revision
 * OCT builds this model on Windows but it fails at PyFMI run time with an "Initialization failed" error (after a number of warnings)
 
-### Guideline36
+### [Guideline36](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Guideline36)
 * PyFMI runs of OCT FMU built with generate_ode_jacobian progress very slowly
 * The FMU has a large number of event indicators with many dependencies
 * QSS runs progress slowly: At least partly due to the event indicators: Needs investigation
 
-### Guideline36Spring
+### [Guideline36Spring](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Guideline36Spring)
 * PyFMI runs of OCT FMU built with generate_ode_jacobian progress very slowly
 * The FMU has a large number of event indicators with many dependencies
 * QSS runs progress slowly: At least partly due to the event indicators: Needs investigation
 
-### HeatingCoolingHotWater3Clusters
+### [HeatingCoolingHotWater3Clusters](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/HeatingCoolingHotWater3Clusters)
 * The QSS2 run matches well but is slower than CVode (without tolerance matching or binning)
 
-### HeatingCoolingHotWaterSmall
+### [HeatingCoolingHotWaterSmall](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/HeatingCoolingHotWaterSmall)
 * The QSS2 run matches well but is slower than CVode (without tolerance matching or binning)
 
-### InputFunction: 1-State System with Input Function Derivative
+### [InputFunction](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/InputFunction): 1-State System with Input Function Derivative
 * No problems
 
-### IntegratorWithLimiter
+### [IntegratorWithLimiter](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/IntegratorWithLimiter)
 * No problems
 
-### mLIQSS_1: 2-State System from Improving LIQSS Paper
+### [mLIQSS_1](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/mLIQSS_1): 2-State System from Improving LIQSS Paper
 * No problems
 
-### Observers: Scalable Non-Sparse Observer Graph System
+### [Observers](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Observers): Scalable Non-Sparse Observer Graph System
 * No problems
 
-### OnOffController: Simple Room + Controller System
+### [OnOffController](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/OnOffController): Simple Room + Controller System
 * This model is adapted for local use from the OnOffController model in https://github.com/lbl-srg/soep/tree/master/models/modelica_for_qss/QSS/Specific/Events
 * The adapted model built with OCT is not running correctly with PyFMI or QSS: The FMU is not detecting zero crossings: Possible OCT issue
 * The original model built with Dymola runs corrctly with PyFMI and QSS with QSS capturing the zero crossings more accurately
 * Needs "observer" QSS outputs to show the temperature accurately (without sampled outputs) since it depends only on conQSS.y and so doesn't requantize often
 
-### PID_Controller: Modelica PID Controller Example
+### [PID_Controller](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/PID_Controller): Modelica PID Controller Example
 * QSS runs are sensitive to the numerical differentiation time step and zero crossing bump multiplier
 
-### Quadratic: Simple 1-State System with Quadratic Trajectory
+### [Quadratic](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Quadratic): Simple 1-State System with Quadratic Trajectory
 * No problems
 
-### SimpleHouse
+### [SimpleHouse](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/SimpleHouse)
 * The OCT FMU built with generate_ode_jacobian aborts under PyFMI and QSS during initialization with no error message
 * Without directional derivatives the QSS simulations run very slowly due to excessive requantizations caused by event indicator numerical differentiation noise
 * Despite the noise without directional derivatives runs with binning are competitive with CVode for the same accuracy, largely because the zero crossings are more accurate
 
-### SimpleHouseDiscreteTime
+### [SimpleHouseDiscreteTime](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/SimpleHouseDiscreteTime)
 * This model is a variant of SimpleHouse with a discrete time controller for which QSS is more advantageous
 * This model was removed from the Buildings library and is set up to clone a specific revision of the Buildings library: it would be better to update it and re-add it to the library
 * The OCT FMU built with generate_ode_jacobian aborts under PyFMI and QSS during initialization with no error message
@@ -266,31 +266,31 @@ Currently the main issue categories with OCT+QSS simulations are:
 * The QSS simulation accuracy is hurt by numeric differentiation and the lack of directional derivatives such that zero-crossing events can be missed: This may be better with the new zero-crossing controls
 * Some variables of interest are (non-state) local FMU variables that require a very inefficient process to extract from a QSS run (due to the lack of dependency information)
 
-### sinusoid: Simple System with Fast and Slow Dynamics
+### [sinusoid](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/sinusoid): Simple System with Fast and Slow Dynamics
 * No problems
 
-### sinusoidZ: Event Indicator Torture Test
+### [sinusoidZ](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/sinusoidZ): Event Indicator Torture Test
 * This model is a zero-crossing "torture test" with a high-frequency sinusoidal zero-crossing function and difficult "touch" crossings
 * This was used to help design the dtZMax control that inserts a requantization close before a predicted zero crossing as needed to assure an accurate crossing time
 * Depending on how close to a true one-point "touch" the zero crossings are PyFMI won't detect some crossings: This is not a flaw but the designed tolerance behavior
 
-### StateEvent6: 3-State Model With Conditional
+### [StateEvent6](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/StateEvent6): 3-State Model With Conditional
 * The QSS2 runs use the --dtInf control to avoid deactivation at startup due to the second derivative of x1 being sine(Constant*time)
 
-### TimeTest
+### [TimeTest](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/TimeTest)
 * This model demonstrates a problem with short-circuiting discrete variables out of the dependencies
 * This model has the same event indicator as ACControl10 but in this case the directional derivative of the time-based event indicator is correct
 
-### TwoFloor_TwoZone
+### [TwoFloor_TwoZone](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/TwoFloor_TwoZone)
 * The OCT-r23206_JM-r14295 FMU built with generate_ode_jacobian aborts in the PyFMI CVode run giving a number of errors before failing with: Evaluating the derivatives failed at <value name="t"> 1.1052023186606659E+005
 * Standard QSS shows derivative sensitivity of some self-observer variables causing solution noise/drift
   * The experimental QSS variant that propagates the current continuous trajectory improves the behavior but drift still occurs
   * Under investigation
 * The FMU built without any QSS options is almost 2x faster than the FMU built with QSS options except for generate_ode_jacobian so PyFMI may have a surprising overhead for the presence of event indicators.
 
-### UpstreamSampler: Simple Sampler for Event Indicator Feature
+### [UpstreamSampler](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/UpstreamSampler): Simple Sampler for Event Indicator Feature
 * The OCT-generated FMU event indicators have no reverse dependencies so QSS cannot simulate it correctly
 
-### ZCBoolean2: Simple 1-State System with Conditional
+### [ZCBoolean2](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/ZCBoolean2): Simple 1-State System with Conditional
 * The QSS2 runs use the --dtInf control to avoid deactivation of u=sin(t) at startup (where its 2nd derivative is zero)
 * The QSS2 runs use a larger-than-default --zMul control for zero crossing detection
