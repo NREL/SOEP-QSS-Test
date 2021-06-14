@@ -9,7 +9,7 @@ Unless otherwise indicated the findings below are based on this OCT version: 202
 #### OCT Update OCT-r23206_JM-r14295
 
 Summary of some changes observed:
-* The ACControl model (with all the when blocks) now builds and runs correctly with PyFMI but has issues for QSS (described below)
+* The ACControl model (with all the when blocks) now builds and runs correctly with PyFMI but has issues for QSS (described below).
 * Some FMU builds give warnings like this (may be a code gen issue or a problem in the Buildings Library file):
   ```
   sources/Buildings_Examples_ChillerPlant_DataCenterContinuousTimeControl_funcs.c:826:14: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
@@ -23,9 +23,9 @@ Summary of some changes observed:
   0.001	1.001
   ...
   ```
-  and there are other new (non-startup) output steps that also look like
-  a state event is being shown that wasn't before even though we weren't
-  suppressing output "event points".
+  and there are other new (non-startup) output steps that also look like a state event is being shown that wasn't before even though we weren't suppressing output "event points".
+  For example, the [ASHRAE2006](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/ASHRAE2006) model has apparent events at 2.95079428592932e-08 s and at 110.095386183947 s and other times.
+  Understanding the cause of these early events (zero-crossing functions that start at zero?) and any additional later events would be helpful.
 * Getting the PyFMI results variable list using the prior `res.keys()` method stopped working. The `run_PyFMI.py` script uses this list for output filtering against a name/wildcard/regex list of variables. A work-around was found (getting it from `res._result_data.vars`) so it isn't an obstacle.
 * The TwoFloor_TwoZone CVode run now aborts if the FMU is built with generate_ode_jacobian but during simulation, not initialization.
 
