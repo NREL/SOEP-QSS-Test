@@ -9,7 +9,7 @@ Unless otherwise indicated the findings below are based on this OCT version: 202
 #### OCT Update OCT-r23206_JM-r14295
 
 Summary of some changes observed:
-* The ACControl model (with all the when blocks) now builds and runs correctly with PyFMI but has issues for QSS (described below).
+* The [ACControl10](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/ACControl10) model (with all the when blocks) now builds and runs correctly with PyFMI but has issues for QSS (described below).
 * Some FMU builds give warnings like this (may be a code gen issue or a problem in the Buildings Library file):
   ```
   sources/Buildings_Examples_ChillerPlant_DataCenterContinuousTimeControl_funcs.c:826:14: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
@@ -27,7 +27,7 @@ Summary of some changes observed:
   For example, the [ASHRAE2006](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/ASHRAE2006) model has apparent events at 2.95079428592932e-08 s and at 110.095386183947 s and other times.
   Understanding the cause of these early events (zero-crossing functions that start at zero?) and any additional later events would be helpful.
 * Getting the PyFMI results variable list using the prior `res.keys()` method stopped working. The `run_PyFMI.py` script uses this list for output filtering against a name/wildcard/regex list of variables. A work-around was found (getting it from `res._result_data.vars`) so it isn't an obstacle.
-* The TwoFloor_TwoZone CVode run now aborts if the FMU is built with generate_ode_jacobian but during simulation, not initialization.
+* The [TwoFloor_TwoZone](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/TwoFloor_TwoZone) CVode run now aborts if the FMU is built with generate_ode_jacobian but during simulation, not initialization.
 
 ### Buildings Library Version
 
@@ -91,11 +91,11 @@ Currently the main issue categories with OCT+QSS simulations are:
   * Directional derivatives have proven important to the QSS+FMU zero-crossing protocol and could be used to provide state variable 2nd derivatives if efficiency obstacles are overcome
   * Directional derivative support doesn't work with PyFMI and/or QSS for some models, failing during FMU initialization or causing very slow PyFMI and QSS progress
 * Event Indicators ([#3](https://github.com/NREL/SOEP-QSS-Test/issues/3)):
-  * Surprisingly many event indicators are generated for some models (Guideline36, Guideline36Spring)
-  * Event indicators missing all reverse dependencies (UpstreamSampler)
+  * Surprisingly many event indicators are generated for some models ([Guideline36](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Guideline36), [Guideline36Spring](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Guideline36Spring))
+  * Event indicators missing all reverse dependencies ([UpstreamSampler](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/UpstreamSampler))
   * Event indicators aren't working correctly in some models
-  * Extra event indicators (EventIndicator5)
-  * Event indicator reverse dependency refinements (BouncingBall, EventIndicator2)
+  * Extra event indicators ([EventIndicator5](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/EventIndicator5))
+  * Event indicator reverse dependency refinements ([BouncingBall](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/BouncingBall), [EventIndicator2](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/EventIndicator2))
 * Numerical differentiation can inject significant noise into QSS derivatives (worse with QSS3 than QSS2) causing excess requantizations and simulation inaccuracy ([#4](https://github.com/NREL/SOEP-QSS-Test/issues/4))
   * Automatic optimal ND step selection is under development and will help with this but since a uniform step is needed for efficiency it can't be optimal for all variables
 * OCT output issues ([#5](https://github.com/NREL/SOEP-QSS-Test/issues/5)):
@@ -123,7 +123,7 @@ Currently the main issue categories with OCT+QSS simulations are:
   ```
   _eventIndicator_22(0) = -1+1*Δ+0*Δ²
   ```
-  with the time derivative contribution. The same event indicator in the TimeTest model gives the correct trajectory. Debugging showed that QSS gives the correct der(time) = 1 to the FMI call to get the directional derivative but zero is returned for this model for some reason.
+  with the time derivative contribution. The same event indicator in the [TimeTest](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/TimeTest) model gives the correct trajectory. Debugging showed that QSS gives the correct der(time) = 1 to the FMI call to get the directional derivative but zero is returned for this model for some reason.
 * All the event indicators have the same 10 reverse dependencies but the model does not warrant that. The reverse dependencies are the derivatives of all 10 elements of the th[] temperature vector. The 20 event indicators for the temperature-triggered AC on/off when statements should each have a reverse dependency on only its own der(th[i]) since it alters the on[i] vector element:
   ```
   der(th[i]) = ( THA - th[i] ) / ( RES[i] * CAP[i] ) - ( POT[i] * on[i] ) / CAP[i];
