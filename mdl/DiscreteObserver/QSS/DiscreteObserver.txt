@@ -1,0 +1,7 @@
+DiscreteObserver Model QSS Notes
+
+The QSS runs use dtMax to force the state variable, x, to
+requantize so that we can verify that the y variable does
+the desired observer updates.
+
+QSS supports real, integer, and boolean discrete observers.

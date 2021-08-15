@@ -1,0 +1,6 @@
+DiscreteObserver Model Notes
+
+This is a simple model with a discrete variable that is
+an observer of state variables to verify that discrete
+variables correctly do observer updates when the observed
+state variable requantizes.
