@@ -1,0 +1,18 @@
+TimeTestCross Model QSS Notes
+
+The QSS runs show the same issue as TimeTest, where the
+missing dependency of the event indicators on the discrete
+variable appearing in their zero-crossing functions prevent
+QSS from simulating correctly. In this model also shows that
+it isn't sufficient to do an event indicator update after its
+own "handler" runs since the two discrete nextSample variables
+are modified by handlers of each others event indicator block.
+
+This model also exposes another issue: this use of pre() in the
+zero-crossing function:
+  when time >= pre(nextSample1) then
+causes the directional derivative for the event indicator to lose
+the time contribution as described in Issue #16 for the
+ACControl10 model. So even with the event indicator forwad
+dependencies on the nextSample variables added QSS is not able
+to simulate this model correctly.

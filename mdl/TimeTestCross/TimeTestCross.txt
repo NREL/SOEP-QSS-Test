@@ -1,3 +1,5 @@
+TimeTestCross Model Notes
+
 This is a variant of the model TimeTest.
 In this model, the first when block changes the
 zero crossing function of the second when block
