@@ -165,6 +165,9 @@ Currently the main issue categories with OCT+QSS simulations are:
 * The QSS runs (without directional derivative based event indicators) track fairly well but display some noise/slowness
 * The time range starts at a large value which causes some small steps to be non-advancing in PyFMI simulations ("t + h = t on the next step")
 
+### [DepTest](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/DepTest): QSS Dependency Issue Test
+* Demonstrates issues with QSS event indicator dependencies
+
 ### [DiscreteObserver](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/DiscreteObserver)
 * No problems
 
@@ -269,7 +272,7 @@ Currently the main issue categories with OCT+QSS simulations are:
 
 ### [TimeTestCross](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/TimeTestCross)
 * This model expands on TimeTest to demonstrate that it isn't sufficient to fix the discrete variable dependency short-circuiting issue for event indicator variables to do a QSS update after their own condition "handler" runs
- 
+
 ### [TwoFloor_TwoZone](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/TwoFloor_TwoZone)
 * The OCT-r23206_JM-r14295 FMU built with generate_ode_jacobian aborts in the PyFMI CVode run giving a number of errors before failing with: Evaluating the derivatives failed at <value name="t"> 1.1052023186606659E+005
 * Standard QSS shows derivative sensitivity of some self-observer variables causing solution noise/drift

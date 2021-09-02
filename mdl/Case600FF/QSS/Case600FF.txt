@@ -2,11 +2,6 @@ Case600FF Model QSS Notes
 
 The 2020/04 OCT FMU slows to a crawl at ~400000 s with second derivatives getting large causing tiny steps
 
-The Dymola FMU was used for QSS simulations.
-
-The key room temperature variables, TRooQSS_K, outputs are the primary
-basis for solution comparison.
-
 A sampling rate of 100 s is suggested for comparison with the PyFMI solution.
 
 The LIQSS solutions drift upward in temperature unless --dtInf deactivation
@@ -15,3 +10,10 @@ variable that (in the Dymola xml) has no observees other than itself.
 
 xQSS2 runs are, like LIQSS runs, somewhat noisier. The use of --dtInf with
 xQSS2 is recommended for this case.
+
+With the OCT-r23206_JM-r14295 OCT version some QSS3 runs give an fmi status error
+during the simulation from an fmi2_import_get_real call for the roo.irRadExc.TOpa[7]
+and return a large magnitude spike value -9.25596313493178e+61. Since the timing of
+this error varies with the dtND value it appears to be a numeric differentiation
+sensitivity. Also, the numeric differentiation time step optimizer reports a few
+variables whose numeric third derivatives never stabilize as dtND is reduced.

@@ -1,0 +1,5 @@
+DepTest Model Notes
+
+This is a simple model that demonstrates some changes needed to OCT
+dependency processing when a QSS FMU is being built, as detailed in
+the Event Handling section of the Software Architecture SOEP document.
