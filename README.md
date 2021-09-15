@@ -25,9 +25,11 @@ The `bin` directory contains scripts for modeling and testing:
 * `bld_fmu.py`  Builds model FMU with OPTIMICA or JModelica depending on the current directory
 * `bld_fmus.py`  Builds all model FMUs with OPTIMICA
 * `cleanup`  Removes comparison/regression testing output files
-* `cmp_CVode_QSS_Buildings.py`  Run and compare CVode and QSS simulations for a set of Buildings library models
-* `cmp_CVode_QSS_simple.py`  Run and compare CVode and QSS simulations for a set of simple models
+* `cmp_CVode_QSS3_Buildings.py`  Run and compare CVode and QSS3 simulations for a set of Buildings library models
+* `cmp_CVode_QSS3_simple.py`  Run and compare CVode and QSS3 simulations for a set of simple models
 * `cmp_PyFMI_QSS.py`  Run and compare PYFMI and QSS simulations for the local model
+* `cmp_PyFMI_QSS_hdr.py`  Generate the YAML file header for a PyFMI vs QSS comparison run
+* `cmp_PyFMI_QSS_yaml.py`  Compare the YAML results file for two PyFMI vs QSS comparison runs
 * `comparison`  Compares results from two modeling tools
 * `csv2ascii.py`  Converts CVS files to ASCII files
 * `jm*`  Wraps `jm_python.sh`: Customize to your system
@@ -231,8 +233,9 @@ In addition to passing PyFMI and QSS options through it accepts options such as:
 
 The PyFMI and QSS runs are set to use only sampled output to aid in the automated comparison: sampled QSS output may not show key events accurately.
 
-Comparison wrapper scripts, such as `cmp_CVode_QSS_Buildings.py`, can be used to run the comparison on a set of models, including any desired custom options.
+Comparison wrapper scripts, such as `cmp_CVode_QSS3_Buildings.py`, can be used to run the comparison on a set of models, including any desired custom options.
 By including RMS "pass" limits these can serve as a type of regression test to make sure that OCT and QSS updates do not cause unexpected solution discrepancies.
+The `cmp_PyFMI_QSS_yaml.py` script can compare the YAML results file from two comparison runs with an optional relative tolerance argument to use when comparing variable RMS differences.
 
 ### Comparison Testing Different Modeling Tools
 

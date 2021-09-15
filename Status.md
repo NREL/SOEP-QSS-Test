@@ -17,6 +17,7 @@ Summary of some changes observed and not yet explained/addressed:
 The contained models and notes should be valid with the Buildings Library repository from Tue May 4 2021 with hash 9c37781 (9c37781c84e1f72f557ffdb150fe08f174b3682e).
 * Some models pull an earlier Buildings Library revision to run against.
 * Automatic configuration of the Buildings Library revision when building FMUs is planned but not yet implemented.
+* Regression testing support has been extended with YAML report files from comparison runs and a script to compare these results between runs.
 
 ### Building and Running Models
 

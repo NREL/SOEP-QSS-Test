@@ -60,13 +60,17 @@ import os, shutil, subprocess, sys
 # Set up pass-through arguments
 args = ''
 pyfmi_args = ''
+pyfmi_solver = 'CVode'
 qss_args = ''
 qss = 'QSS3'
 red = 'cmp.log'
+yaml = ''
 vars = []
 for arg in sys.argv[1:]:
     if arg.startswith( '--red' ): # Redirect
         red = arg[6:].strip()
+    elif arg.startswith( ( '--yaml:', '--yaml=' ) ): # YAML comparison file
+        yaml = arg[7:].strip()
     elif arg.startswith( ( '--cmp:', '--cmp=' ) ): # Comparison variable
         var = arg[6:].strip().split( '=', 1 )
         if var[0] == '':
@@ -88,6 +92,10 @@ for arg in sys.argv[1:]:
         vars.append( var )
     elif arg.startswith( ( '--solver', '--maxord', '--discr', '--inp', '--ncp' ) ): # PyFMI arg
         pyfmi_args += ' ' + arg
+        try:
+            if arg.startswith( '--solver' ): pyfmi_solver = arg[9:].strip() # PyFMI solver
+        except:
+            pass
     elif arg.startswith( '--soo' ): # PyFMI arg automatically added
         pass
     elif arg.startswith( '--qss:rTol' ): # QSS rTol
@@ -96,11 +104,18 @@ for arg in sys.argv[1:]:
         qss = arg[6:].strip()
     elif arg.lower().startswith( (
      '--afac',
+     '--eidd',
+     '--no-eidd',
+     '--afac',
      '--ztol',
+     '--zmul',
      '--zfac',
+     '--zrfac',
+     '--zafac',
      '--dtmin',
      '--dtmax',
      '--dtinf',
+     '--dtzmax',
      '--dtzc',
      '--dtnd',
      '--dtcon',
@@ -110,9 +125,11 @@ for arg in sys.argv[1:]:
      '--refine',
      '--prune',
      '--perfect',
+     '--steps',
      '--fxn',
      '--con',
      '--dep',
+     '--rdep',
      '--bin',
      '--out',
      '--tloc',
@@ -200,6 +217,16 @@ except Exception as err:
 print( ' RMS', model )
 try:
     i_var = 0
+    try:
+        yaml_file = open( yaml, 'a' ) if yaml else None
+        yaml_file.write( '    - Name: ' + model + '\n' )
+        yaml_file.write( '      PyFMI:\n' )
+        yaml_file.write( '        Solver: ' + pyfmi_solver + '\n' )
+        yaml_file.write( '      QSS:\n' )
+        yaml_file.write( '        Solver: ' + qss + '\n' )
+        yaml_file.write( '      Var:\n' )
+    except:
+        yaml_file = None
     with open( 'cmp.log', 'r' ) as log: # Scan log file
         line = log.readline()
         while line:
@@ -219,6 +246,11 @@ try:
                         RMS_f = float( RMS )
                         RMS_s = var_[1]
                         print( '  ' + var + ' ' + RMS + ' ' + ( '>' if RMS_f > RMS_s else ( '<' if RMS_f < RMS_s else '=' ) ) + ' RMS limit =', RMS_s )
+                        if yaml_file:
+                            yaml_file.write( '        - Name: ' + var + '\n' )
+                            yaml_file.write( '          RMS:\n' )
+                            yaml_file.write( '            Val: ' + RMS + '\n' )
+                            yaml_file.write( '            Lim: ' + str( RMS_s ) + '\n' )
                         i_var += 1
                     else:
                         print( '  ' + var + ' ' + RMS )
@@ -227,3 +259,5 @@ try:
 except Exception as err:
     print( 'Comparison scan failed: ', err )
     sys.exit( 1 )
+finally:
+    if yaml_file: yaml_file.close()
