@@ -81,6 +81,7 @@ for arg in sys.argv[1:]:
             qss = arg[6:].strip()
         else: # Clean up options
             arg.replace( '--final_time', '--tEnd', 1 )
+            arg.replace( '--res=csv', '--csv', 1 )
         args += ' ' + arg
 
 # Try to deduce QSS solver if not specified

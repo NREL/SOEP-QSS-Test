@@ -59,6 +59,8 @@ parser.add_argument( '--dd', help = 'Directional derivatives (OCT)  [On if --qss
 parser.add_argument( '--no-dd', help = 'No directional derivatives (OCT)', dest = 'dd', action = 'store_false' )
 parser.add_argument( '--tearing', help = 'Automatic tearing [On]', default = True, action = 'store_true' )
 parser.add_argument( '--no-tearing', help = 'No automatic tearing', dest = 'tearing', action = 'store_false' )
+parser.add_argument( '--deps', help = '<Dependencies> annotation [On if --qss]', default = None, action = 'store_true' )
+parser.add_argument( '--no-deps', help = 'No <Dependencies> annotation', dest = 'deps', action = 'store_false' )
 parser.add_argument( '--source', help = 'Generate FMU source  [Off]', default = False, action = 'store_true' )
 parser.add_argument( '--mof', help = 'Generate .mof flat files  [Off]', default = False, action = 'store_true' )
 parser.add_argument( '--diag', help = 'Generate HTML diagnostics  [On]', default = True, action = 'store_true' )
@@ -70,9 +72,11 @@ args = parser.parse_args()
 if args.qss: # Set up conditional defaults
     if args.lazy is None: args.lazy = True
     if args.dd is None: args.dd = True
+    if args.deps is None: args.deps = True
 else:
     if args.lazy is None: args.lazy = False
     if args.dd is None: args.dd = False
+    if args.deps is None: args.deps = False
 
 # Check Modelica environment is set up
 if not os.getenv( 'MODELICAPATH' ):
@@ -198,6 +202,7 @@ if tool == 'OCT':
     compiler_options[ 'time_state_variable' ] = args.qss
     compiler_options[ 'enable_lazy_evaluation' ] = args.lazy # Can cause FMU to give wrong derivatives # Can cause event indicator infinite loop with incomplete dependencies
     compiler_options[ 'generate_ode_jacobian' ] = args.dd # For directional derivatives # Doesn't support delay() # Causes some Buildings library models to abort in PyFMI
+    compiler_options[ 'event_indicator_structure' ] = args.deps # For <Dependencies> annotation
     compiler_options[ 'source_code_fmu' ] = args.source # Not supported by OCT yet
     #compiler_options[ 'msvs_version' ] = '2017' # This seems to happen automatically when MSVS2017 is installed
     #compiler_options[ 'msvs_version' ] = '2019' # Not supported yet
