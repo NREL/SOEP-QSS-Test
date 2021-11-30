@@ -108,11 +108,11 @@ Currently the main issue categories with OCT+QSS simulations are:
   _eventIndicator_22(0) = -1+1*Δ+0*Δ²
   ```
   with the time derivative contribution. The same event indicator in the [TimeTest](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/TimeTest) model gives the correct trajectory. Debugging showed that QSS gives the correct der(time) = 1 to the FMI call to get the directional derivative but zero is returned for this model for some reason. This is issue [#16](https://github.com/NREL/SOEP-QSS-Test/issues/16).
-* All the event indicators have the same 10 reverse dependencies but the model does not warrant that. The reverse dependencies are the derivatives of all 10 elements of the th[] temperature vector. The 20 event indicators for the temperature-triggered AC on/off when statements should each have a reverse dependency on only its own der(th[i]) since it alters the on[i] vector element:
+* All the event indicators have the same 10 reverse dependencies but the model does not warrant that. The reverse dependencies are the derivatives of all 10 elements of the `th[]` temperature vector. The 20 event indicators for the temperature-triggered AC on/off when statements should each have a reverse dependency on only its own `der(th[i])` since it alters the `on[i]` vector element:
   ```
   der(th[i]) = ( THA - th[i] ) / ( RES[i] * CAP[i] ) - ( POT[i] * on[i] ) / CAP[i];
   ```
-  The unnecessary reverse dependencies are a performance/scalability problem.
+  The unnecessary reverse dependencies are a performance/scalability problem. This has been added to issue [#10](https://github.com/NREL/SOEP-QSS-Test/issues/10).
 
 ### [ASHRAE2006](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/ASHRAE2006)
 * Directional derivative support breaks PyFMI
