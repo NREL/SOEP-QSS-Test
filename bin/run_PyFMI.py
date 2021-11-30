@@ -40,7 +40,8 @@
 # Notes
 #  Run from an environment set up for PyFMI such as jm_python.sh
 #  Run from an environment with MODELICAPATH set up
-#  Variable output list file entries can use wildcard or regex syntax
+#  Variable output list file entries can use glob or regex syntax
+#  - PyFMI filter option only supports glob syntax
 
 # Imports
 import argparse, fnmatch, glob, math, os, re, sys
@@ -48,7 +49,8 @@ import numpy
 from pyfmi import load_fmu
 
 # Parse arguments
-parser = argparse.ArgumentParser( formatter_class = argparse.RawTextHelpFormatter )
+parser = argparse.ArgumentParser( formatter_class = argparse.RawTextHelpFormatter, add_help = False )
+parser.add_argument( '-h', '--help', help = 'Show this message', action = 'help' )
 parser.add_argument( '--solver', help = 'Solver  [CVode]', default = 'CVode', choices = [ 'CVode', 'Radau5ODE', 'RungeKutta34', 'Dopri5', 'RodasODE', 'LSODAR', 'ExplicitEuler', 'DASSL' ] )
 parser.add_argument( '--maxord', help = 'Max order', type = int )
 parser.add_argument( '--discr', help = 'CVode discretization method  [BDF]', default = 'BDF', choices = [ 'BDF', 'Adams' ] )
@@ -71,7 +73,8 @@ parser.add_argument( '--dtOut', help = 'Output time step  [computed]', type = fl
 parser.add_argument( '--dtout', help = argparse.SUPPRESS, type = float, dest = 'dtOut' )
 parser.add_argument( '--ncp', help = 'Number of communication (output) points (overrides dtOut) (0 => no sampled points)', type = int )
 parser.add_argument( '--soo', help = 'Sampled output only (no event points)  [False]', default = False, action = 'store_true' )
-parser.add_argument( '--var', help = 'Variable output list file' )
+parser.add_argument( '--res', help = 'Results format  [memory]', default = 'memory', choices = [ 'memory', 'binary', 'csv', 'text' ] )
+parser.add_argument( '--var', help = 'Variable output filter list file' )
 parser.add_argument( '--log', help = 'Logging level  [3]', type = int, default = 3, choices = [ 0, 1, 2, 3, 4, 5, 6, 7 ] )
 args = parser.parse_args()
 
@@ -141,9 +144,25 @@ fmu.set_max_log_size( 2073741824 ) # = 2*1024^3 (about 2GB)
 # Set simulation options
 opt = fmu.simulate_options()
 opt[ 'solver' ] = args.solver
-opt[ 'result_handling' ] = 'memory' # No file output: We do that explicitly below to filter by var file
-#opt[ 'result_handling' ] = 'csv'; opt[ 'result_file_name' ] = model + '.csv' # CSV output files
-#opt[ 'result_handling' ] = 'file'; opt[ 'result_file_name' ] = model + '.txt' # ASCII output files
+if args.res == 'memory': # In-memory results: Signal files generated after simulation
+    opt[ 'result_handling' ] = 'memory'
+elif args.res == 'binary': # Binary .mat results file
+    opt[ 'result_handling' ] = 'binary'
+    opt[ 'result_file_name' ] = model + '.mat'
+elif args.res == 'csv': # CSV results file
+    opt[ 'result_handling' ] = 'csv'
+    opt[ 'result_file_name' ] = model + '.csv'
+elif args.res == 'text': # Text results file
+    opt[ 'result_handling' ] = 'file'
+    opt[ 'result_file_name' ] = model + '.res'
+if args.var: # Variable output filtering
+    filter = []
+    with open( args.var, 'r' if sys.version_info >= ( 3, 0 ) else 'rU' ) as var_file:
+        for line in var_file:
+            key = line.strip()
+            if key and ( key[ 0 ] != '#' ):
+                filter.append( key )
+    if filter: opt[ 'filter' ] = filter
 if args.ncp is not None:
     opt[ 'ncp' ] = args.ncp
 else: # Use dtOut to set ncp for PyFMI
@@ -285,86 +304,87 @@ except:
 # Terminate if simulation failed
 if res is False: sys.exit( 1 )
 
-# Generate output files
-print( '\nGenerating output files...' )
-try:
-    keys = res.keys()
-except: # Work-around for OCT-r23206_JM-r14295
-    if sys.version_info >= ( 3, 0 ):
-        keys = list( res._result_data.vars )
+# Generate signal output files if in-memory results
+if args.res == 'memory':
+    print( '\nGenerating output files...' )
+    try:
+        keys = res.keys()
+    except: # Work-around for OCT-r23206_JM-r14295
+        if sys.version_info >= ( 3, 0 ):
+            keys = list( res._result_data.vars )
+        else:
+            keys = res._result_data.vars.keys()
+    if sys.platform in ( 'win32', 'cygwin' ): # Case-insensitive file name handling
+        keys.sort() # Assure the collision name decorating is deterministic
+        keys_count = { key: 0 for key in keys } # Count number of variables
+        KEYS_count = { key.upper(): 0 for key in keys } # Count of variables with same case-insensitive key
+        for key in keys:
+            KEYS_count[ key.upper() ] += 1
+            keys_count[ key ] = KEYS_count[ key.upper() ]
+        keys_out = {}
+        for key in keys:
+            if KEYS_count[ key.upper() ] == 1: # No case-insentive collision
+                keys_out[ key ] = key
+            else: # Add count to output key
+                key_out = key + '.' + str( keys_count[ key ] )
+                while key_out in keys: # In case the count-appended name conflicts
+                    key_out += '_'
+                keys_out[ key ] = key_out
     else:
-        keys = res._result_data.vars.keys()
-if sys.platform in ( 'win32', 'cygwin' ): # Case-insensitive file name handling
-    keys.sort() # Assure the collision name decorating is deterministic
-    keys_count = { key: 0 for key in keys } # Count number of variables
-    KEYS_count = { key.upper(): 0 for key in keys } # Count of variables with same case-insensitive key
-    for key in keys:
-        KEYS_count[ key.upper() ] += 1
-        keys_count[ key ] = KEYS_count[ key.upper() ]
-    keys_out = {}
-    for key in keys:
-        if KEYS_count[ key.upper() ] == 1: # No case-insentive collision
-            keys_out[ key ] = key
-        else: # Add count to output key
-            key_out = key + '.' + str( keys_count[ key ] )
-            while key_out in keys: # In case the count-appended name conflicts
-                key_out += '_'
-            keys_out[ key ] = key_out
-else:
-    keys_out = { key: key for key in keys }
-t = res[ 'time' ]
-if args.var:
-    with open( args.var, 'r' if sys.version_info >= ( 3, 0 ) else 'rU' ) as var_file:
-        for line in var_file:
-            key = line.strip()
-            if key and ( key[ 0 ] != '#' ):
-                if key in keys:
-                    key_out = keys_out[ key ] + '.out'
-                    try:
-                        t_v = numpy.c_[ t, res[ key ] ]
-                        numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
-                    except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
-                        print( 'Output failed to: ' + key_out )
-                else: # Try as file name wildcard pattern or regex
-                    bkey = '' # Key with literal brackets protected
-                    for c in key:
-                        if c in ( '[', ']' ):
-                            bkey += '[' + c + ']'
-                        else:
-                            bkey += c
-                    m = fnmatch.filter( keys, bkey ) # File name wildcard pattern
-                    if not m: # Try as regex
+        keys_out = { key: key for key in keys }
+    t = res[ 'time' ]
+    if args.var: # Variable output filtering
+        with open( args.var, 'r' if sys.version_info >= ( 3, 0 ) else 'rU' ) as var_file:
+            for line in var_file:
+                key = line.strip()
+                if key and ( key[ 0 ] != '#' ):
+                    if key in keys:
+                        key_out = keys_out[ key ] + '.out'
                         try:
-                            re_key = re.compile( bkey + ( '' if key.endswith( '$' ) else '$' ) ) # Match whole string
-                        except:
-                            pass # Not a valid regex
-                        else:
-                            for k in keys:
-                                if re_key.match( k ):
-                                    m.append( k )
-                    if m: # Matches found
-                        for k in m:
-                            key_out = keys_out[ k ] + '.out'
+                            t_v = numpy.c_[ t, res[ key ] ]
+                            numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
+                        except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
+                            print( 'Output failed to: ' + key_out )
+                    else: # Try as file name wildcard pattern or regex
+                        bkey = '' # Key with literal brackets protected
+                        for c in key:
+                            if c in ( '[', ']' ):
+                                bkey += '[' + c + ']'
+                            else:
+                                bkey += c
+                        m = fnmatch.filter( keys, bkey ) # File name wildcard pattern
+                        if not m: # Try as regex
                             try:
-                                t_v = numpy.c_[ t, res[ k ] ]
-                                numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
-                            except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
-                                print( 'Output failed to: ' + key_out )
-                    else: # No matches
-                        print( 'No variables found matching: ' + key )
-else:
-    temp_re = re.compile( 'temp_\d+' )
-    for key in keys:
-        if key.startswith( 'der(' ) and ( key[ -1 ] == ')' ):
-            pass # Skip derivatives
-        elif key.startswith( '_' ) and ( not key.startswith( ( '_eventIndicator', '__zc_' ) ) ):
-            pass # Skip non-zero-crossing internals
-        elif temp_re.match( key ):
-            pass # Skip temporaries
-        elif key != 'time':
-            key_out = keys_out[ key ] + '.out'
-            try:
-                t_v = numpy.c_[ t, res[ key ] ]
-                numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
-            except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
-                print( 'Output failed to: ' + key_out )
+                                re_key = re.compile( bkey + ( '' if key.endswith( '$' ) else '$' ) ) # Match whole string
+                            except:
+                                pass # Not a valid regex
+                            else:
+                                for k in keys:
+                                    if re_key.match( k ):
+                                        m.append( k )
+                        if m: # Matches found
+                            for k in m:
+                                key_out = keys_out[ k ] + '.out'
+                                try:
+                                    t_v = numpy.c_[ t, res[ k ] ]
+                                    numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
+                                except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
+                                    print( 'Output failed to: ' + key_out )
+                        else: # No matches
+                            print( 'No variables found matching: ' + key )
+    else: # No variable output filtering
+        temp_re = re.compile( 'temp_\d+' )
+        for key in keys:
+            if key.startswith( 'der(' ) and ( key[ -1 ] == ')' ):
+                pass # Skip derivatives
+            elif key.startswith( '_' ) and ( not key.startswith( ( '_eventIndicator', '__zc_' ) ) ):
+                pass # Skip non-zero-crossing internals
+            elif temp_re.match( key ):
+                pass # Skip temporaries
+            elif key != 'time':
+                key_out = keys_out[ key ] + '.out'
+                try:
+                    t_v = numpy.c_[ t, res[ key ] ]
+                    numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
+                except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
+                    print( 'Output failed to: ' + key_out )
