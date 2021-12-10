@@ -1,6 +1,6 @@
 model TimeTest
   discrete output Real x( start=0.0, fixed=true );
-  discrete output Real nextSample(start = 1, fixed = true);
+  discrete output Real nextSample( start = 1, fixed = true );
 algorithm
   when time > nextSample then
     x := x + 1;

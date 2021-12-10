@@ -128,6 +128,10 @@ Currently the main issue categories with OCT+QSS simulations are:
 ### [Achilles2](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Achilles2): Part 2 of Split/Connected Achilles
 * No problems
 
+### [BIDR](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/BIDR)
+* Demo of the various uses of non-state variables that QSS must support and can better support using the `<Dependencies>` information
+* Shows scenario where event indicator annotation distinguishing `if` from `when` blocks can help QSS performance
+
 ### [BouncingBall](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/BouncingBall)
 * The event indicator reverse dependency on der(v) and der(h) works but causes extra requantizations of h when observer update would suffice
 * QSS3 takes very large steps between bounces as expected since the height in quadratic in time

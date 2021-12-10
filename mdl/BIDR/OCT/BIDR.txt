@@ -1,0 +1,3 @@
+BIDR Model OCT Notes
+
+PyFMI runs show the correct behavior for this model.

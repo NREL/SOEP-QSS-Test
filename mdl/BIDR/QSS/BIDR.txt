@@ -1,0 +1,8 @@
+BIDR Model QSS Notes
+
+QSS is being revised to exploit the new Dependencies XML section to
+correctly simulate this model.
+
+OCT addition of event indicator annotations to distinguish "if" from "when" blocks
+has been suggested to allow some real non-state variables that only change discretely 
+to be handled more efficiently in QSS.

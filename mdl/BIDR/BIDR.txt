@@ -1,0 +1,17 @@
+BIDR Model Notes
+
+This is a small demo model for boolean, integer, discrete real, and non-discrete real
+non-state (BIDR) variables showing the variations in how they can change to help in
+understanding the range of behaviors QSS must support and in designing FMU annotations
+to enable more efficient QSS simulation.
+
+- BIDR variables can change outside of event indicator "handlers" so BIDR variables 
+  can have observees and need to support QSS updates via observee changes.
+
+- R variables dependent on (non-event-indicator) variables or on any if-clause based 
+  event indicators (R-trajectory variables) need trajectories (and requantization)
+
+- R variables only depending on when-clause event indicators (R-when variables) only
+  change discretely so are effectively discrete and don't need trajectories.
+  Event indicator annotations to identify whether they originate from an "if" or "when"
+  block would allow these R variables to be treated more efficiently.
