@@ -71,25 +71,21 @@ Notes:
 
 Currently the main issue categories with OCT+QSS simulations are:
 1. Derivatives for some Buildings models are sensitive to the standard QSS approach of propagating somewhat "stale" quantized trajectories ([#1](https://github.com/NREL/SOEP-QSS-Test/issues/1))
-2. Directional Derivatives ([#2](https://github.com/NREL/SOEP-QSS-Test/issues/2)):
+2. Directional Derivatives:
    * Directional derivatives have proven important to the QSS+FMU zero-crossing protocol and could be used to provide state variable 2nd derivatives if efficiency obstacles are overcome
-   * Directional derivative support doesn't work with PyFMI and/or QSS for some models, failing during FMU initialization or causing very slow PyFMI and QSS progress
-3. Event Indicators ([#3](https://github.com/NREL/SOEP-QSS-Test/issues/3)):
-   * Surprisingly many event indicators are generated for some models ([Guideline36](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Guideline36), [Guideline36Spring](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Guideline36Spring))
-   * Event indicators missing all reverse dependencies ([UpstreamSampler](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/UpstreamSampler))
-   * Event indicators aren't working correctly in some models
-   * Extra event indicators ([EventIndicator5](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/EventIndicator5))
+   * Directional derivative support doesn't work with PyFMI and/or QSS for some models, failing during FMU initialization or causing very slow PyFMI and QSS progress ([#2](https://github.com/NREL/SOEP-QSS-Test/issues/2))
+   * Directional derivatives are missing the contribution from time in some models ([#16](https://github.com/NREL/SOEP-QSS-Test/issues/16))
+3. Event Indicators:
+   * Surprisingly many event indicators are generated for some models ([#12](https://github.com/NREL/SOEP-QSS-Test/issues/12))
+   * Event indicators missing all reverse dependencies ([UpstreamSampler](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/UpstreamSampler)) ([#3](https://github.com/NREL/SOEP-QSS-Test/issues/3))
    * Event indicator reverse dependency refinements ([BouncingBall](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/BouncingBall), [EventIndicator2](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/EventIndicator2))
 4. Numerical differentiation can inject significant noise into QSS derivatives (worse with QSS3 than QSS2) causing excess requantizations and simulation inaccuracy ([#4](https://github.com/NREL/SOEP-QSS-Test/issues/4))
    * Automatic optimal ND step selection is under development and will help with this but since a uniform step is needed for efficiency it can't be optimal for all variables
-5. OCT output issues ([#5](https://github.com/NREL/SOEP-QSS-Test/issues/5)):
-   * An OCT mechanism to tell the FMU compiler to treat specified (non-state) local variables as output variables would allow QSS to avoid a very inefficient process for getting those outputs
-   * Getting a variable's declared type from the PyFMI API is not working
-6. Buildings Library issues ([#6](https://github.com/NREL/SOEP-QSS-Test/issues/6)):
+5. Buildings Library issues ([#6](https://github.com/NREL/SOEP-QSS-Test/issues/6)):
    * Buildings library changes can alter or remove models making stable testing challenging
    * OCT gives warnings when building FMUs for many of Buildings models that should probably be reviewed and addressed
 
-"Clearinghouse" Issues for these were created but items within these can also be tracked in separate Issues as needed.
+"Clearinghouse" Issues for some of these were created but items within these can also be tracked in separate Issues as needed.
 
 ## Models
 
