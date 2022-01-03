@@ -204,7 +204,7 @@ if tool == 'OCT':
     compiler_options[ 'enable_lazy_evaluation' ] = args.lazy # Can cause FMU to give wrong derivatives # Can cause event indicator infinite loop with incomplete dependencies
     compiler_options[ 'generate_ode_jacobian' ] = args.dd # For directional derivatives # Doesn't support delay() # Causes some Buildings library models to abort in PyFMI
     compiler_options[ 'event_indicator_structure' ] = args.deps # For <Dependencies> annotation
-    compiler_options[ 'source_code_fmu' ] = args.source # Not supported by OCT yet
+    #compiler_options[ 'source_code_fmu' ] = args.source # Not supported by OCT yet: Not present in latest non-end-user OCT
     #compiler_options[ 'msvs_version' ] = '2017' # This seems to happen automatically when MSVS2017 is installed
     #compiler_options[ 'msvs_version' ] = '2019' # Not supported yet
 else: # JModelica
