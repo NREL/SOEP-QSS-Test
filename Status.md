@@ -4,13 +4,13 @@
 
 ### OCT Version
 
-Unless otherwise indicated the findings below are based on this OCT version: 2020.1-1.18 with the OCT-r23206_JM-r14295 update.
+Unless otherwise indicated the findings below are based on this OCT version: 2020.1-1.18 with the OCT-r28312_JM-r14295 update.
 
-#### OCT Update OCT-r23206_JM-r14295
+#### OCT Update OCT-r28312_JM-r14295
 
 Summary of some changes observed and not yet explained/addressed:
 1. The [ACControl10](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/ACControl10) model (with all the when blocks) now builds and runs correctly with PyFMI but has issues for QSS (described below).
-2. The [TwoFloor_TwoZone](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/TwoFloor_TwoZone) CVode run now aborts if the FMU is built with generate_ode_jacobian but during simulation, not initialization.
+2. The [TwoFloor_TwoZone](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/TwoFloor_TwoZone) CVode run now aborts if the FMU is built with generate_ode_jacobian but during simulation, not initialization. It gives the message "Simulation failed: 'The right-hand side function had repeated recoverable errors. At time 188479.249406.'"
 
 ### Buildings Library Version
 
