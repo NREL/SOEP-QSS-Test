@@ -77,7 +77,6 @@ Currently the main issue categories with OCT+QSS simulations are:
    * Directional derivative support doesn't work with PyFMI and/or QSS for some models, failing during FMU initialization or causing very slow PyFMI and QSS progress ([#2](https://github.com/NREL/SOEP-QSS-Test/issues/2))
 3. Event Indicators:
    * Surprisingly many event indicators are generated for some models ([#12](https://github.com/NREL/SOEP-QSS-Test/issues/12))
-   * Event indicators missing all reverse dependencies ([UpstreamSampler](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/UpstreamSampler)) ([#3](https://github.com/NREL/SOEP-QSS-Test/issues/3))
    * Event indicator reverse dependency refinements ([BouncingBall](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/BouncingBall), [EventIndicator2](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/EventIndicator2))
 4. Numerical differentiation can inject significant noise into QSS derivatives (worse with QSS3 than QSS2) causing excess requantizations and simulation inaccuracy ([#4](https://github.com/NREL/SOEP-QSS-Test/issues/4))
    * Automatic optimal ND step selection is under development and will help with this but since a uniform step is needed for efficiency it can't be optimal for all variables
