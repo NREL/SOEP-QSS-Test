@@ -35,7 +35,8 @@ Notes:
   * To see the options for building the FMU you can run `bld --help`.
   * The default is to build the FMU with QSS support, which enables event indicator variables and directional derivative support (used only for the event indicators currently)
     * Some models don't currently work with the directional derivative support included with the QSS options, in which case the custom `bld.py` will use the `--no-dd` option
-    * QSS can run without directional derivative support but zero-crossing accuracy/reliability can be degraded
+    * Earlier QSS versions could run without directional derivative support but zero-crossing accuracy/reliability was degraded
+    * The current QSS version that uses the new Dependencies section drops support for simulation without directional derivatives
   * To get a "normal" FMU you can use the `--no-qss` option or its equivalent `--pyfmi`
   * Some models/issues might require building the "normal" FMU for PyFMI runs and then building the FMU with QSS options for QSS runs
 
@@ -74,7 +75,6 @@ Currently the main issue categories with OCT+QSS simulations are:
 2. Directional Derivatives:
    * Directional derivatives have proven important to the QSS+FMU zero-crossing protocol and could be used to provide state variable 2nd derivatives if efficiency obstacles are overcome
    * Directional derivative support doesn't work with PyFMI and/or QSS for some models, failing during FMU initialization or causing very slow PyFMI and QSS progress ([#2](https://github.com/NREL/SOEP-QSS-Test/issues/2))
-   * Directional derivatives are missing the contribution from time in some models ([#16](https://github.com/NREL/SOEP-QSS-Test/issues/16))
 3. Event Indicators:
    * Surprisingly many event indicators are generated for some models ([#12](https://github.com/NREL/SOEP-QSS-Test/issues/12))
    * Event indicators missing all reverse dependencies ([UpstreamSampler](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/UpstreamSampler)) ([#3](https://github.com/NREL/SOEP-QSS-Test/issues/3))
@@ -94,16 +94,6 @@ Currently the main issue categories with OCT+QSS simulations are:
 * Due to the issues noted here QSS cannot correctly simulate this model yet (other than by forcing frequent requantizations by using a small dtMax)
 * Although the results don't match yet QSS does appear to significantly outperform CVode for this model as expected from the paper
 * Once these issues are fixed larger models from the paper will be added and should show an even larger performance advantage for QSS
-* The event indicator (#22) for the conditional "when time > nextSample then" does not get notified in QSS to update when nextSample is incremented because nextSample is discrete and its dependencies are short-circuited out so this seems to be a flaw with the dependency logic. This is issue [#13](https://github.com/NREL/SOEP-QSS-Test/issues/13).
-* This event indicator is also generating an incorrect directional derivative, losing the time contribution, giving an initial QSS trajectory of:
-  ```
-  _eventIndicator_22(0) = -1+0*Δ+0*Δ²
-  ```
-  instead of:
-  ```
-  _eventIndicator_22(0) = -1+1*Δ+0*Δ²
-  ```
-  with the time derivative contribution. The same event indicator in the [TimeTest](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/TimeTest) model gives the correct trajectory. Debugging showed that QSS gives the correct der(time) = 1 to the FMI call to get the directional derivative but zero is returned for this model for some reason. This is issue [#16](https://github.com/NREL/SOEP-QSS-Test/issues/16).
 * All the event indicators have the same 10 reverse dependencies but the model does not warrant that. The reverse dependencies are the derivatives of all 10 elements of the `th[]` temperature vector. The 20 event indicators for the temperature-triggered AC on/off when statements should each have a reverse dependency on only its own `der(th[i])` since it alters the `on[i]` vector element:
   ```
   der(th[i]) = ( THA - th[i] ) / ( RES[i] * CAP[i] ) - ( POT[i] * on[i] ) / CAP[i];
