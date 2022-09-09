@@ -4,12 +4,11 @@ model DepTest
   discrete output Real o(start = 2.0, fixed = true); // Output
 equation
   der(x) = 0.001;
-algorithm
-  when time > l + x then
-    l := pre(l) + 1.0;
+  when time > pre(l) + x then
+    l = pre(l) + 1.0;
   end when;
-  when time > o + x then
-    o := pre(o) + 2.0;
+  when time > pre(o) + x then
+    o = pre(o) + 2.0;
   end when;
 annotation( experiment(StartTime=0, StopTime=5, Tolerance=1e-4) );
 end DepTest;

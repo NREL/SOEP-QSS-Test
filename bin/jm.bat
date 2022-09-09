@@ -1,6 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
-rem Set up environment for OCT and runs passed Python script
+:: Set up environment for OCT and runs passed Python script
 for %%x in (%1) do (set script=%%~$PATH:x)
 shift
 if defined script (

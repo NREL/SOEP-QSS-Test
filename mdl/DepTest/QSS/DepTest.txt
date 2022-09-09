@@ -1,4 +1,2 @@
 DepTest Model QSS Notes
 
-The QSS simulation does not run correctly unless the dependencies
-are corrected as detailed in the Software Architecture SEOP document.

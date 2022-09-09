@@ -1,16 +1,2 @@
 DepTest Model OCT Notes
 
-The OCT-r23206_JM-r14295 revision FMU dependencies have these issues
-for QSS:
-- Both event indicators show a reverse dependency on the output
-variable o but o only appears in the second event indicator.
-- The local variable l needs to be treated like an output variable
-for QSS to get the necessary dependencies, including appearing as
-a reverse dependency of the first event indicator and as a forward
-dependency of the first event indicator.
-- The output variable o should appear as a forward dependency of
-the second event indicator.
-- The variables modified in the event indicator handler block, l
-and o, should not have forward dependencies on variables appearing
-in the event indicator expressions since they should appear as
-reverse dependencies of the event indicators.

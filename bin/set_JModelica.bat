@@ -1,6 +1,6 @@
 @echo off
-rem Set environment for using these scripts with JModelica
-rem Customize for your system
+:: Set environment for using these scripts with JModelica
+:: Customize for your system
 set MODELICA_BUILDINGS_LIB=C:\modelica-buildings
 set MODELICAPATH=C:\JModelica\install\ThirdParty\MSL;%MODELICA_BUILDINGS_LIB%;.;..
 set batPath=%~dp0

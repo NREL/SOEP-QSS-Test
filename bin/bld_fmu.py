@@ -206,7 +206,7 @@ if tool == 'OCT':
     compiler_options[ 'event_indicator_structure' ] = args.deps # For <Dependencies> annotation
     #compiler_options[ 'source_code_fmu' ] = args.source # Not supported by OCT yet: Not present in latest non-end-user OCT
     #compiler_options[ 'msvs_version' ] = '2017' # This seems to happen automatically when MSVS2017 is installed
-    #compiler_options[ 'msvs_version' ] = '2019' # Not supported yet
+    compiler_options[ 'msvs_version' ] = '2019'
 else: # JModelica
     assert tool == 'JModelica', 'Tool should be OCT or JModelica'
     compiler_options[ 'copy_source_files_to_fmu' ] = args.source
@@ -241,20 +241,39 @@ if branch or commit:
 try:
     # Compile the FMU
     if mod: # Pass Modelica file
-        fmu_file = pymodelica.compile_fmu(
-         nam,
-         mod,
-         version = "2.0",
-         compiler_log_level = 'warning',
-         compiler_options = compiler_options
-        )
+        try:
+            fmu_file = pymodelica.compile_fmu(
+             nam,
+             mod,
+             version = "2.0",
+             compiler_log_level = 'warning',
+             compiler_options = compiler_options,
+             modelicapath = os.getenv( 'MODELICAPATH' )
+            )
+        except:
+            fmu_file = pymodelica.compile_fmu(
+             nam,
+             mod,
+             version = "2.0",
+             compiler_log_level = 'warning',
+             compiler_options = compiler_options
+            )
     else: # Modelica file found by searching MODELICAPATH
-        fmu_file = pymodelica.compile_fmu(
-         nam,
-         version = "2.0",
-         compiler_log_level = 'warning',
-         compiler_options = compiler_options
-        )
+        try:
+            fmu_file = pymodelica.compile_fmu(
+             nam,
+             version = "2.0",
+             compiler_log_level = 'warning',
+             compiler_options = compiler_options,
+             modelicapath = os.getenv( 'MODELICAPATH' )
+            )
+        except:
+            fmu_file = pymodelica.compile_fmu(
+             nam,
+             version = "2.0",
+             compiler_log_level = 'warning',
+             compiler_options = compiler_options
+            )
         if nam != model: # Rename outputs to local model name
             nam = nam.replace( '.', '_' )
             nam_fmu = nam + '.fmu'
