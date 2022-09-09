@@ -49,5 +49,5 @@ equation
   annotation (
     Icon(coordinateSystem(preserveAspectRatio=false)),
     Diagram(coordinateSystem(preserveAspectRatio=false)),
-    uses(Buildings(version="8.0.0")));
+    uses(Buildings(version="8.1.0")));
 end UpstreamSampler;

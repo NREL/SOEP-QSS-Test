@@ -1,4 +1,1 @@
 BouncingBall Model OCT Notes
-
-XML Modifications:
- 2020/08 OCT: Bounce event indicator reverse dependency on der(v) and der(h) works but causes extra requantizations of h when observer update would suffice

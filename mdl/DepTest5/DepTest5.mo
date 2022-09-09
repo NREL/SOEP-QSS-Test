@@ -4,7 +4,7 @@ model DepTest5
 equation
   der(s) = 0.1;
   if time > r then
-    r = s; // CVode: r becomes linear => Need r -> s
+    r = s;
   else
     r = 1.0;
   end if;

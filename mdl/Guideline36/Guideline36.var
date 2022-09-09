@@ -1,9 +1,3 @@
 _eventIndicator_*
 *.T
 *.dynBal.U
-con.TZonCooSet
-con.TZonHeaSet
-con.TZon
-con.yFan
-con.yHeaCoi
-con.yCooCoi

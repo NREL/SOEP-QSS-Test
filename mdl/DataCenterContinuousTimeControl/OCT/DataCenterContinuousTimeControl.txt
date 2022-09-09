@@ -8,9 +8,3 @@ known.
 
 The time range starts at a large value which causes some small steps to
 be non-advancing in PyFMI simulations ("t + h = t on the next step").
-
-As of the OCT-r23206_JM-r14295 OCT update an FMU built with 
-generate_ode_jacobian still aborts under PyFMI and QSS with no error 
-message (typically this indicates an abort during FMU initialization)
-so we build without that option, which limits QSS zero-crossing protocol 
-accuracy and robustness.
