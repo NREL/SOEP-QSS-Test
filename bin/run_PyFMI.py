@@ -51,7 +51,7 @@ from pyfmi import load_fmu
 # Parse arguments
 parser = argparse.ArgumentParser( formatter_class = argparse.RawTextHelpFormatter, add_help = False )
 parser.add_argument( '-h', '--help', help = 'Show this message', action = 'help' )
-parser.add_argument( '--solver', help = 'Solver  [CVode]', default = 'CVode', choices = [ 'CVode', 'Radau5ODE', 'RungeKutta34', 'Dopri5', 'RodasODE', 'LSODAR', 'ExplicitEuler', 'DASSL' ] )
+parser.add_argument( '--solver', help = 'Solver  [CVode]', default = 'CVode', choices = [ 'CVode', 'Radau5ODE', 'RungeKutta34', 'Dopri5', 'RodasODE', 'LSODAR', 'ExplicitEuler', 'DASSL' ] ) # DASSL was removed from OCT
 parser.add_argument( '--maxord', help = 'Max order', type = int )
 parser.add_argument( '--discr', help = 'CVode discretization method  [BDF]', default = 'BDF', choices = [ 'BDF', 'Adams' ] )
 parser.add_argument( '--fxn', help = '''Input function in the form VARIABLE:FUNCTION
@@ -228,7 +228,7 @@ elif args.solver == 'ExplicitEuler':
     except:
         print( 'Error: Unsupported solver:', args.solver )
         sys.exit( 1 )
-    opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
+    #opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination # Not supported by ExplicitEuler
 elif args.solver == 'DASSL':
     opt[ 'solver' ] = 'ODASSL'
     try:

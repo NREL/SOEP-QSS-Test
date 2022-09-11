@@ -1,0 +1,4 @@
+DepTest4 Model Notes
+
+This simple dependency test model uses the Modelica event-generating 
+integer() function with a discrete variable.
