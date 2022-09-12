@@ -1,3 +1,17 @@
 ACControl10 Model QSS Notes
 
-The OCT-r23206_JM-r14295 generated FMU built with QSS options was run with QSS:
+The QSS simulation is wrong. At least one reason is that the
+event indicator dependencies don't include the th[*] variables
+that most of them depend on. For example:
+    when th[1] > tref + dtref + 0.5 then
+      on[1] := 1;
+    elsewhen th[1] < tref + dtref - 0.5 then
+      if time > 0 then
+        on[1] := 0;
+      end if;
+    end when;
+
+The when blocks are in the algorithms section, which has known
+limitations with the dependencies. Since this use of algorithm
+is not believed common in Buildings Library models this may be
+a non-critical issue.
