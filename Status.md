@@ -93,11 +93,8 @@ Currently the main issue categories with OCT+QSS simulations are:
 * Due to the issues noted here QSS cannot correctly simulate this model yet (other than by forcing frequent requantizations by using a small dtMax)
 * Although the results don't match yet QSS does appear to significantly outperform CVode for this model as expected from the paper
 * Once these issues are fixed larger models from the paper will be added and should show an even larger performance advantage for QSS
-* All the event indicators have the same 10 reverse dependencies but the model does not warrant that. The reverse dependencies are the derivatives of all 10 elements of the `th[]` temperature vector. The 20 event indicators for the temperature-triggered AC on/off when statements should each have a reverse dependency on only its own `der(th[i])` since it alters the `on[i]` vector element:
-  ```
-  der(th[i]) = ( THA - th[i] ) / ( RES[i] * CAP[i] ) - ( POT[i] * on[i] ) / CAP[i];
-  ```
-  The unnecessary reverse dependencies are a performance/scalability problem. This has been added to issue [#10](https://github.com/NREL/SOEP-QSS-Test/issues/10).
+* The event indicators that depend on the `th[]` variables are missing those dependencies
+* Because the when blocks are in the algorithms section they have mostly uniform dependencies that include dependencies from the sets of similar event indicators rather than just those for the specific event indicator. The unnecessary reverse dependencies are a performance/scalability problem. This has been added to issue [#10](https://github.com/NREL/SOEP-QSS-Test/issues/10).
 
 ### [ASHRAE2006](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/ASHRAE2006)
 * Directional derivative support breaks PyFMI
