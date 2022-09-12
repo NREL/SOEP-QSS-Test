@@ -15,7 +15,3 @@ but QSS needs:
 which has the event indicator dependency on time and the
 dependency of r on the state variable, s (in the event
 handler block).
-
-Another issue exposed by this model is that when the event
-fires the FMU doesn't update the value of r, which had been
-assumed by QSS previously.
