@@ -156,7 +156,13 @@ Currently the main issue categories with OCT+QSS simulations are:
 * The time range starts at a large value which causes some small steps to be non-advancing in PyFMI simulations ("t + h = t on the next step")
 
 ### [DepTest](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/DepTest): QSS Dependency Issue Test
-* Demonstrates issues with QSS event indicator dependencies
+* Issue with QSS event indicator dependencies was resolved by moving when blocks from `algorithm` to `equation`
+
+### [DepTest4](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/DepTest4): QSS Dependency Issue Test
+* Demonstrates issues with QSS event indicator dependencies when using the `integer()` event-generating function
+
+### [DepTest5](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/DepTest5): QSS Dependency Issue Test
+* Demonstrates issues with missing event indicator dependencies
 
 ### [DiscreteObserver](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/DiscreteObserver)
 * No problems
