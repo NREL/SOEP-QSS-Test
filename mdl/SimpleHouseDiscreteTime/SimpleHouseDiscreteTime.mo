@@ -1,30 +1,31 @@
 within ;
 model SimpleHouseDiscreteTime
-  "Illustrative example of a simple heating, ventilation and room model with discrete time sampling"
+  "Illustrative example of a simple heating, ventilation and room model with time sampling"
   extends Modelica.Icons.Example;
 
   package MediumAir = Buildings.Media.Air;
   package MediumWater = Buildings.Media.Water;
 
-  parameter Modelica.SIunits.Area A_wall = 100 "Wall area";
-  parameter Modelica.SIunits.Area A_win = 5 "Window area";
+  parameter Modelica.Units.SI.Area A_wall=100 "Wall area";
+  parameter Modelica.Units.SI.Area A_win=5 "Window area";
   parameter Real g_win(min=0, max=1, unit="1") = 0.3 "Solar heat gain coefficient of window";
-  parameter Modelica.SIunits.Volume V_zone = A_wall*3 "Wall area";
-  parameter Modelica.SIunits.HeatFlowRate QHea_nominal = 700
+  parameter Modelica.Units.SI.Volume V_zone=A_wall*3 "Wall area";
+  parameter Modelica.Units.SI.HeatFlowRate QHea_nominal=700
     "Nominal capacity of heating system";
-  parameter Modelica.SIunits.MassFlowRate mWat_flow_nominal=QHea_nominal/10/4200
-    "Nominal mass flow rate for water loop";
-  parameter Modelica.SIunits.MassFlowRate mAir_flow_nominal=V_zone*2*1.2/3600
+  parameter Modelica.Units.SI.MassFlowRate mWat_flow_nominal=QHea_nominal/10/
+      4200 "Nominal mass flow rate for water loop";
+  parameter Modelica.Units.SI.MassFlowRate mAir_flow_nominal=V_zone*2*1.2/3600
     "Nominal mass flow rate for air loop";
 
-  parameter Modelica.SIunits.PressureDifference dpAir_nominal=200
+  parameter Modelica.Units.SI.PressureDifference dpAir_nominal=200
     "Pressure drop at nominal mass flow rate for air loop";
   parameter Boolean allowFlowReversal=false
     "= false because flow will not reverse in these circuits";
 
   Modelica.Thermal.HeatTransfer.Components.HeatCapacitor walCap(
-                    T(fixed=true), C=10*A_wall*0.05*1000*1000)
-                                   "Thermal mass of walls"
+    T(fixed=true),
+    C=10*A_wall*0.05*1000*1000)
+    "Thermal mass of walls"
     annotation (Placement(transformation(extent={{-10,-10},{10,10}},
         rotation=270,
         origin={142,-8})));
@@ -48,15 +49,16 @@ model SimpleHouseDiscreteTime
     T_b_nominal=273.15 + 40,
     energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
     allowFlowReversal=allowFlowReversal,
-    Q_flow_nominal=QHea_nominal) "Radiator"
+    Q_flow_nominal=QHea_nominal)                  "Radiator"
     annotation (Placement(transformation(extent={{104,-116},{124,-96}})));
 
-  Buildings.Fluid.Sources.Boundary_pT bouAir( redeclare package Medium = MediumAir, nPorts=2,
+  Buildings.Fluid.Sources.Boundary_pT bouAir(redeclare package Medium = MediumAir, nPorts=2,
     use_T_in=true) "Air boundary with constant temperature"
     annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         origin={-112,140})));
-  Buildings.Fluid.Sources.Boundary_pT bouWat(redeclare package Medium = MediumWater, nPorts=1)
+  Buildings.Fluid.Sources.Boundary_pT bouWat(redeclare package Medium =
+        MediumWater,                                                                 nPorts=1)
     "Pressure bound for water circuit" annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         origin={-8,-170})));
@@ -94,14 +96,14 @@ model SimpleHouseDiscreteTime
   Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor senTemZonAir
     "Zone air temperature sensor"
     annotation (Placement(transformation(extent={{80,170},{60,190}})));
-  Buildings.Fluid.Actuators.Dampers.VAVBoxExponential vavDam(
+  Buildings.Fluid.Actuators.Dampers.Exponential vavDam(
     redeclare package Medium = MediumAir,
-    dp_nominal=dpAir_nominal,
     from_dp=true,
-    m_flow_nominal=mAir_flow_nominal) "Damper" annotation (Placement(
-        transformation(
-        extent={{-10,10},{10,-10}},
-        origin={72,120})));
+    m_flow_nominal=mAir_flow_nominal,
+    dpDamper_nominal=10,
+    dpFixed_nominal=dpAir_nominal - 10)
+    "Damper" annotation (Placement(transformation(extent={{-10,10},{10,
+            -10}}, origin={72,120})));
 
   Buildings.Fluid.Movers.FlowControlled_dp fan(
     redeclare package Medium = MediumAir,
@@ -141,8 +143,9 @@ model SimpleHouseDiscreteTime
     annotation (Placement(transformation(extent={{-60,-36},{-40,-16}})));
   Modelica.Blocks.Math.BooleanToInteger booleanToInt "Boolean to integer"
     annotation (Placement(transformation(extent={{-16,-144},{4,-124}})));
-  Buildings.Controls.Continuous.LimPID conDam(controllerType=Modelica.Blocks.Types.SimpleController.P,
-      yMin=0.1) "Controller for damper"
+  Buildings.Controls.Continuous.LimPID conDam(
+      controllerType=Modelica.Blocks.Types.SimpleController.P,
+      yMin=0.25) "Controller for damper"
     annotation (Placement(transformation(extent={{-20,80},{0,100}})));
   Modelica.Blocks.Sources.Constant TSetRoo(k=273.15 + 24)
     "Room temperature set point for air system"
@@ -168,7 +171,7 @@ model SimpleHouseDiscreteTime
 
 block MySampler "Ideal sampler of a continuous signal"
 
-  parameter Modelica.SIunits.Time samplePeriod(min=1E-3)
+  parameter Modelica.Units.SI.Time samplePeriod(min=1E-3)
     "Sample period of component";
 
   Buildings.Controls.OBC.CDL.Interfaces.RealInput u "Continuous input signal"
@@ -178,14 +181,14 @@ block MySampler "Ideal sampler of a continuous signal"
     annotation (Placement(transformation(extent={{100,-20},{140,20}})));
 
   protected
-  parameter Modelica.SIunits.Time t0(fixed=false)
+  parameter Modelica.Units.SI.Time t0(fixed=false)
     "First sample time instant";
 
-  Modelica.SIunits.Time t(fixed=false)
+  Modelica.Units.SI.Time t(fixed=false)
     "Time as a state";
 
   Integer i(fixed=true, start=1) "Counter for event scheduling";
-  discrete Modelica.SIunits.Time tNext(fixed=false) "Next event time";
+  discrete Modelica.Units.SI.Time tNext(fixed=false) "Next event time";
 
 initial equation
   t0 = time;
@@ -288,11 +291,11 @@ equation
   connect(window.port, walCap.port) annotation (Line(points={{0,-26},{132,-26},{
           132,-12},{132,-8}},
                          color={191,0,0}));
-  connect(bouAir.ports[1], hexRec.port_b1) annotation (Line(points={{-102,142},{
+  connect(bouAir.ports[1], hexRec.port_b1) annotation (Line(points={{-102,139},{
           -102,139.6},{-84,139.6}},
                               color={0,127,255}));
   connect(hexRec.port_a1, zone.ports[1]) annotation (Line(points={{-54,139.6},{85,
-          139.6},{85,140},{94,140}},      color={0,127,255}));
+          139.6},{85,140},{93,140}},      color={0,127,255}));
   connect(rad.heatPortCon, zone.heatPort) annotation (Line(points={{112,-98.8},{
           112,-98.8},{112,48},{112,150},{102,150}},   color={191,0,0}));
   connect(rad.heatPortRad, walCap.port) annotation (Line(points={{116,-98.8},{116,
@@ -306,8 +309,8 @@ equation
           {26,-100},{42,-100}}, color={0,0,127}));
   connect(heaWat.port_a, pump.port_b) annotation (Line(points={{44,-106},{40,-106},
           {40,-112},{40,-170},{60,-170}}, color={0,127,255}));
-  connect(const_dp.y, fan.dp_in) annotation (Line(points={{-31,160},{-22,160},{-22,
-          132},{-22,132}},                           color={0,0,127}));
+  connect(const_dp.y, fan.dp_in) annotation (Line(points={{-31,160},{-22,160},{
+          -22,132},{-22,132}},                       color={0,0,127}));
   connect(gaiWin.y, window.Q_flow) annotation (Line(points={{-39,-26},{-34,-26},
           {-30,-26},{-20,-26}}, color={0,0,127}));
   connect(gaiWin.u, weaBus.HGloHor) annotation (Line(points={{-62,-26},{-90,-26},
@@ -316,12 +319,12 @@ equation
           {-22,-100},{-25,-100}}, color={255,0,255}));
   connect(booleanToInt.y, pump.stage) annotation (Line(points={{5,-134},{32,-134},
           {70,-134},{70,-158}}, color={255,127,0}));
-  connect(bouAir.ports[2], hexRec.port_a2) annotation (Line(points={{-102,138},{
+  connect(bouAir.ports[2], hexRec.port_a2) annotation (Line(points={{-102,141},{
           -102,142},{-90,142},{-90,120.4},{-84,120.4}}, color={0,127,255}));
   connect(hexRec.port_b2, fan.port_a) annotation (Line(points={{-54,120.4},{-44,
           120.4},{-44,120},{-32,120}}, color={0,127,255}));
   connect(vavDam.port_b, zone.ports[2])
-    annotation (Line(points={{82,120},{90,120},{90,140}}, color={0,127,255}));
+    annotation (Line(points={{82,120},{91,120},{91,140}}, color={0,127,255}));
   connect(conDam.y, vavDam.y) annotation (Line(points={{1,90},{26,90},{72,90},{72,
           108}},color={0,0,127}));
   connect(TSetRoo.y,conDam. u_m) annotation (Line(points={{-39,70},{-40,70},{-36,
@@ -335,12 +338,12 @@ equation
           20,128},{28,128}}, color={0,0,127}));
   connect(bouAir.T_in, weaBus.TDryBul) annotation (Line(points={{-124,144},{
           -152,144},{-152,-8}}, color={0,0,127}));
-  connect(TZon.u, senTemZonAir.T)
-    annotation (Line(points={{52,180},{60,180}}, color={0,0,127}));
-  connect(TZon.y, hysRad.u) annotation (Line(points={{28,180},{-134,180},{-134,-100},
-          {-76,-100}}, color={0,0,127}));
   connect(TZon.y, conDam.u_s) annotation (Line(points={{28,180},{-134,180},{-134,
           90},{-22,90}}, color={0,0,127}));
+  connect(TZon.y, hysRad.u) annotation (Line(points={{28,180},{-134,180},{-134,-100},
+          {-76,-100}}, color={0,0,127}));
+  connect(TZon.u, senTemZonAir.T)
+    annotation (Line(points={{52,180},{59,180}}, color={0,0,127}));
   annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-240,
             -220},{200,220}}), graphics={
         Rectangle(
@@ -360,7 +363,7 @@ equation
           pattern=LinePattern.None),
         Text(
           extent={{-78,182},{-212,198}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           fillColor={255,213,170},
           fillPattern=FillPattern.Solid,
           textString="Cooling and ventilation"),
@@ -371,31 +374,36 @@ equation
           pattern=LinePattern.None),
         Text(
           extent={{98,20},{32,38}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           fillColor={255,213,170},
           fillPattern=FillPattern.Solid,
           textString="Wall"),
         Text(
           extent={{-148,-86},{-214,-68}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           fillColor={255,213,170},
           fillPattern=FillPattern.Solid,
           textString="Heating"),
         Text(
           extent={{-154,20},{-212,38}},
-          lineColor={0,0,127},
+          textColor={0,0,127},
           fillColor={255,213,170},
           fillPattern=FillPattern.Solid,
           textString="Weather")}),
-    experiment(Tolerance=1e-06, StopTime=604800),
+    experiment(Tolerance=1e-06, StopTime=3.1536e+07),
     Documentation(revisions="<html>
 <ul>
+<li>
+June 15, 2022, by Hongxiang Fu:<br/>
+Changed <code>conDam.yMin</code> from 0.1 to 0.25.<br/>
+This is for
+<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/1624\">IBPSA, #1624</a>.
+</li>
 <li>
 May 8, 2017, by Michael Wetter:<br/>
 Updated heater model.<br/>
 This is for
-<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/763\">
-Buildings, #763</a>.
+<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/763\">IBPSA, #763</a>.
 </li>
 <li>
 November 10, 2016, by Michael Wetter:<br/>
@@ -440,9 +448,13 @@ This model contains a simple model of a house
 with a heating system, ventilation and weather boundary conditions.
 It servers as a demonstration case of how the <code>Buildings</code> library can be used.
 </p>
+<p>
+The model is identical to <code>SimpleHouse</code>
+except for the class <code>MySampler</code> that is added to this model.
+</p>
 </html>"),
     __Dymola_Commands(file=
           "modelica://Buildings/Resources/Scripts/Dymola/Fluid/Examples/SimpleHouse.mos"
         "Simulate and plot"),
-    uses(Modelica(version="3.2.3"), Buildings(version="7.0.0")));
+uses(Buildings(version="9.0.0")));
 end SimpleHouseDiscreteTime;
