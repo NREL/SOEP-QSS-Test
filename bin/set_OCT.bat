@@ -4,7 +4,7 @@
 set SOEP_QSS_Test_bin=%~dp0
 set SOEP_QSS_Test_bin=%SOEP_QSS_Test_bin:~0,-1%
 set PATH=%PATH%;%SOEP_QSS_Test_bin%;
-call %SOEP_QSS_Test_bin%\set_Modelica.bat
+call %SOEP_QSS_Test_bin%\set_Modelica_400.bat
 set SOEP_QSS_Test_bin=
 call C:\OCT\setenv.bat 64
 set "PATH=%PATH%;%PYTHONHOME%\Tools\scripts"
