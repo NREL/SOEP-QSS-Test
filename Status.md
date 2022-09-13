@@ -96,12 +96,6 @@ Currently the main issue categories with OCT+QSS simulations are:
 * The event indicators that depend on the `th[]` variables are missing those dependencies
 * Because the when blocks are in the algorithms section they have mostly uniform dependencies that include dependencies from the sets of similar event indicators rather than just those for the specific event indicator. The unnecessary reverse dependencies are a performance/scalability problem. This has been added to issue [#10](https://github.com/NREL/SOEP-QSS-Test/issues/10).
 
-### [ASHRAE2006](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/ASHRAE2006)
-* Directional derivative support breaks PyFMI
-  * CVode: Simulation failed: The right-hand side function had repeated recoverable errors
-* The PyFMI run gives warnings including out of bounds
-* The QSS runs drift off track without a small dtMax and show self-observer derivative sensitivity: Under investigation
-
 ### [Achilles](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Achilles): Simple 2-State System
 * No problems
 
@@ -113,6 +107,17 @@ Currently the main issue categories with OCT+QSS simulations are:
 
 ### [Achilles2](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Achilles2): Part 2 of Split/Connected Achilles
 * No problems
+
+### [ASHRAE2006](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/ASHRAE2006)
+* The PyFMI CVode run gives chattering warnings
+* The QSS runs drift off track without a small dtMax and show self-observer derivative sensitivity: Under investigation
+* The flo.cor.air.p_start variable start value/specs from the FMIL API calls and the modelDescription.xml file are inconsistent: Modelon is investigating
+* The model has 173 der(.) variables, each showing a `derivative=` entry in the xml file but the FMIL API only shows 168 derivatives, which breaks the QSS simulation. These are the derivatives not included:
+  - der(flo.cor.air.vol.dynBal.m)
+  - der(flo.eas.air.vol.dynBal.m)
+  - der(flo.nor.air.vol.dynBal.m)
+  - der(flo.wes.air.vol.dynBal.m)
+  - der(flo.portsWes[1].p)
 
 ### [BIDR](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/BIDR)
 * Demo of the various uses of non-state variables that QSS must support and can better support using the `<Dependencies>` information
