@@ -162,6 +162,9 @@ if args.var: # Variable output filtering
             key = line.strip()
             if key and ( key[ 0 ] != '#' ):
                 filter.append( key )
+                if ( '[' in key ) or ( ']' in key ):
+                    key = re.sub( r'([\[\]])', r'[\1]', key ) # filter needs glob syntax with recent OCT: Add variant assuming brackets aren't protected in .var files
+                    filter.append( key )
     if filter: opt[ 'filter' ] = filter
 if args.ncp is not None:
     opt[ 'ncp' ] = args.ncp
@@ -345,23 +348,11 @@ if args.res == 'memory':
                             numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
                         except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
                             print( 'Output failed to: ' + key_out )
-                    else: # Try as file name wildcard pattern or regex
-                        bkey = '' # Key with literal brackets protected
-                        for c in key:
-                            if c in ( '[', ']' ):
-                                bkey += '[' + c + ']'
-                            else:
-                                bkey += c
-                        m = fnmatch.filter( keys, bkey ) # File name wildcard pattern
-                        if not m: # Try as regex
-                            try:
-                                re_key = re.compile( bkey + ( '' if key.endswith( '$' ) else '$' ) ) # Match whole string
-                            except:
-                                pass # Not a valid regex
-                            else:
-                                for k in keys:
-                                    if re_key.match( k ):
-                                        m.append( k )
+                    else: # Try as file name glob pattern
+                        m = fnmatch.filter( keys, key ) # File name glob pattern
+                        if not m: # Try with protected brackets
+                            key = re.sub( r'([\[\]])', r'[\1]', key ) # Assume brackets aren't protected in .var files
+                            m = fnmatch.filter( keys, key ) # File name glob pattern
                         if m: # Matches found
                             for k in m:
                                 key_out = keys_out[ k ] + '.out'
@@ -375,9 +366,9 @@ if args.res == 'memory':
     else: # No variable output filtering
         temp_re = re.compile( 'temp_\d+' )
         for key in keys:
-            if key.startswith( 'der(' ) and ( key[ -1 ] == ')' ):
-                pass # Skip derivatives
-            elif key.startswith( '_' ) and ( not key.startswith( ( '_eventIndicator', '__zc_' ) ) ):
+            #if key.startswith( 'der(' ) and ( key[ -1 ] == ')' ):
+            #    pass # Skip derivatives: Some der() variables are not the derivatives of states!
+            if key.startswith( '_' ) and ( not key.startswith( ( '_eventIndicator', '__zc_' ) ) ):
                 pass # Skip non-zero-crossing internals
             elif temp_re.match( key ):
                 pass # Skip temporaries
