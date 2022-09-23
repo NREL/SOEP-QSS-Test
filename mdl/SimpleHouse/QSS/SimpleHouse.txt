@@ -1,8 +1,5 @@
 SimpleHouse Model QSS Notes
 
-The OCT FMU built with the generate_ode_jacobian option aborts under PyFMI
-and QSS with no error message so we build without that option.
-
 The QSS simulations run very slowly due to excessive requantizations
 caused by numerical differentiation noise.
 

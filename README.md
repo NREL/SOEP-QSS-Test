@@ -60,7 +60,7 @@ ModelName/
   ModelName.mo       Modelica model
   ModelName.ref      Modelica or Buildings Library model name and, optionally, Buildings Library branch and/or commit
   ModelName.txt      Notes
-  ModelName.var      Variables to output name list (supports wildcards)
+  ModelName.var      Variables to output name list (supports glob wildcards and syntax)
   Dymola/            Dymola model & results
   JModelica/         JModelica model & results
   OCT/               OPTIMICA model & results
@@ -195,7 +195,7 @@ Run `bld_fmu.py` from the `JModelica` sub-directory of the model's directory.
 Run `run.py` or `run_PyFMI.py` from the desired output sub-directory under the modeling tool sub-directory of the model's directory, such as MyModel/JModelica/out.
 
 * PyFMI options like `--ncp` and `--final_time` are accepted by these scripts.
-* A *ModelName*.var file, if present alongside the *ModelName*.mo file, will be used to limit the output variables that are generated. It is a simple text file with one variable name (wildcards supported) per line.
+* A *ModelName*.var file, if present alongside the *ModelName*.mo file, will be used to limit the output variables that are generated. It is a simple text file with one variable name/glob per line.
 * The run scripts generate per-variable ASCII output files named as MyVariable.out for easy comparison with QSS results.
 * PyFMI fails to generate output for some variables but we don't know why yet.
 
@@ -206,7 +206,7 @@ Custom `run.py` scripts may be present under `QSS` with recommended or needed QS
 
 Notes:
 * QSS options like `--out` and `--zFac` are accepted by these scripts.
-* A *ModelName*.var file, if present alongside the *ModelName*.mo file, will be used to limit the output variables that are generated. It is a simple text file with one variable name (wildcards supported) per line.
+* A *ModelName*.var file, if present alongside the *ModelName*.mo file, will be used to limit the output variables that are generated. It is a simple text file with one variable name/glob per line.
 * OPTIMICA (OCT) FMUs are recommended for use with QSS.
 * Use of JModelica-generated FMUs requires special treatment for use with QSS as described below.
 * Dymola-generated FMUs with if/when constructs and the related zero-crossing functions will lack the necessary dependency information for correct QSS simulation.

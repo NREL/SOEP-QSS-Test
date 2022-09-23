@@ -4,10 +4,15 @@ OCT gives a number of warnings when generating the FMU.
 
 PyFMI run gives warnings including out of bounds.
 
-The r19089 OCT update and the late-2020 updated model
-generate fewer event indicators and the results are
-mildly changed.
+Dependencies Notes:
+ hvac.cooCoi.dryWetCalcs.fullyWet.TSurEff (#25526)
+  Not on the LHS of any equation but Dependencies has it depending on itself and two other variables: <Element index="25526" dependencies="25526 25551 25556" />
+  Alias for hvac.cooCoi.dryWetCalcs.fullyWet.hSatSurEffM.TSat (#25550) that is also not an LHS
+ 
+The model has 173 der(.) variables, each showing a derivative= entry in the xml file but the FMIL API only shows 168 derivatives with these not included:
+ der(flo.cor.air.vol.dynBal.m)
+ der(flo.eas.air.vol.dynBal.m)
+ der(flo.nor.air.vol.dynBal.m)
+ der(flo.wes.air.vol.dynBal.m)
+ der(flo.portsWes[1].p)
 
-This update fails to run the FMU with PyFMI if the
-generate_ode_jacobian is used, giving:
-Simulation failed:  'The right-hand side function had repeated recoverable errors. At time 80280.000000.'

@@ -203,7 +203,7 @@ Currently the main issue categories with OCT+QSS simulations are:
 ### [Guideline36](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Guideline36)
 * The FMU has a large number of event indicators with many dependencies
 * QSS runs progress slowly: At least partly due to the event indicators: Investigating
-* The model has 176 der(.) variables, each showing a `derivative=` entry in the xml file but the FMIL API only shows 171 derivatives, which breaks the QSS simulation.
+* The model has 176 der(.) variables only 171 are state derivatives: QSS needs updating to support this
 
 ### [Guideline36Spring](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/Guideline36Spring)
 * PyFMI runs of OCT FMU built with generate_ode_jacobian progress very slowly

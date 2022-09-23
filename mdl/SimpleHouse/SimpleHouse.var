@@ -4,7 +4,7 @@ fan.sta_a.T
 fan.sta_b.T
 heaWat.u
 rad.vol[?].dynBal.U
-vavDam.filter.x
+vavDam.filter.x[?]
 vavDam.y
 walCap.T
 zone.dynBal.U

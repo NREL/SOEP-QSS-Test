@@ -3,7 +3,7 @@ roo.air.vol.dynBal.mXi[1]
 roo.air.vol.dynBal.U
 roo.conBou[1].opa.T[7]
 roo.conExt[*].opa.T[*]
-roo.conExtWin[*].opa.T[*]
+roo.conExtWin[1].opa.T[*]
 roo.irRadExc.TOpa[*]
 TRooAir.T
 

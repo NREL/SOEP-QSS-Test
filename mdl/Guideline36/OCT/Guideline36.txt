@@ -6,10 +6,5 @@ FMUs built with QSS options have a large number of event indicators:
  734 event indicators with OCT-r23206_JM-r14295
  Almost all EIs have many (50+) forward and reverse dependencies and most are the same
 
-With the OCT-stable-r19089_JM-r14295 OCT update this model built with
-generate_ode_jacobian progresses very slowly in PyFMI runs and
-generates a large number of event indicators when QSS options are used.
-
-With the OCT-r23206_JM-r14295 OCT update this model built with
-generate_ode_jacobian fails in PyFMI CVode runs giving:
-Simulation failed:  'The right-hand side function had repeated recoverable errors. At time 39120.000000.'
+The modelDescription.xml file shows 176 derivatives but the FMIL API call only gets 171.
+This breaks the QSS simulation.

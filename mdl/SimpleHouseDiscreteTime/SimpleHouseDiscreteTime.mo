@@ -455,6 +455,7 @@ except for the class <code>MySampler</code> that is added to this model.
 </html>"),
     __Dymola_Commands(file=
           "modelica://Buildings/Resources/Scripts/Dymola/Fluid/Examples/SimpleHouse.mos"
-        "Simulate and plot"),
-uses(Buildings(version="9.0.0")));
+        "Simulate and plot")
+//,uses(Buildings(version="9.0.0"))
+);
 end SimpleHouseDiscreteTime;

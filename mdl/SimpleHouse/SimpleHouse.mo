@@ -345,6 +345,7 @@ It servers as a demonstration case of how the <code>Buildings</code> library can
 </html>"),
     __Dymola_Commands(file=
           "modelica://Buildings/Resources/Scripts/Dymola/Fluid/Examples/SimpleHouse.mos"
-        "Simulate and plot"),
-uses(Buildings(version="9.0.0")));
+        "Simulate and plot")
+//,uses(Buildings(version="9.0.0"))
+);
 end SimpleHouse;

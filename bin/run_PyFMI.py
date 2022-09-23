@@ -366,16 +366,13 @@ if args.res == 'memory':
     else: # No variable output filtering
         temp_re = re.compile( 'temp_\d+' )
         for key in keys:
-            #if key.startswith( 'der(' ) and ( key[ -1 ] == ')' ):
-            #    pass # Skip derivatives: Some der() variables are not the derivatives of states!
-            if key.startswith( '_' ) and ( not key.startswith( ( '_eventIndicator', '__zc_' ) ) ):
-                pass # Skip non-zero-crossing internals
-            elif temp_re.match( key ):
-                pass # Skip temporaries
-            elif key != 'time':
-                key_out = keys_out[ key ] + '.out'
-                try:
-                    t_v = numpy.c_[ t, res[ key ] ]
-                    numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
-                except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
-                    print( 'Output failed to: ' + key_out )
+            if key == 'time': continue # Omit time
+            if key.startswith( 'der(' ) and ( key[ -1 ] == ')' ): continue # Omit derivatives
+            if key.startswith( '_' ) and ( not key.startswith( ( '_eventIndicator_' ) ) ): continue # Omit internals except for event indicators
+            if temp_re.match( key ): continue # Omit temporaries
+            key_out = keys_out[ key ] + '.out'
+            try:
+                t_v = numpy.c_[ t, res[ key ] ]
+                numpy.savetxt( key_out, t_v, fmt = '%-.15g', delimiter = '\t' )
+            except: # PyFMI sometimes raises KeyError on res[ key ] lookups (not sure why)
+                print( 'Output failed to: ' + key_out )

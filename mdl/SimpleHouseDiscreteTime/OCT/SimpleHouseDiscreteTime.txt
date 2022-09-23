@@ -1,11 +1,5 @@
 SimpleHouseDiscreteTime Model OCT Notes
 
-After updating to this model to correspond to SimpleHouse it builds against
-the Buildings Library master branch.
-
 The normal and "reference" PyFMI (CVode) runs do not have the same zero
 crossing behavior (e.g., compare _eventIndicator_32) so the model is
 probably not numerically stable.
-
-The OCT FMU built with the generate_ode_jacobian option aborts under PyFMI
-and QSS with no error message so we build without that option.
