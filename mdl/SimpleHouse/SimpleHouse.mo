@@ -1,4 +1,4 @@
-within Buildings.Fluid.Examples;
+within ;
 model SimpleHouse
   "Illustrative example of a simple heating, ventilation and room model"
   extends Modelica.Icons.Example;
@@ -29,7 +29,7 @@ model SimpleHouse
     annotation (Placement(transformation(extent={{-10,-10},{10,10}},
         rotation=270,
         origin={142,-8})));
-  MixingVolumes.MixingVolume zone(
+  Buildings.Fluid.MixingVolumes.MixingVolume zone(
     redeclare package Medium = MediumAir,
     V=V_zone,
     nPorts=2,
@@ -43,7 +43,7 @@ model SimpleHouse
     annotation (Placement(transformation(extent={{-10,-10},{10,10}},
         rotation=270,
         origin={132,22})));
-  HeatExchangers.Radiators.RadiatorEN442_2 rad(
+  Buildings.Fluid.HeatExchangers.Radiators.RadiatorEN442_2 rad(
     redeclare package Medium = MediumWater,
     T_a_nominal=273.15 + 50,
     T_b_nominal=273.15 + 40,
@@ -52,20 +52,20 @@ model SimpleHouse
     Q_flow_nominal=QHea_nominal)                  "Radiator"
     annotation (Placement(transformation(extent={{104,-116},{124,-96}})));
 
-  Sources.Boundary_pT bouAir(redeclare package Medium = MediumAir, nPorts=2,
+  Buildings.Fluid.Sources.Boundary_pT bouAir(redeclare package Medium = MediumAir, nPorts=2,
     use_T_in=true) "Air boundary with constant temperature"
     annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         origin={-112,140})));
-  Sources.Boundary_pT bouWat(redeclare package Medium = MediumWater, nPorts=1)
+  Buildings.Fluid.Sources.Boundary_pT bouWat(redeclare package Medium = MediumWater, nPorts=1)
     "Pressure bound for water circuit" annotation (Placement(transformation(
         extent={{-10,-10},{10,10}},
         origin={-8,-170})));
-  BoundaryConditions.WeatherData.ReaderTMY3 weaDat(
+  Buildings.BoundaryConditions.WeatherData.ReaderTMY3 weaDat(
     filNam=Modelica.Utilities.Files.loadResource("modelica://Buildings/Resources/weatherdata/USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.mos"))
     "Weather data reader"
     annotation (Placement(transformation(extent={{-200,-18},{-180,2}})));
-  BoundaryConditions.WeatherData.Bus weaBus "Weather data bus"
+  Buildings.BoundaryConditions.WeatherData.Bus weaBus "Weather data bus"
     annotation (Placement(transformation(extent={{-162,-18},{-142,2}})));
   Modelica.Thermal.HeatTransfer.Components.ThermalResistor wallRes(R=0.25/
         A_wall/0.04) "Thermal resistor for wall: 25 cm of rockwool"
@@ -73,7 +73,7 @@ model SimpleHouse
   Buildings.HeatTransfer.Sources.PrescribedTemperature Tout
     "Exterior temperature boundary condition"
     annotation (Placement(transformation(extent={{-20,-10},{0,10}})));
-  HeatExchangers.HeaterCooler_u heaWat(
+  Buildings.Fluid.HeatExchangers.HeaterCooler_u heaWat(
     redeclare package Medium = MediumWater,
     m_flow_nominal=mWat_flow_nominal,
     energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
@@ -82,7 +82,7 @@ model SimpleHouse
     Q_flow_nominal=QHea_nominal) "Heater for water circuit"
     annotation (Placement(transformation(extent={{44,-116},{64,-96}})));
 
-  Movers.FlowControlled_m_flow pump(
+  Buildings.Fluid.Movers.FlowControlled_m_flow pump(
     redeclare package Medium = MediumWater,
     use_inputFilter=false,
     m_flow_nominal=mWat_flow_nominal,
@@ -95,7 +95,7 @@ model SimpleHouse
   Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor senTemZonAir
     "Zone air temperature sensor"
     annotation (Placement(transformation(extent={{80,170},{60,190}})));
-  Actuators.Dampers.Exponential vavDam(
+  Buildings.Fluid.Actuators.Dampers.Exponential vavDam(
     redeclare package Medium = MediumAir,
     from_dp=true,
     m_flow_nominal=mAir_flow_nominal,
@@ -104,7 +104,7 @@ model SimpleHouse
     "Damper" annotation (Placement(transformation(extent={{-10,10},{10,
             -10}}, origin={72,120})));
 
-  Movers.FlowControlled_dp fan(
+  Buildings.Fluid.Movers.FlowControlled_dp fan(
     redeclare package Medium = MediumAir,
     dp_nominal=dpAir_nominal,
     use_inputFilter=false,
@@ -117,7 +117,7 @@ model SimpleHouse
   Modelica.Thermal.HeatTransfer.Sources.PrescribedHeatFlow window
     "Very simple window model"
     annotation (Placement(transformation(extent={{-20,-36},{0,-16}})));
-  HeatExchangers.ConstantEffectiveness hexRec(
+  Buildings.Fluid.HeatExchangers.ConstantEffectiveness hexRec(
     redeclare package Medium1 = MediumAir,
     redeclare package Medium2 = MediumAir,
     dp1_nominal=0,
@@ -142,14 +142,14 @@ model SimpleHouse
     annotation (Placement(transformation(extent={{-60,-36},{-40,-16}})));
   Modelica.Blocks.Math.BooleanToInteger booleanToInt "Boolean to integer"
     annotation (Placement(transformation(extent={{-16,-144},{4,-124}})));
-  Controls.Continuous.LimPID conDam(
+  Buildings.Controls.Continuous.LimPID conDam(
       controllerType=Modelica.Blocks.Types.SimpleController.P,
       yMin=0.25) "Controller for damper"
     annotation (Placement(transformation(extent={{-20,80},{0,100}})));
   Modelica.Blocks.Sources.Constant TSetRoo(k=273.15 + 24)
     "Room temperature set point for air system"
     annotation (Placement(transformation(extent={{-60,60},{-40,80}})));
-  HeatExchangers.SensibleCooler_T cooAir(
+  Buildings.Fluid.HeatExchangers.SensibleCooler_T cooAir(
     energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
     allowFlowReversal=allowFlowReversal,
     m_flow_nominal=mAir_flow_nominal,
@@ -291,15 +291,13 @@ equation
 June 15, 2022, by Hongxiang Fu:<br/>
 Changed <code>conDam.yMin</code> from 0.1 to 0.25.<br/>
 This is for
-<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/1624\">
-IBPSA, #1624</a>.
+<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/1624\">IBPSA, #1624</a>.
 </li>
 <li>
 May 8, 2017, by Michael Wetter:<br/>
 Updated heater model.<br/>
 This is for
-<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/763\">
-IBPSA, #763</a>.
+<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/763\">IBPSA, #763</a>.
 </li>
 <li>
 November 10, 2016, by Michael Wetter:<br/>
@@ -347,5 +345,6 @@ It servers as a demonstration case of how the <code>Buildings</code> library can
 </html>"),
     __Dymola_Commands(file=
           "modelica://Buildings/Resources/Scripts/Dymola/Fluid/Examples/SimpleHouse.mos"
-        "Simulate and plot"));
+        "Simulate and plot"),
+uses(Buildings(version="9.0.0")));
 end SimpleHouse;
