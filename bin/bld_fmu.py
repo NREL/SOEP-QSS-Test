@@ -61,8 +61,9 @@ parser.add_argument( '--tearing', help = 'Automatic tearing [On]', default = Tru
 parser.add_argument( '--no-tearing', help = 'No automatic tearing', dest = 'tearing', action = 'store_false' )
 parser.add_argument( '--deps', help = '<Dependencies> annotation [On if --qss]', default = None, action = 'store_true' )
 parser.add_argument( '--no-deps', help = 'No <Dependencies> annotation', dest = 'deps', action = 'store_false' )
+parser.add_argument( '--temps', help = 'Temporary variables exposed in modelDescription.xml  [Off]', default = False, action = 'store_true' )
 parser.add_argument( '--source', help = 'Generate FMU source  [Off]', default = False, action = 'store_true' )
-parser.add_argument( '--mof', help = 'Generate .mof flat files  [Off]', default = False, action = 'store_true' )
+#parser.add_argument( '--mof', help = 'Generate .mof flat files  [Off]', default = False, action = 'store_true' ) # Deprecated: Replaced by --diag
 parser.add_argument( '--diag', help = 'Generate HTML diagnostics  [On]', default = True, action = 'store_true' )
 parser.add_argument( '--no-diag', help = 'Don\'t generate HTML diagnostics', dest = 'diag', action = 'store_false' )
 parser.add_argument( '--xml', help = 'Extract modelDescription.xml from FMU  [On]', default = True, action = 'store_true' )
@@ -191,12 +192,11 @@ else: # Find Modelica input file from .ref file
 # Set FMU compilation options
 compiler_options = {}
 compiler_options[ 'automatic_tearing' ] = args.tearing
-compiler_options[ 'generate_mof_files' ] = args.mof
+#compiler_options[ 'generate_mof_files' ] = args.mof # Deprecated: Replaced by generate_html_diagnostics
 compiler_options[ 'generate_html_diagnostics' ] = args.diag
 compiler_options[ 'disable_smooth_events' ] = False
 if tool == 'OCT':
     compiler_options[ 'event_indicator_scaling' ] = args.qss
-    compiler_options[ 'event_indicator_structure' ] = args.qss
     compiler_options[ 'event_output_vars' ] = args.qss
     compiler_options[ 'time_events' ] = args.qss
     compiler_options[ 'time_state_variable' ] = args.qss
@@ -204,12 +204,13 @@ if tool == 'OCT':
     compiler_options[ 'enable_lazy_evaluation' ] = args.lazy # Can cause FMU to give wrong derivatives # Can cause event indicator infinite loop with incomplete dependencies
     compiler_options[ 'generate_ode_jacobian' ] = args.dd # For directional derivatives # Doesn't support delay() # Causes some Buildings library models to abort in PyFMI
     compiler_options[ 'event_indicator_structure' ] = args.deps # For <Dependencies> annotation
-    #compiler_options[ 'source_code_fmu' ] = args.source # Not supported by OCT yet: Not present in latest non-end-user OCT
-    #compiler_options[ 'msvs_version' ] = '2017' # This seems to happen automatically when MSVS2017 is installed
-    compiler_options[ 'msvs_version' ] = '2019'
+    compiler_options[ 'expose_temp_vars_in_fmu' ] = args.temps
+    #compiler_options[ 'source_code_fmu' ] = args.source # Not supported by OCT
+    if os.name == 'nt': compiler_options[ 'msvs_version' ] = '2019'
 else: # JModelica
     assert tool == 'JModelica', 'Tool should be OCT or JModelica'
     compiler_options[ 'copy_source_files_to_fmu' ] = args.source
+#for key in compiler_options: print( "Option: ", key, compiler_options[ key ] ) #Debug#####
 
 # Set up to use model-specific Buildings Library if branch or commit specified
 if branch or commit:
