@@ -1,0 +1,6 @@
+DepTest6 Model Notes
+
+This is a simple model to demonstrate a scenario where including
+discrete variables in the update signaling dependency graph can
+provide a performance benefit by acting as a firewall against
+update propagation.

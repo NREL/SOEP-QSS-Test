@@ -1,0 +1,5 @@
+DepTest6 Model QSS Notes
+
+Deactivation occurs for some of the event indicators so a --dtInf
+option value should be set for the QSS2+ runs.
+

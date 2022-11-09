@@ -206,7 +206,8 @@ if tool == 'OCT':
     compiler_options[ 'event_indicator_structure' ] = args.deps # For <Dependencies> annotation
     compiler_options[ 'expose_temp_vars_in_fmu' ] = args.temps
     #compiler_options[ 'source_code_fmu' ] = args.source # Not supported by OCT
-    if os.name == 'nt': compiler_options[ 'msvs_version' ] = '2019'
+    #if os.name == 'nt': compiler_options[ 'msvs_version' ] = '2019'
+    #if os.name == 'nt': compiler_options[ 'msvs_version' ] = '2022'
 else: # JModelica
     assert tool == 'JModelica', 'Tool should be OCT or JModelica'
     compiler_options[ 'copy_source_files_to_fmu' ] = args.source

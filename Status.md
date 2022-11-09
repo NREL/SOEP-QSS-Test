@@ -6,6 +6,10 @@
 
 Unless otherwise indicated the findings below are based on this OCT version: 2020.1-1.18 with the OCT-r28312_JM-r14295 update.
 
+#### OCT Update OCT-master-7245bce03ab2ebdfdaaf0805d75209efaa009c67
+
+1. Previously missing dependencies in [DepTest5](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/DepTest5) are now present but some unneeded dependencies are present ([#26](https://github.com/NREL/SOEP-QSS-Test/issues/26#issuecomment-1279827972)).
+
 #### OCT Update OCT-r28312_JM-r14295
 
 Summary of some changes observed and not yet explained/addressed:
@@ -165,6 +169,9 @@ Currently the main issue categories with OCT+QSS simulations are:
 
 ### [DepTest5](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/DepTest5): QSS Dependency Issue Test
 * Demonstrates issues with missing event indicator dependencies
+
+### [DepTest6](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/DepTest6): QSS Dependency Bypass Demo
+* Demonstrates scenario of QSS performance hit from short-circuiting discrete variable from dependencies
 
 ### [DiscreteObserver](https://github.com/NREL/SOEP-QSS-Test/tree/main/mdl/DiscreteObserver)
 * No problems
