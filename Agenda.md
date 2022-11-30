@@ -3,8 +3,8 @@
   - Observees (for setting variable values in FMU) are short-circuited to states and inputs
   - Observers (for signaling updates) short-circuit around passive variables
   - Passive variables can be output via sampled output times
-  - Event indicators can depend on other event indicators to handle passive variable short-circuiting (but prefer Dependencies not to s-c)
-  - Discrete intermediate variables can be active (firewall) or passive (short-circuited): Can test to see whether active is worth it in most models
+  - Event indicators can depend on other event indicators to handle passive variable short-circuiting (but prefer Dependencies not to s-c): OCT generates some of these
+  - Discrete intermediate variables can be active (firewall) or passive (short-circuited via --passive): Can test to see whether active is worth it in most models
   - Updates flow through intermediate variables immediately for consistency
   - Working with current OCT dependencies (at some reduced efficiency)
   - Not performance optimized yet: A number of efficiency updates deferred
@@ -16,9 +16,9 @@
   - Need to look at handling of non-state real variables with associated derivative variables
 - Issues
   - Event indicator to event indicator dependencies in modelDescription.xml are used in two different situations, which interferes with QSS's ability to patch around the lack of direct dependencies:
-    1. An intermediate "signaling" variable modified in on EI block that appears in the other EI expression has bee short-circuited out
-    2. Something like the EIs share an expression or dependencies
-    - QSS could temporarily add dependencies for both meanings for an inefficient hack (not tried yet)
+    1. An intermediate "signaling" variable modified in on EI block that appears in the other EI expression has been short-circuited out
+    2. The EIs share an expression or dependencies
+    - QSS temporary work-around: Adds dependencies for both meanings: inefficient
   - Simultaneous events prevent consistent (order-independent) updating with ND
     - Doing deferred updating of states for now to avoid this but is that ideal?
     - Event handler blocks are tricky:
@@ -31,7 +31,7 @@
   - Trying x-based observee values for states
     - A bit more accurate but may cause more ND noise
     - Enables simpler/faster code since BIDR and ZC variables are naturally X based: Can fully exploit this if we decide to stay with X-based
-  - Zero crossings
+  - Zero crossing protocol
     - Need to set handler observee state before FMU event processing to make sure it sees correct pre() values ?
     - If ZC event fires FMU actually sets handler state at t_bump, not tZ: Add post-event correction for this ? Pass t_bump also and have it back correct x_0_ to ZC(tZ) ?
 - Proposed OCT/spec changes
