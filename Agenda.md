@@ -18,7 +18,9 @@
   - UpstreamSampler switch behavior resolved by QSS bug fix
   - Case600 & Case600FF: Buildings 9 versions give wrong QSS results: Non-SI units present: Investigating
   - Guideline36 & ASHRAE2006: Some event indicator 2nd derivatives are off: Investigating to isolate cause: Non-SI units present
-  - Where would non-SI units be a problem? Are directional derivative seeds assumed to be in variable or SI units?
+  - Can non-SI units be a problem for QSS?
+    - Are directional derivative seeds assumed to be in their own units or SI units or the target variable's units?
+    - Can a continuous state and its derivative used inconsistent or SI and non-SI units? Does integrator have to convert?
 
 ## Agenda: 2022/11/30
 - Revised QSS is working as hoped
