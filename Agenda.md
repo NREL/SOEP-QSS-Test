@@ -1,3 +1,24 @@
+## Agenda: 2022/12/08
+- General
+  - Added computational observer/observee Graphviz graph generation to the direct dependency graph (helpful for debugging)
+  - Computational observer intialization sequencing bug fixed
+  - Functions for deferred update ND use fixed
+  - QSS set for now to do some things differently than before
+    - Simultaneous updates of interdependent states do deferred updates rather than trying to use evolving new trajectories
+      - ND time steps and LIQSS make doing this in a pure, order-independent way impossible short of requiring and exploiting a triangularizable dependency matrix
+      - Other variable types (EIs and BIDR) could update after states and also use new trajectories but for now they don't for some notion of consistency: Easy to switch
+      - Deferred updating => order independence at each phase => parallelizable: Not exploited yet
+    - Continuous states propagate continuous (not quantized) representations to their observers unlike traditional ODE QSS
+      - Other variable types naturally want continuous representations (observees appear in their value, not derivative) so this is more consistent and can enable greater operation pooling for efficiency
+      - Could readily make switchable to quantized and compare behavior later
+      - This separates the function of the quantized rep for choosing when to requantize from its use as the external representation
+- Testing
+  - Many of the smaller models tested and behavior verified
+  - Added an ObserverGraph model to demo/test computational observers/observees
+  - UpstreamSampler switch behavior resolved by QSS bug fix
+  - Case600 & Case600FF: Buildings 9 versions give wrong QSS results: Non-SI units present: Investigating
+  - Guideline36 & ASHRAE2006: Some event indicator 2nd derivatives are off: Investigating to isolate cause
+
 ## Agenda: 2022/11/30
 - Revised QSS is working as hoped
   - Observees (for setting variable values in FMU) are short-circuited to states and inputs
