@@ -1,3 +1,32 @@
+## Agenda: 2022/12/15
+- Development
+  - Self-dependent event indicator variable fix to prevent resetting the zero-crossing event time on detected crossings
+  - Continuous state variable deferred requantization and handler updates to remove ND-caused order dependency in QSS2+ in non-simultaneous events with self-dependency
+  - LIQSS updates in progress to streamline code and eliminate more ND-caused order dependency
+  - Initialization changes being evaluated to bootstrap initial state without ND-caused order dependencies and using refinement to get accurate higher order coefficients
+- Testing
+  - Guideline36: Behavior is believed to be representative of issues seen with other Buildings models
+    - Early mis-tracking traced to event indicators with the same C1_flow * C2_flow we have run into before
+      - C2_flow is mis-tracking -> states such as hvac.cooCoi.heaCooHum_u.vol.dynBal.m that are self-dependent and have tiny changes in early phase
+      - QSS gets off track slightly and then worse => Probable numerical/stiffness issues
+      - With dtMax=1e-4 QSS tracks well
+    - PyFMI Testing: Looked at early behavior with different solvers: Conclusion = Stiff solver needed
+      - CVode
+        - BDF (stiff): Tracks well
+        - Adams (non-stiff): Mis-tracks
+      - ExplicitEuler: Mis-tracks until `h` reduced to 1e-4
+      - RungeKutta34: Mis-tracks
+      - Dopri5: Mis-tracks until step reduced to 1e-3
+      - Radau5ODE: Tracks well
+      - LSODAR: Tracks well
+    - QSS Testing: QSS2 for now: Will run LIQSS2 after in-progress changes
+      - ND time step affects results but doesn't correct tracking for non-LIQSS methods
+      - Adding --dep changes solution => May have missing dependency issues
+- Next
+  - Do LIQSS methods fix tracking? If stiffness is primarily "diagonal" then it should and we see issues with self-dependent states
+  - If EI requantizations remain dominant consider smarter and more automated approaches to reducing them than `--zFac`
+  - Get performance results once tracking is OK
+
 ## Agenda: 2022/12/08
 - General
   - Added computational observer/observee Graphviz graph generation to the direct dependency graph (helpful for debugging)
