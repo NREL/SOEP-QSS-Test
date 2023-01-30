@@ -1,8 +1,5 @@
 Case600 Model QSS Notes
 
-The OCT FMU was used for QSS simulations since it has the event indicators
-for zero crossings.
-
 The key room temperature variable, TRooAir.T, is not set up in the FMU as an
 output variable so QSS runs must use the inefficient local output support.
 

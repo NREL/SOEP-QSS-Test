@@ -1,5 +1,4 @@
 SimpleHouseDiscreteTime Model OCT Notes
 
-The normal and "reference" PyFMI (CVode) runs do not have the same zero
-crossing behavior (e.g., compare _eventIndicator_32) so the model is
-probably not numerically stable.
+The standard and "reference" PyFMI (CVode) runs show slight lagging
+in some of event indicator curves from the standard tolerance run.

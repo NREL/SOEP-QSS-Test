@@ -1,5 +1,6 @@
 _eventIndicator_*
-*.air.vol.T.dynBal.
-*.air.vol.T
-*.m_flow
-T*.T
+hvac.fanSup.vol.dynBal.mXi[1]
+hvac.fanSup.vol.dynBal.U
+flo.*.air.vol.T.dynBal.mXi[1]
+flo.*.air.vol.T.dynBal.U
+flo.*.air.vol.T

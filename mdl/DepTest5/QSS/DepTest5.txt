@@ -1,12 +1,7 @@
 DepTest5 Model QSS Notes
 
-With the missing dependencies added to the Dependencies
-section of the modelDescription.xml:
+The desired (complete and minimal) Dependencies for this model are:
 			<Dependencies>
 				<Element index="11" dependencies="45 48" />
 				<Element index="45" dependencies="11 46" />
 			</Dependencies>
-and QSS updated to not assume the FMU sets the value of the
-event handler modified variable (r here) the QSS simulation
-is correct.
-

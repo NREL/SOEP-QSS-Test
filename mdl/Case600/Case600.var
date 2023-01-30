@@ -1,4 +1,5 @@
 _eventIndicator_*
+roo.air.vol.dynBal.m
 roo.air.vol.dynBal.mXi[1]
 roo.air.vol.dynBal.U
 roo.conBou[1].opa.T[7]
@@ -14,3 +15,13 @@ EHea.y
 ECoo.y
 PHea.mu
 PCoo.mu
+
+# These are summed to get the sensitive der(roo.air.vol.dynBal.m)
+roo.air.vol.dynBal.ports[?].m_flow
+
+# These are deps that affect roo.air.vol.dynBal.ports[3].m_flow that is showing noise in QSS
+res.m_flow
+res.dp
+res.port_a.p
+res.port_b.p
+density.port.p

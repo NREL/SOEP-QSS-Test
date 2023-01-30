@@ -8,3 +8,20 @@ This model has a large number of event indicators:
  Most of these EIs have observer updates after every state requantization so QSS will run slowly
 
 QSS runs progress very slowly due to the event indicators.
+
+
+Some event indicators do not track CVode results from very early.
+For example, _eventIndicator_474 has larger 2nd derivative than in CVode.
+Running with --dep changes _eventIndicator_474 trajectory but it still doesn't match CVode so might indicate missing dependencies but it isn't clear.
+See if removing --bin affects it: if so then simultaneous processing could be a problem.
+See if using q-based state observees fixes it.
+See if dtND affects it: if so ND may be the cause: Try better (slower) ND formulations.
+Trace early behavior and look at EI equations to find first point of divergence.
+ But it seems like 2nd derivative is too large right from t=0.
+Can it be non-SI units?
+
+
+With default zMul the ZCs are being missed: setting zMul=1 works.
+This shows that ZC protocol is still not robust enough.
+Ask team to suggest improvements.
+Stress that imperative ZCs are probably needed for production use.

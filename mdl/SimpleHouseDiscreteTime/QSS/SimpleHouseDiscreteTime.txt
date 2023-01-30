@@ -5,3 +5,11 @@ such that zero-crossing events can be missed. Careful selection
 of the dtND allows the QSS2 and QSS3 simulations to give correct
 results but since the zero crossings in PyFMI simulations are also
 not stable this model is not yet a good choice for QSS evaluation.
+
+Currently --bin helps for QSS2 but increases instability with QSS3.
+The QSS2 solution has some unpredicted zero crossings and doesn't
+track the CVode reference solution perfectly although mostly pretty
+well.
+
+QSS2 runs with std and sampled output are hanging up at 22% simulation
+but runs fine with just sampled output!

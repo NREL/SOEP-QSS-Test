@@ -1,6 +1,6 @@
 model DepTest5
   Real s(start=0.0, fixed=true);
-  Real r(start = 1.0, fixed = true);
+  Real r(start=1.0, fixed=true);
 equation
   der(s) = 0.1;
   if time > r then

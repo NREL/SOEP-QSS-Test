@@ -1,4 +1,3 @@
 UpstreamSampler Model OCT Notes
 
-The OCT-generated FMU event indicators have no reverse dependencies in the XML
-so QSS cannot simulate it correctly.
+This model depends on Buildings components missing in Buildings v.9.x such as Gain.mo.

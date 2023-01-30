@@ -1,15 +1,20 @@
 SimpleHouse Model QSS Notes
 
-The QSS simulations run very slowly due to excessive requantizations
+The QSS simulations run slowly due to the large number of requantizations
 caused by numerical differentiation noise.
 
-Using --dtND=5e-4 with QSS2 runs reduces but does not eliminate the issue.
-Using --dtND=2e-4 with QSS3 runs gives similar results to QSS2 but cycle
-timing is a little different. Neither tracks the reference PyFMI solution
-tightly. QSS3 has excessive requantizations of event indicators 5 and 6 due
-to ND noise causing it to run slower than QSS2.
+The zone.T variable is convenient as a basis for comparison but note that
+if it is treated by QSS as a passive variable it will only have outputs
+at sample times so it won't show accurate (event-driven) peaks unless a
+small sampling time step is used.
 
-QSS will not be efficient for this model until at least first derivatives
-of event indicators are provided efficiently by the FMU.
+Using --dtND=5e-4 with QSS2 runs reduces but does not eliminate the issue.
+
+Using --dtND=2e-4 with QSS3 runs gives similar results to QSS2 but cycle
+timing is a little different.
+
+QSS3 has excessive requantizations of event indicators 5 and 6 due to ND
+noise causing it to run slower than QSS2.
+[Retry now with DD-based EI 1st derivs]
 
 Binned QSS runs are significantly faster for this model.

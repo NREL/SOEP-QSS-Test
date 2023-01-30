@@ -1,3 +1,22 @@
+## Agenda: 2023/1/30
+- Development
+  - Harvest additional dependencies from `<ModelStructure>` to work around `<Dependencies>` issues
+  - Special time variable that never requantizes to enable QSS1 testing without time requantizing and more efficiency for QSS2/3
+  - Archive deferred-updating variable experiment due to poor performanceq
+- Testing: Case600 roo.air.vol.dynBal.m is a good demo for the key performance issue for QSS on Buildings models
+  - Self-dependent variable based on small differences between large values
+  - Derivative gets very large at small offsets from exact solution => QSS2 solution "yo-yos" between Q-tolerance bracket around solution
+    - The solver trajectory must quickly converge toward the exact solution to get close to its actual derivatives and allow large steps
+    - Pure QSS trajectories evaluate at Q-tolerance boundary so they can't do this
+  - Models may also be stiff but LIQSS alone doesn't overcome small step behavior caused by this derivative sensitivity
+  - IBPSASync_issue1412_stateSelect_Tp Buildings branch is numerically better but doesn't eliminate the issue: QSS2 tracks the reference solution 3X better but still yo-yos
+- Relaxation/Multistep QSS
+  - Experimented with $\dot{x}$ and $\ddot{x}$ relaxation: Can increase step but not smooth convergence with this alone due to requantization still happening at Q-tolerance border
+  - Inflection point option shows desired behavior on constant sections
+  - Now looking at approaches to blending previous 3|4-point based $\dot{x}$ and $\ddot{x}$ with QSS 1-point values
+  - Goal: efficient and smooth blend of QSS and multi-step trajectories to bring trajectory to exact solution
+  - Develop a rationale for shortening these long steps to keep requantizations near enough to exact solution
+
 ## Agenda: 2022/12/15
 - Development
   - Self-dependent event indicator variable fix to prevent resetting the zero-crossing event time on detected crossings

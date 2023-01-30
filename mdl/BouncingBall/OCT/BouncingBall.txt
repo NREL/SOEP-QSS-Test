@@ -1,1 +1,8 @@
 BouncingBall Model OCT Notes
+
+OCT version OCT-master-7245bce03ab2ebdfdaaf0805d75209efaa009c67 does not show
+a self-dependency for the v variable for the reinit "handler" action in:
+  when h < 0 then
+    reinit(v, -e*pre(v));
+  end when;
+

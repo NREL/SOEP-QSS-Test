@@ -1,3 +1,2 @@
 Case600 Model OCT Notes
 
-OCT is currently generating 5 event indicators with no reverse dependencies.

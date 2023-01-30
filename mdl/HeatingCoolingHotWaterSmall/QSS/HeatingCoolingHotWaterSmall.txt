@@ -1,5 +1,17 @@
 HeatingCoolingHotWaterSmall Model QSS Notes
 
+2022/12
+
+Non-SI units present
+
+pla.sta_a.T.x.out and pla.sta_b.T.x.out results mostly match
+CVode but have a drift: Investigate cause
+
+Runs are significantly slower than CVode.
+
+
+Old:
+
 The QSS results match the PyFMI run but QSS is significantly 
 slower than CVode (without tolerance matching).
 

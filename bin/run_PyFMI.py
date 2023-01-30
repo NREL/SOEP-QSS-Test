@@ -54,6 +54,7 @@ parser.add_argument( '-h', '--help', help = 'Show this message', action = 'help'
 parser.add_argument( '--solver', help = 'Solver  [CVode]', default = 'CVode', choices = [ 'CVode', 'Radau5ODE', 'RungeKutta34', 'Dopri5', 'RodasODE', 'LSODAR', 'ExplicitEuler', 'DASSL' ] ) # DASSL was removed from OCT
 parser.add_argument( '--maxord', help = 'Max order', type = int )
 parser.add_argument( '--discr', help = 'CVode discretization method  [BDF]', default = 'BDF', choices = [ 'BDF', 'Adams' ] )
+parser.add_argument( '--iter', help = 'CVode iteration method  [Newton]', default = 'Newton', choices = [ 'Newton', 'FixedPoint' ] )
 parser.add_argument( '--fxn', help = '''Input function in the form VARIABLE:FUNCTION
  VARIABLE  Input variable name
  FUNCTION  Function name/spec (only step function currently available):
@@ -69,8 +70,12 @@ parser.add_argument( '--aTol', help = argparse.SUPPRESS, type = float, dest = 'a
 parser.add_argument( '--final_time', help = 'Simulation end time  [FMU]', type = float )
 parser.add_argument( '--tEnd', help = argparse.SUPPRESS, type = float, dest = 'final_time' )
 parser.add_argument( '--tend', help = argparse.SUPPRESS, type = float, dest = 'final_time' )
-parser.add_argument( '--dtOut', help = 'Output time step  [computed]', type = float )
+parser.add_argument( '--dtOut', help = 'Output time step (s)  [computed]', type = float )
 parser.add_argument( '--dtout', help = argparse.SUPPRESS, type = float, dest = 'dtOut' )
+parser.add_argument( '--maxh', help = 'CVode max time step (s)  [computed from ncp]', type = float )
+parser.add_argument( '--dtMax', help = argparse.SUPPRESS, type = float, dest = 'maxh' )
+parser.add_argument( '--dtmax', help = argparse.SUPPRESS, type = float, dest = 'maxh' )
+parser.add_argument( '--h', help = 'ExplicitEuler max time step (s)  [0.01]', type = float )
 parser.add_argument( '--ncp', help = 'Number of communication (output) points (overrides dtOut) (0 => no sampled points)', type = int )
 parser.add_argument( '--soo', help = 'Sampled output only (no event points)  [False]', default = False, action = 'store_true' )
 parser.add_argument( '--res', help = 'Results format  [memory]', default = 'memory', choices = [ 'memory', 'binary', 'csv', 'text' ] )
@@ -180,12 +185,12 @@ else: # Use dtOut to set ncp for PyFMI
 if args.solver == 'CVode':
     opt_solver = opt[ args.solver + '_options' ]
     opt_solver[ 'discr' ] = args.discr
+    opt_solver[ 'iter' ] = args.iter
     if args.maxord is not None: opt_solver[ 'maxord' ] = args.maxord
-
-    # Additional arguments for testing
+    if args.maxh is not None: opt_solver[ 'maxh' ] = args.maxh
+# Additional arguments for testing
 #   opt_solver[ 'external_event_detection' ] = False
 #   opt_solver[ 'maxh' ] = ( fmu.get_default_experiment_stop_time() - fmu.get_default_experiment_stop_time() ) / float( opt[ 'ncp' ] )
-#   opt_solver[ 'iter' ] = 'Newton'
 #   opt_solver[ 'store_event_points' ] = True # True is default
 elif args.solver == 'Radau5ODE':
     try:
@@ -231,6 +236,7 @@ elif args.solver == 'ExplicitEuler':
     except:
         print( 'Error: Unsupported solver:', args.solver )
         sys.exit( 1 )
+    if args.h is not None: opt_solver[ 'h' ] = args.h
     #opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination # Not supported by ExplicitEuler
 elif args.solver == 'DASSL':
     opt[ 'solver' ] = 'ODASSL'

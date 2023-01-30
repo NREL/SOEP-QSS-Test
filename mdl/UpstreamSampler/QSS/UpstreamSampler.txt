@@ -1,4 +1,1 @@
 UpstreamSampler Model QSS Notes
-
-The OCT-generated FMU event indicators have no reverse dependencies in the XML
-so QSS cannot simulate it correctly.
