@@ -2,7 +2,7 @@
 - Development
   - Harvest additional dependencies from `<ModelStructure>` to work around `<Dependencies>` issues
   - Special time variable that never requantizes to enable QSS1 testing without time requantizing and more efficiency for QSS2/3
-  - Archive deferred-updating variable experiment due to poor performanceq
+  - Archive deferred-updating variable experiment due to poor performance
 - Testing: Case600 roo.air.vol.dynBal.m is a good demo for the key performance issue for QSS on Buildings models
   - Self-dependent variable based on small differences between large values
   - Derivative gets very large at small offsets from exact solution => QSS2 solution "yo-yos" between Q-tolerance bracket around solution
