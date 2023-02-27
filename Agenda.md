@@ -1,3 +1,25 @@
+## Agenda: 2023/2/27
+- Relaxation/Multistep QSS Development
+  - Goals
+    - Efficient QSS algorithm adaptation that brings trajectories close enough to precise trajectory to allow safe large steps
+    - Gradual and automatic trajectory correction
+    - Ideally, fast enough that no user option required
+  - Metrics for detecting/measuring variable sensitivity
+    - Multistep $\dot{x}$ and $\ddot{x}$ estimates across requantization points
+    - $\dot{x}$ and $\ddot{x}$ estimates from average of incoming and outgoing $\dot{x}$ at requantizations
+    - ???
+  - QSS2 algorithm adaptations evaluated
+    - Shorten ("relax") time step to stop trajectory from traveling back out to Q-tolerance away from precise trajectory
+      - Gradual relaxation so metrics are good enough
+      - This can bring trajectory close to precise but $\dot{x}$ and $\ddot{x}$ remain large enough to limit step size
+      - Got just modest step count reductions
+    - Added $\ddot{x}$ relaxation
+      - Improvement but $\dot{x}$ relaxation is still needed near precise trajectory to get to large steps
+  - Conclusions
+    - Don't yet have a clear best algorithm
+    - Complex due to multiple, interacting relaxation factors
+    - Adding $\dot{x}$ relaxation should get us the desired large steps
+
 ## Agenda: 2023/1/30
 - Development
   - Harvest additional dependencies from `<ModelStructure>` to work around `<Dependencies>` issues
