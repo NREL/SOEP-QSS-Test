@@ -1,3 +1,17 @@
+## Agenda: 2023/3/13
+- Relaxation QSS: Theory/Framework Development
+  - Want simplest possible approach that is robust and self-controlling => Not too many independent controls
+  - Relationship between $\dot{x}$ and $\ddot{x}$ relaxation and time step relaxation
+  - Relaxation by magnitude _vs_ toward estimates
+  - Moving average estimates to avoid chasing noise _vs_ gradual relaxation changes and relaxation limits
+- Status
+  - $\dot{x}$ relaxation along with $\ddot{x}$ and time step relaxation => Improves efficiency of converging on precise trajectory
+  - conHea.I.y and conCoo.I.y are now driving more requantizations than roo.air.vol.dynBal.m: Look into making relaxation work better for them
+- Plans
+  - Try refinements of relaxation factor control logic
+  - Try moving average $\dot{x}$ and $\ddot{x}$ trajectory boundary based estimates (to damp noise and distortion of trajectory convergence)
+  - Use $\dot{x}$ nominal value instead of estimate for sensitivity metric to avoid need for both relative and absolute criteria to handle estimate approaching zero
+
 ## Agenda: 2023/2/27
 - Relaxation/Multistep QSS Development
   - Goals
