@@ -1,3 +1,51 @@
+## Agenda: 2023/4/4
+- Relaxation Development:
+  - Time step based relaxation is workable and fairly efficient.
+    - Derivative relaxation adds a lot of logic complexity/hueristics and overhead (I am still experimenting with this further to be sure).
+  - Best approach so far uses a 3-level logic when relaxation is needed:
+    1. Limit time step to the $x$ inflection ($\dot{x} == 0$ in QSS2) point if one is present at a positive step. In QSS2 this is also the point where the $x$ trajectory change from the requantization value is half the $q$ trajectory change.
+    2. Otherwise limit the time step to the point where the $x$ derivative equals the estimated boundary derivative at the requantization point ($\tilde{\dot{x}} = ( \dot{x}^- + \dot{x}^+ )/2$) if such a point exists at a positive time step.
+    3. Otherwise, if small "yo-yoing" metric indicates likely close to precise trajectory, limit time step to a growth factor from prior step. This allows time step to grow flexibly while staying close to the precise trajectory without needing a `dtInf` or `dtMax` control.
+  - This may be automatable and efficient enough to allow its use in default state variable types but for now developing them as option-enabled alternative types
+- Relaxation Testing:
+  - ConservationEquationStep: Pulls QSS2 trajectory in to reference trajectory efficiently and then enables large steps.
+    - Converged behavior can probably be improved, possibly with derivative relaxation.
+  - Case600: Need to enable yo-yo metric detection to avoid slowing non-yo-yoing variables.
+- Next Steps:
+  - Finalize QSS2 relaxation and see if it is fast and automatic enough to merge into primary state variable types.
+  - Develop QSS3 relaxation on analogous principles.
+  - Profile/tune/parallelize.
+  - Performance testing.
+
+## Agenda: 2023/3/27
+- QSS Development
+  - Time step history output added: Actual steps at requantizations (not initial predicted and not observer steps. Informative for variables that dominate the requantizations.
+  - Dependency management fixes.
+  - Added --dot option to request Graphviz dot output files: These get too large to be practical for other than fairly small models.
+  - Support .var file entries overriding default output filtering (so, e.g., you can get time signal output)
+  - Made Computational Observers/Observees listing on all the time.
+  - Changed dependency harvesting from `<ModelStructure>` to skip `<InitialUnknowns>`: Initialization dependencies shouldn't matter for QSS.
+  - Support --out+<flags> and --out-<flags> to simplify output selection/overrides.
+  - OCT 1.4.0 install/testing
+    - Small differences from previous OCT update.
+    - SimpleHouseDiscreteTime:
+      - time initial value issue remains.
+      - Number of event indicators went from 13 back to 12.
+  - FMIL 2.4.1 build/mig/test. Posted two GitHub issues.
+  - gtest 1.13.0 build/mig/test.
+- SimpleHouseDiscreteTime Study
+  - Newer revisions that add dependencies from `<ModelStructure>` catch a number of missing dependencies in `<Dependencies>`.
+    The prior simulation was generally OK but some event indicators had no/missing dependencies so were wrong.
+    Enough added dependencies to slow simulation => Important to eliminate extraneous dependencies.
+  - time variable initialization issue noted in email: Added temporary work-around to use XML initial time value when they disagree.
+- Relaxation
+  - Michael is thinking about a small model that would demonstrate the dynBal.m sensitivity
+  - Michael suggests looking at analytical derivative expression if the derivative approx is contributing to the sensitivity. I suspect that QSS is getting pretty good derivatives and the analytical would be similar but there is some extra noise due to ND that analytical or directional derivative should eliminate.
+  - Did a deeper analysis of the relaxation metrics, estimates, and algorithms that gives good direction for the next round of refinements:
+    - Idea for geometric approach to relaxing $\dot{x}$ and $\ddot{x}$ together that should avoid issues with derivative sign changes without requiring conditional logic.
+    - Will also be trying a cleaner method for time step only relaxation since this could have a number of simplicity and performance advantages.
+    - Should have both of these working within a few days and will report on progress.
+
 ## Agenda: 2023/3/13
 - Relaxation QSS: Theory/Framework Development
   - Want simplest possible approach that is robust and self-controlling => Not too many independent controls
