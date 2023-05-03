@@ -1,3 +1,32 @@
+## Agenda: 2023/5/3
+- Relaxation:
+  - Coordinated (geometric) $\dot{x}$ and $\ddot{x}$ relaxation can be done but is complex and expensive.
+  - Experimented with a simple approach: inflection point time step shortening and damped time step lengthening. This doesn't require yo-yo detection and could be fast enough to leave on all the time in unified QSS variable types.
+    - Inflection points can add more steps when not needed so may not be viable without yo-yo detection/enabling
+    - Inflection point control seems to be needed to avoid near-zero steps: _e.g._, skip inflection point if time step would be < 1% of the natural QSS time step
+  - Time step growth relaxation: Only apply if no inflection point used?
+  - Experimented with $\ddot{x}$ relaxation: using half the QSS $\ddot{x}$ value (and keeping the QSS $\dot{x}$) has the trajectory hitting the halway point between the $x$ and $q$ trajectories at the next QSS time step, which is about where the precise trajectory typically sits when sensitive yo-yoing occurs. This is effective and allows longer steps during convergence to precise trajectory but still benefits from inflection point time step shortening. Given that it requires yo-yoing detection (and could give a bad trajectory if detection was wrong) sticking with time step only relaxation seems safer and probably more efficient overall.
+  - Case600:
+    - Time step + $\ddot{x}$ relaxation looks like a good approach for `dp`: start to get large time steps.
+    - `T_degC` (self-dependent) still has high step count with this relaxation.
+      - Suspect sensitivity to use of trajectory values from other non-requantizing observee variables.
+      - Continuous (instead of quantized) trajectory propagation reduces sensitivity noise.
+      - Fixed time step QSS runs (dtMin==dtMax==2) clean this up.
+      - Concept of a requantization variable bin could be key. Needs to happen automatically and bins need to be minimal to avoid losing QSS sparsity benefits.
+  - Impact of continuous trajectory propagation.
+- Performance:
+  - Assessment: Metrics _vs._ reference solution is tricky:
+    - Same CVode and QSS tolerances don't give same solution accuracy so we need to tune the tolerance of one of them to compare time steps and run time.
+    - Non-uniform time sampling of PyFMI (to prevent forcing extra integration points):
+      - QSS runs can add sampling points without causing integration steps but we want a comparable metric.
+      - Need very high sampling rate in reference solution or metric can be dominated by interpolation "error".
+      - Need to measure "error" only at non-reference points to avoid large interpolation "errors" (simdiff --coarse).
+      - Should we be weighting the diffs by the time step size for a uniform metric?
+- Other:
+  - Build system revamp: Drop `64` directory level, refine compiler options, ...
+  - Linux (Ubuntu) testing/updates, build FMIL 2.4.1 and migrate
+  - OpenMP experiments with new Clang-based Intel oneAPI C++
+
 ## Agenda: 2023/4/4
 - Relaxation Development:
   - Time step based relaxation is workable and fairly efficient.

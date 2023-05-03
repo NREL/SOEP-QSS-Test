@@ -807,9 +807,9 @@ def sig_compare( fnam1, fnam2 ):
                 top.xaxis.get_offset_text().set_size( 6 )
                 top.yaxis.get_offset_text().set_size( 6 )
                 for tick in top.xaxis.get_major_ticks():
-                    tick.label.set_fontsize( 7 )
+                    tick.label1.set_fontsize( 7 )
                 for tick in top.yaxis.get_major_ticks():
-                    tick.label.set_fontsize( 7 )
+                    tick.label1.set_fontsize( 7 )
                 len_leg = max( len( leg1 ), len( leg2 ) )
                 if len_leg <= 80:
                     leg_font_size = 7
@@ -831,9 +831,9 @@ def sig_compare( fnam1, fnam2 ):
                 bot.xaxis.get_offset_text().set_size( 6 )
                 bot.yaxis.get_offset_text().set_size( 6 )
                 for tick in bot.xaxis.get_major_ticks():
-                    tick.label.set_fontsize( 7 )
+                    tick.label1.set_fontsize( 7 )
                 for tick in bot.yaxis.get_major_ticks():
-                    tick.label.set_fontsize( 7 )
+                    tick.label1.set_fontsize( 7 )
 
                 # Labels
                 if lbls:
