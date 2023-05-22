@@ -1,3 +1,38 @@
+## Agenda: 2023/5/22
+- Development
+  - Refined relaxed rQSS2 for performance: sensitivity detection and relaxation enabling, time step controls (inflection points, growth damping), $\ddot{x}$ relaxation, ...
+  - Reenabled xQSS variants and added rxQSS2
+  - Experimented with "convergence" controls to reduce steps once relaxation trajectory converges on precise trajectory: nothing clean enough that works well found yet: will give it more thought
+- Testing
+  - Case600
+    - Comparing RMS-matched (QSS is more accurate with the same `rTol`) 1-day runs
+    - Current rQSS2 and/or rxQSS2 are approaching 3X faster than stock QSS2 but still 4+X slower than CVode (ncp=0) runs
+    - Hope to further reduce steps after trajectory "convergence"
+    - Not large or sparse enough model for QSS to shine but can probably get to ~2X CVode speed after next phase
+- Next
+  - Complete rLIQSS2 and do basic performance comparison
+  - Performance testing rQSS2 and rLIQSS2 on larger/scalable Buildings models to see where we are at
+  - Revamp with state $\ddot{x}$ directional derivatives
+    - Reduce QSS order dependencies
+    - Reduce trajectory noise causing extra steps
+    - Enable practical QSS3
+    - Fairly involved change: will take at least a few days to complete
+    - Test standard and relaxed QSS2 and QSS3
+  - "Clustering" support to reduce QSS sensitivity and experiment with logic for automating minimal clustering
+  - Performance:
+    - Profiling/tuning
+    - Parallelization
+    - Output logic revamp to handle local variables (with or without dependencies) more efficiently
+    - Option for full in-memory output buffering to minimize i/o during simulation
+- OCT
+  - Dependency problems in Issues that have no work-around and may impact Buildings model testing
+    - reinit: https://github.com/NREL/SOEP-QSS-Test/issues/30#issuecomment-1536951802
+    - `<Dependencies>` missing and short-circuited dependencies (include local variables)
+      - Harvesting dependencies from `<ModelStructure>` as work-around
+      - Can't experiment with "active" signaling variables that are short-circuited for update "firewalling"
+  - Start value issues (email discussion)
+  - Think about providing event indicator derivative variables so they track with states
+
 ## Agenda: 2023/5/3
 - Relaxation:
   - Coordinated (geometric) $\dot{x}$ and $\ddot{x}$ relaxation can be done but is complex and expensive.

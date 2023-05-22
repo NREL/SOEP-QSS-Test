@@ -9,7 +9,7 @@
 # Developed by Objexx Engineering, Inc. (https://objexx.com) under contract to
 # the National Renewable Energy Laboratory of the U.S. Department of Energy
 #
-# Copyright (c) 2017-2021 Objexx Engineering, Inc. All rights reserved.
+# Copyright (c) 2017-2023 Objexx Engineering, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -72,13 +72,13 @@ parser.add_argument( '--tEnd', help = argparse.SUPPRESS, type = float, dest = 'f
 parser.add_argument( '--tend', help = argparse.SUPPRESS, type = float, dest = 'final_time' )
 parser.add_argument( '--dtOut', help = 'Output time step (s)  [computed]', type = float )
 parser.add_argument( '--dtout', help = argparse.SUPPRESS, type = float, dest = 'dtOut' )
-parser.add_argument( '--maxh', help = 'CVode max time step (s)  [computed from ncp]', type = float )
+parser.add_argument( '--maxh', help = 'Max time step (s) for CVode or Radau5ODE solvers (0 => ∞)  [computed from ncp]', type = float )
 parser.add_argument( '--dtMax', help = argparse.SUPPRESS, type = float, dest = 'maxh' )
 parser.add_argument( '--dtmax', help = argparse.SUPPRESS, type = float, dest = 'maxh' )
 parser.add_argument( '--h', help = 'ExplicitEuler max time step (s)  [0.01]', type = float )
 parser.add_argument( '--ncp', help = 'Number of communication (output) points (overrides dtOut) (0 => no sampled points)', type = int )
 parser.add_argument( '--soo', help = 'Sampled output only (no event points)  [False]', default = False, action = 'store_true' )
-parser.add_argument( '--res', help = 'Results format  [memory]', default = 'memory', choices = [ 'memory', 'binary', 'csv', 'text' ] )
+parser.add_argument( '--res', help = 'Results format  [memory]', default = 'memory', choices = [ 'memory', 'binary', 'csv', 'text', 'none', '' ] )
 parser.add_argument( '--var', help = 'Variable output filter list file' )
 parser.add_argument( '--log', help = 'Logging level  [3]', type = int, default = 3, choices = [ 0, 1, 2, 3, 4, 5, 6, 7 ] )
 args = parser.parse_args()
@@ -149,7 +149,7 @@ fmu.set_max_log_size( 2073741824 ) # = 2*1024^3 (about 2GB)
 # Set simulation options
 opt = fmu.simulate_options()
 opt[ 'solver' ] = args.solver
-if args.res == 'memory': # In-memory results: Signal files generated after simulation
+if args.res in ( 'memory', 'none', '' ): # In-memory results: Signal files generated after simulation if memory
     opt[ 'result_handling' ] = 'memory'
 elif args.res == 'binary': # Binary .mat results file
     opt[ 'result_handling' ] = 'binary'
@@ -198,7 +198,8 @@ elif args.solver == 'Radau5ODE':
     except:
         print( 'Error: Unsupported solver:', args.solver )
         sys.exit( 1 )
-    opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
+    opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination # May not be needed anymore since OCT 1.43.4 fix
+    if args.maxh is not None: opt_solver[ 'maxh' ] = args.maxh
 elif args.solver == 'RungeKutta34':
     try:
         opt_solver = opt[ args.solver + '_options' ]
@@ -263,7 +264,7 @@ if args.fxn:
     except:
         print( 'Error: Input option not in VAR:FXN format', args.fxn )
         sys.exit( 1 )
-    if fxn == 'step' or ( fxn.startswith( 'step[' ) and fxn.endswith( ']' ) ):
+    if ( fxn == 'step' ) or ( fxn.startswith( 'step[' ) and fxn.endswith( ']' ) ):
         if fxn == 'step': # Default specs to [0,1,1]
             ( initial, step, delta_t ) = ( 0, 1, 1 )
         else:

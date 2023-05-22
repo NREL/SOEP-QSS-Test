@@ -9,7 +9,7 @@
 # Developed by Objexx Engineering, Inc. (https://objexx.com) under contract to
 # the National Renewable Energy Laboratory of the U.S. Department of Energy
 #
-# Copyright (c) 2017-2021 Objexx Engineering, Inc. All rights reserved.
+# Copyright (c) 2017-2023 Objexx Engineering, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -86,29 +86,37 @@ for arg in sys.argv[1:]:
 
 # Try to deduce QSS solver if not specified
 if not qss: # QSS solver not specified
-    solver = ''
     solvers = ( 'xLIQSS1', 'xLIQSS2', 'xLIQSS3', 'LIQSS1', 'LIQSS2', 'LIQSS3', 'xQSS1', 'xQSS2', 'xQSS3', 'QSS1', 'QSS2', 'QSS3' )
     solver_dir = os.getcwd()
-    solver_dir = os.path.splitext( os.path.basename( os.getcwd() ) )[0]
-    if solver_dir in solvers:
-        solver = solver_dir
-    else:
-        for slv in solvers:
-            if slv in solver_dir:
-                solver = slv
+    solver = os.path.splitext( os.path.basename( solver_dir ) )[0]
+    looking = True
+    while looking:
+        if solver in solvers:
+            looking = False
+        else:
+            for slv in solvers:
+                if slv in solver:
+                    solver = slv
+                    looking = False
+                    break
+        if looking:
+            solver_dir = os.path.dirname( solver_dir )
+            if os.path.splitdrive( solver_dir )[1] == os.sep: # At top of drive/mount
+                solver_dir = solver = ''
                 break
+            solver = os.path.splitext( os.path.basename( solver_dir ) )[0]
     if solver: args += ' --qss=' + solver
 
 # Find tool directory and name
 tools = ( 'QSS', )
 tool_dir = os.getcwd()
 tool = os.path.splitext( os.path.basename( tool_dir ) )[0]
-while tool not in tools: # Move up one directory level
+while tool not in tools: # Look up one directory level
     tool_dir = os.path.dirname( tool_dir )
-    tool = os.path.splitext( os.path.basename( tool_dir ) )[0]
     if os.path.splitdrive( tool_dir )[1] == os.sep: # At top of drive/mount
         tool_dir = tool = ''
         break
+    tool = os.path.splitext( os.path.basename( tool_dir ) )[0]
 if not tool:
     print( 'Error: Not in/under a directory named for a supported QSS simulation tool:', tools )
     sys.exit( 1 )
