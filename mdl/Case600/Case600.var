@@ -1,27 +1,16 @@
-_eventIndicator_*
-roo.air.vol.dynBal.m
-roo.air.vol.dynBal.mXi[1]
-roo.air.vol.dynBal.U
-roo.conBou[1].opa.T[7]
-roo.conExt[*].opa.T[*]
-roo.conExtWin[1].opa.T[*]
-roo.irRadExc.TOpa[*]
-TRooAir.T
-
-# These use significant QSS run time
-conHea.I.y
-conCoo.I.y
-EHea.y
 ECoo.y
-PHea.mu
+EHea.y
 PCoo.mu
+PHea.mu
+TRooAnn.mu
+TRooHou.mu
+conCoo.I.y
+conHea.I.y
+roo.air.vol.dynBal.medium.T_degC
+roo.air.vol.dynBal.medium.Xi[1]
+roo.air.vol.dynBal.m
+roo.air.vol.dynBal.U
+roo.conExt[?].opa.T[?]
+roo.conExtWin[1].opa.T[1]
+roo.radTem.TGlaUns[1]
 
-# These are summed to get the sensitive der(roo.air.vol.dynBal.m)
-roo.air.vol.dynBal.ports[?].m_flow
-
-# These are deps that affect roo.air.vol.dynBal.ports[3].m_flow that is showing noise in QSS
-res.m_flow
-res.dp
-res.port_a.p
-res.port_b.p
-density.port.p

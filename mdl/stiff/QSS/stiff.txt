@@ -1,0 +1,4 @@
+stiff Model QSS Notes
+
+LIQSS2 and LIQSS3 do fewer requantizations than QSS2 and QSS3.
+LIQSS3 has a noisy x2 signal due to ND noise that smooths out with rTol=1e-6.

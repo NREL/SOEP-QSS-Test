@@ -1,0 +1,3 @@
+stiff Model Notes
+
+This is a simple 2-variable model of a stiff system.

@@ -2,3 +2,14 @@ SimpleHouseDiscreteTime Model OCT Notes
 
 The standard and "reference" PyFMI (CVode) runs show slight lagging
 in some of event indicator curves from the standard tolerance run.
+
+The event indicator switching is too fast for sampled output to pick up.
+Run PyFMI with ncp=0 to get visualization of the event indicators
+
+The time variable has strange InitialUnknowns dependencies:
+<Unknown index="2066" dependencies="9 98 1048 1049 2508" />
+                                    TZon.samplePeriod
+                                      bouAir.p
+                                         hysRad.uHigh (fixed)
+                                              hysRad.uLow (fixed)
+                                                   zone.V (fixed)

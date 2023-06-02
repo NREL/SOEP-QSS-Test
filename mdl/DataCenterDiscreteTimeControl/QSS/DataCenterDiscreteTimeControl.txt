@@ -1,7 +1,7 @@
 DataCenterDiscreteTimeControl Model QSS Notes
 
-Directional derivatives are not working with this model so the
-zero-crossing accuracy and robustness are limited.
+The QSS2 solution tracks fairly well but displays some noise and runs 
+slower than CVode (without tolerance matching).
 
-As of the OCT-r23206_JM-r14295 OCT update the QSS tracks fairly well but
-displays some noise and runs slower than CVode (without tolerance matching).
+The derivative sensitivity seen in some Buildings Library models appears
+to be present for this model as well.

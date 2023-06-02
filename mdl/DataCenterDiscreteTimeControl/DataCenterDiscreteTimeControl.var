@@ -5,3 +5,5 @@ wseCon.y1
 chiCon.y
 pumCHW.m_flow
 roo.TAir.T
+*.dynBal.m
+*.dynBal.U

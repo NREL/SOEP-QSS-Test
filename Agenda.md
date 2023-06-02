@@ -1,3 +1,23 @@
+## Agenda: 2023/6/2
+- Relaxation Development
+  - Relaxed LIQSS2 (rLIQSS2)
+    - Completed and tested a few variations including with and without $\ddot{x}$ relaxation
+    - Performance is not as good as relaxed QSS2
+    - Investigating stiffness structure to see if off-diagonal contributions are large in Buildings models
+- Testing
+  - Case600 and ASHRAE2006 relaxation trials and analysis run to look for candidates for additional performance gains
+  - Seeing solution mis-tracking in ASHRAE2006 that may be due to sensitivity to the slightly stale trajectories of non-requantizing variables or possibly missing dependencies: will be in
+- OCT
+  - Time frame for OCT update with reinit/pre dependency support?
+  - Ideas for non-event-generating operations (min/max/...) and calls within function (FunctionTest)?
+- Next
+  - rLIQSS2 variations/testing
+  - Stiffness structure analysis to see if that explains rLIQSS2 performance
+  - Guideline36 and scalable model testing with best rQSS2 variant
+  - State $\ddot{x}$ directional derivatives development and [r]LI/QSS3 development exploiting this
+- Notes
+  - [QSS paper](https://www.researchgate.net/publication/340495790_Mixed-mode_state-time_discretization_in_ODE_numerical_integration) combining LIQSS with CVode for higher performance
+
 ## Agenda: 2023/5/22
 - Development
   - Refined relaxed rQSS2 for performance: sensitivity detection and relaxation enabling, time step controls (inflection points, growth damping), $\ddot{x}$ relaxation, ...
