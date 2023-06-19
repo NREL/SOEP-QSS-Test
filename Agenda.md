@@ -7,7 +7,7 @@
   - Focusing on requantization "clustering" first to see if that can help with sensitivity. Trying self-dependency loops as the first idea.
   - Next will be directional second derivatives to enable QSS3 (larger steps).
 - Papers of Interest
-  - QSS researchers are writing about QSS modifications that show they are hitting models where it doesn't perform well also.
+  - QSS researchers are writing about QSS modifications that show they are also hitting models where it doesn't perform well.
   - [Mixed–Mode State–Time Discretization in ODE Numerical Integration](https://www.researchgate.net/publication/340495790_Mixed-mode_state-time_discretization_in_ODE_numerical_integration): Combining LIQSS with CVode
     - "The proposed mixed–mode scheme consists of splitting an ODE, using QSS algorithms where they perform better than classic algorithms (i.e., in presence of frequent discontinuities or stiﬀness under certain particular sparse structures) and using classic algorithms where they are a better choice"
   - [DEVS Simulation of Marginally Stable Systems](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.61.5329&rep=rep1&type=pdf)
