@@ -1,5 +1,9 @@
 BouncingBall Model QSS Notes
 
+As of OCT-master-8bb4688ea939e98a3f23be67236795ab5f2d3ac4 update released
+in 2023/06 the self-dependency of v is added by OCT to the <Dependencies>
+section of the XML file.
+
 As of OCT 1.43.4 a dependency of v on itself needs to be added to the XML file
 to get an accurate simulation. This represents the self-dependency in the
 conditional "handler" event, where the value of v depends on pre(v), so v

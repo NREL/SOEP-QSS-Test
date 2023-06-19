@@ -1,3 +1,17 @@
+## Agenda: 2023/6/20
+- Testing
+  - Set up for Scalable model testing at different sizes.
+  - Performance of Buildings models including Scalable are much improved with relaxation but not competitive with CVode (to varying degrees)
+- Development.
+  - Could explore multipoint smoothing to improve relaxation but it isn't trivial to combine with QSS.
+  - Focusing on requantization "clustering" first to see if that can help with sensitivity. Trying self-dependency loops as the first idea.
+  - Next will be directional second derivatives to enable QSS3 (larger steps).
+- Papers of Interest
+  - QSS researchers are writing about QSS modifications that show they are hitting models where it doesn't perform well also.
+  - [Mixed–Mode State–Time Discretization in ODE Numerical Integration](https://www.researchgate.net/publication/340495790_Mixed-mode_state-time_discretization_in_ODE_numerical_integration): Combining LIQSS with CVode
+    - "The proposed mixed–mode scheme consists of splitting an ODE, using QSS algorithms where they perform better than classic algorithms (i.e., in presence of frequent discontinuities or stiﬀness under certain particular sparse structures) and using classic algorithms where they are a better choice"
+  - [DEVS Simulation of Marginally Stable Systems](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.61.5329&rep=rep1&type=pdf)
+
 ## Agenda: 2023/6/2
 - Relaxation Development
   - Relaxed LIQSS2 (rLIQSS2)
@@ -6,7 +20,7 @@
     - Investigating stiffness structure to see if off-diagonal contributions are large in Buildings models
 - Testing
   - Case600 and ASHRAE2006 relaxation trials and analysis run to look for candidates for additional performance gains
-  - Seeing solution mis-tracking in ASHRAE2006 that may be due to sensitivity to the slightly stale trajectories of non-requantizing variables or possibly missing dependencies: will be in
+  - Seeing solution mis-tracking in ASHRAE2006 that may be due to sensitivity to the slightly stale trajectories of non-requantizing variables or possibly missing dependencies
 - OCT
   - Time frame for OCT update with reinit/pre dependency support?
   - Ideas for non-event-generating operations (min/max/...) and calls within function (FunctionTest)?
@@ -15,8 +29,6 @@
   - Stiffness structure analysis to see if that explains rLIQSS2 performance
   - Guideline36 and scalable model testing with best rQSS2 variant
   - State $\ddot{x}$ directional derivatives development and [r]LI/QSS3 development exploiting this
-- Notes
-  - [QSS paper](https://www.researchgate.net/publication/340495790_Mixed-mode_state-time_discretization_in_ODE_numerical_integration) combining LIQSS with CVode for higher performance
 
 ## Agenda: 2023/5/22
 - Development

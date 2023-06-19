@@ -1,0 +1,5 @@
+Scalable Model Notes
+
+This is a model that can be easily scaled to different numbers of 
+floors and zones to help assess the performance scalability of QSS 
+and other solvers.

@@ -44,6 +44,11 @@
 # Imports
 import os, subprocess, sys
 
+# Solvers
+solvers = ( 'xLIQSS1', 'xLIQSS2', 'xLIQSS3', 'LIQSS1', 'LIQSS2', 'LIQSS3', 'xQSS1', 'xQSS2', 'xQSS3', 'QSS1', 'QSS2', 'QSS3' )
+relax_solvers = ( 'rLIQSS2', 'rxQSS2', 'rQSS2' )
+relax = False
+
 # Set up pass-through QSS arguments
 args = var = qss = red = ''
 fmus = []
@@ -79,21 +84,35 @@ for arg in sys.argv[1:]:
             var = arg[6:].strip()
         elif arg.startswith( ( '--qss=', '--qss:' ) ): # QSS method
             qss = arg[6:].strip()
+            if qss in relax_solvers:
+                qss = qss[ 1: ]
+                relax = True
+                arg[6:7] = ''
         else: # Clean up options
             arg.replace( '--final_time', '--tEnd', 1 )
             arg.replace( '--res=csv', '--csv', 1 )
         args += ' ' + arg
 
-# Try to deduce QSS solver if not specified
+# Set QSS solver
 if not qss: # QSS solver not specified
-    solvers = ( 'xLIQSS1', 'xLIQSS2', 'xLIQSS3', 'LIQSS1', 'LIQSS2', 'LIQSS3', 'xQSS1', 'xQSS2', 'xQSS3', 'QSS1', 'QSS2', 'QSS3' )
     solver_dir = os.getcwd()
     solver = os.path.splitext( os.path.basename( solver_dir ) )[0]
     looking = True
     while looking:
-        if solver in solvers:
+        if solver in relax_solvers:
+            solver = solver[ 1: ]
+            relax = True
+            looking = False
+        elif solver in solvers:
             looking = False
         else:
+            for rslv in relax_solvers:
+                if rslv in solver:
+                    solver = rslv[ 1: ]
+                    relax = True
+                    looking = False
+                    break
+            if not looking: break
             for slv in solvers:
                 if slv in solver:
                     solver = slv
@@ -105,7 +124,9 @@ if not qss: # QSS solver not specified
                 solver_dir = solver = ''
                 break
             solver = os.path.splitext( os.path.basename( solver_dir ) )[0]
-    if solver: args += ' --qss=' + solver
+    if solver:
+        args += ' --qss=' + solver
+args += ' --relax=' + ( 'Y' if relax else 'N' )
 
 # Find tool directory and name
 tools = ( 'QSS', )
