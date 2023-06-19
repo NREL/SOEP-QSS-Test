@@ -47,7 +47,7 @@ import os, subprocess, sys
 # Solvers
 solvers = ( 'xLIQSS1', 'xLIQSS2', 'xLIQSS3', 'LIQSS1', 'LIQSS2', 'LIQSS3', 'xQSS1', 'xQSS2', 'xQSS3', 'QSS1', 'QSS2', 'QSS3' )
 relax_solvers = ( 'rLIQSS2', 'rxQSS2', 'rQSS2' )
-relax = False
+relax = relax_arg = False
 
 # Set up pass-through QSS arguments
 args = var = qss = red = ''
@@ -88,6 +88,8 @@ for arg in sys.argv[1:]:
                 qss = qss[ 1: ]
                 relax = True
                 arg[6:7] = ''
+        elif arg.startswith( ( '--relax=', '--relax:' ) ): # Relaxation specified
+            relax_arg = True
         else: # Clean up options
             arg.replace( '--final_time', '--tEnd', 1 )
             arg.replace( '--res=csv', '--csv', 1 )
@@ -103,8 +105,10 @@ if not qss: # QSS solver not specified
             solver = solver[ 1: ]
             relax = True
             looking = False
+            break
         elif solver in solvers:
             looking = False
+            break
         else:
             for rslv in relax_solvers:
                 if rslv in solver:
@@ -126,7 +130,7 @@ if not qss: # QSS solver not specified
             solver = os.path.splitext( os.path.basename( solver_dir ) )[0]
     if solver:
         args += ' --qss=' + solver
-args += ' --relax=' + ( 'Y' if relax else 'N' )
+if relax and ( not relax_arg ): args += ' --relax=Y'
 
 # Find tool directory and name
 tools = ( 'QSS', )
