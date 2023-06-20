@@ -1,5 +1,6 @@
 ## Agenda: 2023/6/20
 - Testing
+  - Verified that OCT-master-8bb4688ea939e98a3f23be67236795ab5f2d3ac4 fixes `reinint`` + `pre` problem and closed that Issue.
   - Set up for Scalable model testing at different sizes.
   - Performance of Buildings models including Scalable are much improved with relaxation but not competitive with CVode (to varying degrees)
 - Development.
