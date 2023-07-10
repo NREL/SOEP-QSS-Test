@@ -1,2 +1,7 @@
 Scalable Model OCT Notes
 
+OCT needs a significant amount of FMU build time and memory for the
+larger 6x6 and 8x8 versions of this model. JVM was increased in the
+bld_fmu.py file with:
+  pymodelica.environ[ 'JVM_ARGS' ] = '-Xmx32768m'
+

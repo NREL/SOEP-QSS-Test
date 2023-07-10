@@ -1,0 +1,23 @@
+_eventIndicator_*
+buiZon.theZon[*,*].intECoo.y
+buiZon.theZon[*,*].intEHea.y
+buiZon.theZon[*,*].roo.air.vol.dynBal.m
+buiZon.theZon[*,*].roo.air.vol.dynBal.medium.Xi[*]
+buiZon.theZon[*,*].roo.air.vol.dynBal.U
+conFanRet[*].con.I.y
+cooCoi[*].heaCoo.vol.dynBal.U
+eco[*].filter.s[*]
+fan[*].filter.s[*]
+fan[*].vol.dynBal.m
+fan[*].vol.dynBal.medium.Xi[*]
+fan[*].vol.dynBal.U
+valCoo[*].filter.s[*]
+valHea[*].filter.s[*]
+vavTer[*,*].con.conCoo.I.y
+vavTer[*,*].con.conHea.I.y
+vavTer[*,*].valHea.filter.s[*]
+vavTer[*,*].vav.filter.s[*]
+
+# Passive variables: Relevant for performance analysis
+vavTer[*,*].terHea.C1_flow
+vavTer[*,*].terHea.C2_flow

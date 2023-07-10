@@ -1,3 +1,27 @@
+## Agenda: 2023/7/12
+- Testing
+  - Scalable: F Floors x Z Zones/Floor
+    - Ran 1x1, 2x2, 4x4, and 8x8 "diagonal" models
+    - Not particularly sparse models
+      - Many variables have 300+ observers/observees in the 8x8 version (which has 1845 continuous state variables)
+      - Perform worse with QSS than most Buildings models
+    - Using total number of zones as the model "size" for scalability comparisons
+    - Relaxed QSS2 brings trajectory in nicely but still has a lot of noisy, small steps near precise trajectory: this should be something we can reduce significantly
+      ![rQSS2 "Converged" Steps](img/Scalable.dynBal.m.png)
+    - First "clustering" try (requantizing all states in a state's self-dependency cycles when it requantizes) did not give significant improvement: may still be worth further thought/trials
+    - Relaxed QSS2 CPU ratio compared with CVode goes from an awful 145X slower in the 1x1 model (stock QSS2 is >5000X slower) down to 11X slower in the 8x8 model
+    - QSS scalability advantage is seen but we need to clean up the small steps to overtake CVode at more modest model sizes
+      ![rQSS2/CVode CPU Time](img/CPU_Time_Ratio.png)
+      ![rQSS2 Scalability](img/Scalability.png)
+  - MixingVolumeMassFlow
+    - Suggested as a simple model we could implement in Ptolemy to compare to the SOEP-QSS implementation if it has 
+    - This simple model _doesn't_ demonstrate the derivative self-dependency sensitivity (yo-yoing)
+    - [At the same accuracy QSS2 is actually 2.3X faster than CVode]
+    - Maybe the ConservationEquationStep or some other simple model with the issue could implemented in Ptolemy instead
+- Development
+  - Working on state directional 2nd derivatives: this is a fairly involved task that affects a lot of code
+  - Exploring ideas for smoothing the converged trajectories
+
 ## Agenda: 2023/6/20
 - Testing
   - Verified that OCT-master-8bb4688ea939e98a3f23be67236795ab5f2d3ac4 fixes `reinint` + `pre` problem and closed that Issue.

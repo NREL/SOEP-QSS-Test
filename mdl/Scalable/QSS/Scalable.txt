@@ -1,14 +1,7 @@
 Scalable Model QSS Notes
 
-Standard QSS demonstrates derivative sensitivities to the use of
-stale quantized trajectories in derivatives, particularly for
-self-observer state variables. The experimental QSS variant that
-propagates current continuous trajectories gives much improved
-results but tracking still breaks down. This behavior is seen in
-some of the other Buildings models and is being investigated.
-
-This sensitivity could be inherent to the model or due to some
-state that is taking steps that are too large, possibly due to
-missing dependencies.
-
-QSS3 shows greater sensitivity than QSS2.
+Standard QSS demonstrates derivative sensitivities for self-dependent
+continuous state variables. The experimental relaxed QSS2 solver has
+significantly better performance but currently still makes smaller steps
+than desired due to the derivative magnitudes even near the precise
+trajectory.

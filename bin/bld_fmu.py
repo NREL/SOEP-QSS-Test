@@ -46,7 +46,7 @@ import argparse, os, shutil, subprocess, sys
 import pymodelica
 
 # Increase JVM memory
-pymodelica.environ[ 'JVM_ARGS' ] = '-Xmx4096m'
+pymodelica.environ[ 'JVM_ARGS' ] = '-Xmx32768m'
 
 # Parse arguments
 parser = argparse.ArgumentParser()
