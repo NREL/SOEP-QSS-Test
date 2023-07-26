@@ -46,7 +46,7 @@ import argparse, os, shutil, subprocess, sys
 import pymodelica
 
 # Increase JVM memory
-pymodelica.environ[ 'JVM_ARGS' ] = '-Xmx32768m'
+pymodelica.environ[ 'JVM_ARGS' ] = '-Xmx131072m'
 
 # Parse arguments
 parser = argparse.ArgumentParser()
@@ -68,6 +68,7 @@ parser.add_argument( '--diag', help = 'Generate HTML diagnostics  [On]', default
 parser.add_argument( '--no-diag', help = 'Don\'t generate HTML diagnostics', dest = 'diag', action = 'store_false' )
 parser.add_argument( '--xml', help = 'Extract modelDescription.xml from FMU  [On]', default = True, action = 'store_true' )
 parser.add_argument( '--no-xml', help = 'Don\'t extract modelDescription.xml from FMU', dest = 'xml', action = 'store_false' )
+parser.add_argument( '--log', help = 'FMU compiler log level/file', default = 'warning' )
 parser.add_argument( 'model', nargs = '?', help = 'Model file', default = '' )
 args = parser.parse_args()
 if args.qss: # Set up conditional defaults
@@ -248,7 +249,7 @@ try:
              nam,
              mod,
              version = "2.0",
-             compiler_log_level = 'warning',
+             compiler_log_level = args.log,
              compiler_options = compiler_options,
              modelicapath = os.getenv( 'MODELICAPATH' )
             )
@@ -257,7 +258,7 @@ try:
              nam,
              mod,
              version = "2.0",
-             compiler_log_level = 'warning',
+             compiler_log_level = args.log,
              compiler_options = compiler_options
             )
     else: # Modelica file found by searching MODELICAPATH
@@ -265,7 +266,7 @@ try:
             fmu_file = pymodelica.compile_fmu(
              nam,
              version = "2.0",
-             compiler_log_level = 'warning',
+             compiler_log_level = args.log,
              compiler_options = compiler_options,
              modelicapath = os.getenv( 'MODELICAPATH' )
             )
@@ -273,7 +274,7 @@ try:
             fmu_file = pymodelica.compile_fmu(
              nam,
              version = "2.0",
-             compiler_log_level = 'warning',
+             compiler_log_level = args.log,
              compiler_options = compiler_options
             )
         if nam != model: # Rename outputs to local model name

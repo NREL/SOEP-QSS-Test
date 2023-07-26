@@ -1,3 +1,39 @@
+## Agenda: 2023/7/26
+- Testing
+  - Scalable
+    - Newer 12th Gen Alder Lake system with P+E cores giving strange/inconsistent CPU timing: No solution found yet
+    - Ran all models up to 10x10 on an older system (without het. CPUs): QSS performance is a bit worse rel to CVode
+    - 10x10 isn't large enough to hit CPU speed parity with CVode with current relaxation QSS2
+    - 12x12 and larger won't build with OPT MinGW on Windows currently
+    - QSS areas of improvement:
+      - Profiling/tuning and parallelization and more FMU call pooling
+      - Directional 2nd state derivatives => Enable QSS3 use (need to developed relaxation QSS3)
+      - Trajectory damping to allow larger steps when relaxation has converged on precise trajectory
+      - Explore use of multi-point integrator when converged
+  - Ptolemy: ConservationEquationStep model ported for QSS comparison:
+    - Need some work to get the two models to be running the same thing (tEnd, rTol, aTol, variable correspondence, ...)
+    - Not sure how to get sampled output for good trajectory visualization or step/requantization count
+    - Ptolemy has a few QSS2 variations wrt ND time step selection: Fd is probably closest to QSS2 (?)
+      - These methods might be worth exploring for SOEP QSS ND step selection but uniform ND step at each event is needed for efficient call pooling
+    - Preliminary results:
+      - Ptolemy plot of t_Xi1 (matches Modelica model dynBal.medium.Xi[1]) at the same RMS shows noise but doesn't have enough output points to see if it is yo-yoing
+        ![Xi_1 Comparison](img/ConservationEquationStep.Xi_1.png)
+      - At the same RMS accuracy SOEP QSS2 (standard and relaxed) use fewer steps than Ptolemy QSS2Pts (187 and 97 vs 2696)
+        - Not sure the data.txt lines give the Ptolemy requantization count
+    - This model is not highly sensitive so maybe not a perfect sanity check but QSS2 does do some yo-yoing with it
+- Development
+  - State directional 2nd derivatives
+    - Seems to work well for QSS2 single and simultaneous requantizations: No performance hit (actually seeing a 20-25% speedup)
+    - Completed migration for all QSS2 solver variants and Observers, Triggers, and Handlers collections for simultaneous events
+    - Extending to QSS3 now
+    - Next:
+      - Extend to QSS3 and evaluate on some models
+      - Remove obsolete ND code
+      - Simplify code (probably including dropping ability to use per-variable solver orders)
+      - More FMU call pooling for fmu_set operations and LIQSS where practical
+      - Profiling/tuning and parallelization
+  - Next: Trajectory damping and/or multi-point approaches to get large steps when relaxation has converged trajectory
+
 ## Agenda: 2023/7/12
 - Testing
   - Scalable: F Floors x Z Zones/Floor
