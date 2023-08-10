@@ -72,7 +72,7 @@ parser.add_argument( '--tEnd', help = argparse.SUPPRESS, type = float, dest = 'f
 parser.add_argument( '--tend', help = argparse.SUPPRESS, type = float, dest = 'final_time' )
 parser.add_argument( '--dtOut', help = 'Output time step (s)  [computed]', type = float )
 parser.add_argument( '--dtout', help = argparse.SUPPRESS, type = float, dest = 'dtOut' )
-parser.add_argument( '--maxh', help = 'Max time step (s) for CVode or Radau5ODE solvers (0 => ∞)  [computed from ncp]', type = float )
+parser.add_argument( '--maxh', help = 'Max time step (s) for CVode or Radau5ODE solvers (0 => ∞, <0 => compute from ncp)  [0]', type = float, default = '0' ) # Default to ∞ so output steps don't add integration steps
 parser.add_argument( '--dtMax', help = argparse.SUPPRESS, type = float, dest = 'maxh' )
 parser.add_argument( '--dtmax', help = argparse.SUPPRESS, type = float, dest = 'maxh' )
 parser.add_argument( '--h', help = 'ExplicitEuler max time step (s)  [0.01]', type = float )
@@ -82,6 +82,7 @@ parser.add_argument( '--res', help = 'Results format  [memory]', default = 'memo
 parser.add_argument( '--var', help = 'Variable output filter list file' )
 parser.add_argument( '--log', help = 'Logging level  [3]', type = int, default = 3, choices = [ 0, 1, 2, 3, 4, 5, 6, 7 ] )
 args = parser.parse_args()
+if args.maxh is not None and args.maxh < 0.0: args.maxh = None
 
 # Check Modelica environment is set up
 if not os.getenv( 'MODELICAPATH' ):

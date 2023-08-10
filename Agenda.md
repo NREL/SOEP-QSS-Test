@@ -1,3 +1,21 @@
+## Agenda: 2023/8/10
+- Directional State 2nd Derivatives
+  - Development
+    - Completed with additional refinements: Not pushed to SOEP-QSS repo yet
+    - Significant code simplification: Only state ND is 1 level in QSS3 solvers
+    - Reduces order dependencies
+  - Testing/Findings
+    - QSS2: Accuracy ~same | ~25% faster than ND
+    - QSS3:
+      - AchillesN (All ops simultaneous): ~5X better accuracy and ~40% faster than ND
+      - Case600: ~25% fewer steps and ~40% faster => QSS3 is more practical without 2-level ND noise
+        ![Case600 QSS3 Comparison](img/Case600.QSS3.NDvDD2.png)
+    - LIQSS3:
+      - SLOW! ~3X slower than ND
+      - Needs 4 DD calls for each variable (LIQSS2 only needs 2 and DD is ~28% faster than ND)
+      - LIQSS is not amenable to the FMU call pooling that is key for QSS over FMU performance
+      - May keep separate ND and DD LIQSS3 variants for now and consider alternatives later
+
 ## Agenda: 2023/7/26
 - Testing
   - Scalable
