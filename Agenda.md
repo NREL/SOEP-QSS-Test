@@ -1,3 +1,20 @@
+## Agenda: 2023/8/24
+- Go-NoGo Slides
+- Directional State 2nd Derivatives
+  - Can be much slower for dense dependency graph models such as ObserversN (fully-connected)
+    - Binning greatly reduces the slowdown
+  - For now bringing pure ND solvers back as nQSS2/3 options (but with some of the call pooling and other recent improvements)
+  - Should be able to add warnings for runs where the ND solvers may be more efficient once more experimentation is complete
+  - Is there room to improve DD efficiency?
+- Other Development
+  - Completed FMU call pooling changes for setting the FMU values of observee collections
+  - Eliminated support for mixed QSS solver order runs => Smaller and more efficient code
+  - Custom FMIL build options gave a small speedup but LTO trials didn't yield benefits
+  - VTune profiling of D2D runs confirmed DD overhead dominates but didn't point to useful QSS hot spots to tune
+- Next:
+  - Converged relaxation solver trajectory smoothing for larger steps
+  - LIQSS2/3 interpolation option to reduce the number of extra DD calls
+
 ## Agenda: 2023/8/10
 - Directional State 2nd Derivatives
   - Development

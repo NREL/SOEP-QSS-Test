@@ -69,7 +69,8 @@ parser.add_argument( '--no-diag', help = 'Don\'t generate HTML diagnostics', des
 parser.add_argument( '--xml', help = 'Extract modelDescription.xml from FMU  [On]', default = True, action = 'store_true' )
 parser.add_argument( '--no-xml', help = 'Don\'t extract modelDescription.xml from FMU', dest = 'xml', action = 'store_false' )
 parser.add_argument( '--log', help = 'FMU compiler log level/file', default = 'warning' )
-parser.add_argument( '--msvs', help = 'Use Microsoft Visual Studio as C compiler', default = False, action = 'store_true' )
+parser.add_argument( '--gcc', help = 'Use GCC C compiler', default = ( os.name == 'nt' ), action = 'store_true' )
+parser.add_argument( '--msvs', help = 'Use Microsoft Visual Studio C compiler', default = ( os.name == 'nt' ), action = 'store_true' )
 #parser.add_argument( '--msvs_version', help = 'Microsoft Visual Studio version  [2022]', default = '2022' )
 parser.add_argument( 'model', nargs = '?', help = 'Model file', default = '' )
 args = parser.parse_args()
@@ -212,6 +213,8 @@ if tool == 'OCT':
     if ( os.name == 'nt' ) and args.msvs:
         compiler_options[ 'c_compiler' ] = 'msvs'
         #if args.msvs_version: compiler_options[ 'msvs_version' ] = args.msvs_version # Default search order for MSVS is not newest to oldest but should be OK for now: Finds 2012-2022
+    elif args.gcc:
+        compiler_options[ 'c_compiler' ] = 'gcc'
 else: # JModelica
     assert tool == 'JModelica', 'Tool should be OCT or JModelica'
     compiler_options[ 'copy_source_files_to_fmu' ] = args.source
