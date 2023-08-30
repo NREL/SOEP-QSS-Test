@@ -1,3 +1,3 @@
 #!/bin/bash
-FMU-QSS.gen.py ../../JModelica/Quadratic.fmu --qss=QSS2
+FMU-QSS.gen.py ../../OCT/Quadratic.fmu --qss=QSS2
 QSS Quadratic_QSS.fmu --qss=QSS2 --out=K
