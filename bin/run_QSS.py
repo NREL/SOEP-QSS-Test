@@ -44,10 +44,30 @@
 # Imports
 import os, subprocess, sys
 
-# Solvers
-solvers = ( 'xLIQSS1', 'xLIQSS2', 'xLIQSS3', 'LIQSS1', 'LIQSS2', 'LIQSS3', 'xQSS1', 'xQSS2', 'xQSS3', 'QSS1', 'QSS2', 'QSS3' )
-relax_solvers = ( 'rLIQSS2', 'rxQSS2', 'rQSS2' )
-relax = relax_arg = False
+# Solvers in subset-safe search order
+solvers = (
+ 'nrfQSS2',
+ 'nrQSS2',
+ 'nrLIQSS2',
+ 'nfQSS2',
+ 'nfQSS3',
+ 'nQSS2',
+ 'nQSS3',
+ 'nLIQSS2',
+ 'nLIQSS3',
+ 'rfQSS2',
+ 'rQSS2',
+ 'rLIQSS2',
+ 'fQSS1',
+ 'fQSS2',
+ 'fQSS3',
+ 'LIQSS1', 
+ 'LIQSS2', 
+ 'LIQSS3', 
+ 'QSS1', 
+ 'QSS2', 
+ 'QSS3'
+)
 
 # Set up pass-through QSS arguments
 args = var = qss = red = ''
@@ -84,12 +104,6 @@ for arg in sys.argv[1:]:
             var = arg[6:].strip()
         elif arg.startswith( ( '--qss=', '--qss:' ) ): # QSS method
             qss = arg[6:].strip()
-            if qss in relax_solvers:
-                qss = qss[ 1: ]
-                relax = True
-                arg[6:7] = ''
-        elif arg.startswith( ( '--relax=', '--relax:' ) ): # Relaxation specified
-            relax_arg = True
         else: # Clean up options
             arg.replace( '--final_time', '--tEnd', 1 )
             arg.replace( '--res=csv', '--csv', 1 )
@@ -101,22 +115,10 @@ if not qss: # QSS solver not specified
     solver = os.path.splitext( os.path.basename( solver_dir ) )[0]
     looking = True
     while looking:
-        if solver in relax_solvers:
-            solver = solver[ 1: ]
-            relax = True
-            looking = False
-            break
-        elif solver in solvers:
+        if solver in solvers:
             looking = False
             break
         else:
-            for rslv in relax_solvers:
-                if rslv in solver:
-                    solver = rslv[ 1: ]
-                    relax = True
-                    looking = False
-                    break
-            if not looking: break
             for slv in solvers:
                 if slv in solver:
                     solver = slv
@@ -130,7 +132,6 @@ if not qss: # QSS solver not specified
             solver = os.path.splitext( os.path.basename( solver_dir ) )[0]
     if solver:
         args += ' --qss=' + solver
-if relax and ( not relax_arg ): args += ' --relax=Y'
 
 # Find tool directory and name
 tools = ( 'QSS', )
