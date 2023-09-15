@@ -1,0 +1,30 @@
+# ConservationEquationStep QSS Ptolemy Notes
+
+## Changes
+- Changed stop time to 2700 to match the Modelica version
+- Set all QSS2 references to QSS2Pts so that it would run
+- Tried to set relativeQuantum to 1e-6 to match Modelica rel tol
+- Changed SOEP-QSS run and Ptolemy model to use a uniform absTol=1e-6 (I think)
+
+## Questions
+- How to set a uniform abs tol in Ptolemy? The original XML has 0.01 at the top but then 1e-6 for two other parameters
+- How well does this model match the Modelica version (which has 170 variables, 3 continuous states (dynBal.U, dynBal.medium.Xi[1], and time), & 2 event indicators)?
+  - Ptolemy plots don't correlate with Modelica variable plots:
+    - t_h?
+    - t_Xi1 == dynBal.medium.Xi[1]
+- How can we get total step count?
+- Which plots are closest to dynBal.U or dynBal.mXi[1] or other similar Modelica variables that show some yo-yoing?
+- Why do some plots have value drops to zero that aren't in the saved plot plt files?
+- Can we get the plots to include sampled points (so we can better see the QSS trajectories)?
+- Can we get x,y signal files at all requantization and observer update (and sampled if poss) points?
+- What is in the data.txt file? event times and then smooth tokens of one of the states?
+
+## Comparisons
+- CVode (without changing tolerances) uses 165 steps and 2 state events and ~0.0058 s (ncp=0 run) simulation time
+- SOEP QSS2 (standard) with rTol adjusted to same RMS as Ptolemy QSS2 uses 187 requantizations and 2 zero-crossing events and reports 0 s CPU time (below timer precision)
+- SOEP QSS2 relaxed with rTol adjusted to same RMS as Ptolemy QSS2 uses 97 requantizations and 2 zero-crossing events and reports 0 s CPU time (below timer precision)
+- Ptolemy QSS2 Pts:
+  - data.txt file has 2696 lines: Are those are requantization events?
+  - RMS fit of t_Xi1 (== dynBal.medium.Xi[1]) is ~10X worse than SOEP QSS2 at what I think is the same tolerance setting)
+  - Some plots appear to show noise that may be yo-yoing but need finer sampling and ideally signal files to see exact behavior
+  - Should probably run the Fd version to be closest to standard QSS2 (uniform ND time step size)
