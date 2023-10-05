@@ -47,8 +47,11 @@ import os, subprocess, sys
 # Solvers in subset-safe search order
 solvers = (
  'nrfQSS2',
+ 'nrfQSS3',
  'nrQSS2',
+ 'nrQSS3',
  'nrLIQSS2',
+ 'nrLIQSS3',
  'nfQSS2',
  'nfQSS3',
  'nQSS2',
@@ -56,8 +59,11 @@ solvers = (
  'nLIQSS2',
  'nLIQSS3',
  'rfQSS2',
+ 'rfQSS3',
  'rQSS2',
+ 'rQSS3',
  'rLIQSS2',
+ 'rLIQSS3',
  'fQSS1',
  'fQSS2',
  'fQSS3',
@@ -66,7 +72,7 @@ solvers = (
  'LIQSS3', 
  'QSS1', 
  'QSS2', 
- 'QSS3'
+ 'QSS3',
 )
 
 # Set up pass-through QSS arguments

@@ -1,3 +1,16 @@
+## Agenda: 2023/10/05
+- Relaxation QSS3
+  - Adds 6 solvers for QSS3 and LIQSS3 with D2D, N2D, and with full order representation broadcasting
+  - Best relaxation factors to use for $\ddot{x}$ and $\dddot{x}$ ?
+  - Inflection points only where $\ddot{x} == 0$ or also where $\dot{x} == 0$ ? Testing says we want both but $\dot{x} == 0$ costs an extra quadratic solution
+- Final Convergence Smoothing
+  - Detect convergence: Heuristic
+    - Converging objects:
+      - Keep running low-pass filtered derivative
+      - Metric to assess when within convergence band
+    - In converged mode trying different multipoint representations
+  - Don't have a robust solution yet
+
 ## Agenda: 2023/8/24
 - Go-NoGo Slides
 - Directional State 2nd Derivatives
