@@ -59,7 +59,10 @@ def sim_diff():
     '''Compare simulation signal files'''
 
     # Save the current day+time
-    now = datetime.datetime.utcnow()
+    if sys.version_info < ( 3, 12 ):
+        now = datetime.datetime.utcnow()
+    else:
+        now = datetime.datetime.now( datetime.UTC )
 
     # Parse arguments
     parser = argparse.ArgumentParser()
@@ -94,6 +97,7 @@ def sim_diff():
     parser.add_argument( '--pyfunnel-fail', help = 'pyfunnel failed signals  [F]', action = 'store_true' )
     parser.add_argument( '--dpi', help = 'screen dpi for plot', type = int, default = 0 )
     parser.add_argument( '--out', help = 'output to file(s)  [F]', action = 'store_true' )
+    parser.add_argument( '--dump', help = 'dump signal difference to file  [F]', action = 'store_true' )
     parser.add_argument( '-v', '--verbose', help = 'verbose report  [F]', action = 'store_true' )
     parser.set_defaults( sync = True, interp = True )
     global args
@@ -418,7 +422,7 @@ def sig_compare( fnam1, fnam2 ):
         row2 = []
         cols1 = cols2 = None
         lbls = None
-    if out:
+    if out or args.dump:
         if model1 == model2:
             onam = model1
         else:
@@ -874,6 +878,16 @@ def sig_compare( fnam1, fnam2 ):
                  ltoly = args.rTol,
                 )
                 pyfunnel.plot_funnel( 'pyfunnel_results' )
+                
+    # Dump difference signal
+    if args.dump:
+        if sys.version_info >= ( 3, 0 ):
+            dmp_file = open( onam + '.dmp', 'w', newline = '\n' )
+        else:
+            dmp_file = open( onam + '.dmp', 'wb' )
+        for i in range( x.size ):
+            print( x[ i ], Yd[ i ], file = dmp_file )
+        dmp_file.close()
 
     # Reset stdout
     if out:
