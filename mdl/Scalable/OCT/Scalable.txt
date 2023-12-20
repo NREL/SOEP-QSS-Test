@@ -5,3 +5,6 @@ larger 6x6 and 8x8 versions of this model. JVM was increased in the
 bld_fmu.py file with:
   pymodelica.environ[ 'JVM_ARGS' ] = '-Xmx32768m'
 
+The 12x12 model build with the default MinGW GCC compiler bundled with OCT
+fails due to the size of the generated C files. Switching to the local MSVS
+2022 compiler allowed the 12x12 model build to succeed.

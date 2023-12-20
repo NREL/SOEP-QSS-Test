@@ -1,2 +1,2 @@
 #!/bin/bash
-FMU-QSS.gen.py ../../JModelica/Achilles1.fmu --qss=QSS2
+FMU-QSS.gen.py ../../OCT/Achilles1.fmu --qss=QSS2

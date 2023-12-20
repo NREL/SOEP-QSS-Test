@@ -6,6 +6,7 @@
 *.con
 *.cerr
 *.cout
+*.css
 *.csv
 *.d
 *.dll
@@ -19,6 +20,7 @@
 *.hxx
 *.html
 *.ilk
+*.js
 *.lib
 *.log
 *.map

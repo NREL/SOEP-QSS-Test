@@ -1,3 +1,25 @@
+## Agenda: 2023/12/21
+- Development
+  - LIQSS variants added: full-order propagation, interpolation (reduce DD calls), DD2 & ND2
+    - Don't expect to keep all of these but want them for further testing
+    - So far the interpolation approach seems faster at no significant accuracy loss
+  - LIQSS simultaneous requantization q_0 value update deferral dropped: sequence-independence benefit did not dominate benefit of fresher trajectory
+  - Parallelization
+    - Not a lot of potential
+      - Run time is spent almost completely within the FMU
+      - We gain speed by making fewer and more efficient use of the FMI API (and any future speedups within the FMU for QSS atomic/sparse operations)
+    - Parallel (OpenMP) Observers added: Extends earlier approach and exploits recent refinements/simplifications
+    - Still doesn't beat serial until the number of observers gets quite large (>100) so it was implemented with a low-impact chunk size check & forking to the serial code (for minimal impact when not active)
+  - Determinism: Copy trigger vector to sort it for search efficiency (when large enough vector)
+  - Unit test updates for these changes
+- Performance Testing
+  - QSS is ~30% faster than a year ago due to more FMU call pooling, removal of mixed-order solver support, passive variable treatment, ...
+- Now: Finishing FY23 contract tasks and working on relaxation
+- Next
+  - Further work on relaxation: detection during observer update sequences, 3rd order algorithm, ...
+  - Try mLIQSS (maybe extend to >2 coupled variables)
+  - Consider mixed CVode+QSS algorithm
+
 ## Agenda: 2023/10/05
 - Relaxation QSS3
   - Adds 6 solvers for QSS3 and LIQSS3 with D2D, N2D, and with full order representation broadcasting
