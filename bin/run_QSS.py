@@ -191,9 +191,19 @@ if var: # Use specified variable output list file
     if not os.path.isfile( os.path.abspath( var ) ):
         print( 'Error: Specified variable output list file not found:', var )
         sys.exit( 1 )
-else: # Look for default variable output list file
-    var = os.path.join( model_dir, model + '.var' )
-    if os.path.isfile( var ): args += ' --var=' + var
+else: # Look up the directory tree for a default variable output list file
+    var_dir = os.getcwd()
+    model_var = model + '.var'
+    while True:
+        var_look = os.path.join( var_dir, model_var )
+        if os.path.isfile( var_look ): # Found var file
+            var = var_look
+            break
+        elif var_dir == model_dir: # Reached model dir without finding var file
+            break
+        else: # Move up to parent directory
+            var_dir = os.path.dirname( var_dir )
+    if var: args += ' --var=' + var
 
 # Run QSS
 try:

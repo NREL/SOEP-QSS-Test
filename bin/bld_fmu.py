@@ -42,7 +42,7 @@
 #  Run from an environment with MODELICAPATH and MODELICA_BUILDINGS_LIB set up
 
 # Imports
-import argparse, os, shutil, subprocess, sys
+import argparse, inspect, os, shutil, subprocess, sys
 import pymodelica
 
 # Increase JVM memory
@@ -250,16 +250,18 @@ if branch or commit:
 try:
     # Compile the FMU
     if mod: # Pass Modelica file
-        try:
+        if 'modelicapath' in str( inspect.signature( pymodelica.compile_fmu ) ): # Newer OCT has modelicapth arg
+            modelicapath = os.getenv( 'MODELICAPATH' )
+            del os.environ[ 'MODELICAPATH' ] # Prevent OCT warning
             fmu_file = pymodelica.compile_fmu(
              nam,
              mod,
              version = "2.0",
              compiler_log_level = args.log,
              compiler_options = compiler_options,
-             modelicapath = os.getenv( 'MODELICAPATH' )
+             modelicapath = modelicapath
             )
-        except:
+        else: # Older OCT uses MODELICAPATH env var
             fmu_file = pymodelica.compile_fmu(
              nam,
              mod,
@@ -268,15 +270,17 @@ try:
              compiler_options = compiler_options
             )
     else: # Modelica file found by searching MODELICAPATH
-        try:
+        if 'modelicapath' in str( inspect.signature( pymodelica.compile_fmu ) ): # Newer OCT has modelicapth arg
+            modelicapath = os.getenv( 'MODELICAPATH' )
+            del os.environ[ 'MODELICAPATH' ] # Prevent OCT warning
             fmu_file = pymodelica.compile_fmu(
              nam,
              version = "2.0",
              compiler_log_level = args.log,
              compiler_options = compiler_options,
-             modelicapath = os.getenv( 'MODELICAPATH' )
+             modelicapath = modelicapath
             )
-        except:
+        else: # Older OCT uses MODELICAPATH env var
             fmu_file = pymodelica.compile_fmu(
              nam,
              version = "2.0",

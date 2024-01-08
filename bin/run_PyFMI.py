@@ -135,8 +135,19 @@ if args.var is not None: # Use specified variable output list file
         print( 'Error: Specified variable output list file not found:', model_var )
         sys.exit( 1 )
 else: # Look for default variable output list file
-    model_var = os.path.join( model_dir, model + '.var' )
-    if os.path.isfile( model_var ): args.var = model_var
+    var = ''
+    var_dir = os.getcwd()
+    model_var = model + '.var'
+    while True:
+        var_look = os.path.join( var_dir, model_var )
+        if os.path.isfile( var_look ): # Found var file
+            var = var_look
+            break
+        elif var_dir == model_dir: # Reached model dir without finding var file
+            break
+        else: # Move up to parent directory
+            var_dir = os.path.dirname( var_dir )
+    if var: args.var = var_look
 
 # Load the FMU
 try:

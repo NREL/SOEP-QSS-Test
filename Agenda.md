@@ -1,3 +1,27 @@
+## Agenda: 2024/01/08
+- Development
+  - List of QSS solvers added to SOEP-QSS repository README
+  - Relaxation testing/refinements
+  - Parallelization testing/refinements
+  - Numerical differentiation time step optimizer improved
+  - Next phase of relaxation convergence work in progress
+- Benchmarking
+  - Ported runSuite.py to work on Windows:
+    - Path separators
+    - `%TEMP%` _vs._ `/tmp`
+    - `process_time()` to `perf_counter()` to get subprocess CPU time on Windows (should work on Linux)
+    - _etc._
+  - Working on integrating QSS support: Non-trivial
+  - Issues
+    - QSS doesn't generate `.mat` files yet: Do we need it to output ASCII signal files?
+    - Radau50DE with Case960 giving: `Radau5 failed with flag -8. At time 237157.572000. Message: Repeated unexpected step rejections`
+    - Getting `timed out after 600 seconds` for CVode runs of `DataCenterDiscreteTimeControl` and `Guideline36`
+    - Still getting `USA_CO_Denver.Intl.AP.725650_TMY3.mos - The process cannot access the file because it is being used by another process` (during output processing)
+    - Parameters in supplied `configuration.yml` see to be too small to see scalability (or time.perf_counter() is still not measuring subprocess CPU time?)
+  - Ideas
+    - Option to name results directory (automatically?) to avoid overwriting so we can run different benchmarks at the same time
+      - Could use the `.yml` config file to select a default name
+
 ## Agenda: 2023/12/21
 - Development
   - LIQSS variants added: full-order propagation, interpolation (reduce DD calls), DD2 & ND2
