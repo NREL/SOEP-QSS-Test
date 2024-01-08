@@ -23,6 +23,8 @@
       - Could use the `.yml` config file to select a default name
 
 ## Agenda: 2023/12/21
+- Benchmarking
+  - (Michael): Set up for benchmark problems.
 - Development
   - LIQSS variants added: full-order propagation, interpolation (reduce DD calls), DD2 & ND2
     - Don't expect to keep all of these but want them for further testing
