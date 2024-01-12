@@ -383,7 +383,7 @@ if args.res == 'memory':
                         else: # No matches
                             print( 'No variables found matching: ' + key )
     else: # No variable output filtering
-        temp_re = re.compile( 'temp_\d+' )
+        temp_re = re.compile( r'temp_\d+' )
         for key in keys:
             if key == 'time': continue # Omit time
             if key.startswith( 'der(' ) and ( key[ -1 ] == ')' ): continue # Omit derivatives

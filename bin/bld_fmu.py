@@ -4,7 +4,7 @@
 #
 # Project: QSS Solver
 #
-# Language: Python 2.7 and 3.x
+# Language: Python 3.x
 #
 # Developed by Objexx Engineering, Inc. (https://objexx.com) under contract to
 # the National Renewable Energy Laboratory of the U.S. Department of Energy
@@ -41,8 +41,11 @@
 #  Run from an environment set up for PyFMI such as jm_python.sh
 #  Run from an environment with MODELICAPATH and MODELICA_BUILDINGS_LIB set up
 
-# Imports
+# Python imports
 import argparse, inspect, os, shutil, subprocess, sys
+from zipfile import ZipFile
+
+# PyFMI imports
 import pymodelica
 
 # Increase JVM memory
@@ -248,9 +251,8 @@ if branch or commit:
 
 # Compile FMU
 try:
-    # Compile the FMU
     if mod: # Pass Modelica file
-        if 'modelicapath' in str( inspect.signature( pymodelica.compile_fmu ) ): # Newer OCT has modelicapth arg
+        if 'modelicapath' in str( inspect.signature( pymodelica.compile_fmu ) ): # Newer OCT has modelicapath arg
             modelicapath = os.getenv( 'MODELICAPATH' )
             del os.environ[ 'MODELICAPATH' ] # Prevent OCT warning
             fmu_file = pymodelica.compile_fmu(
@@ -270,7 +272,7 @@ try:
              compiler_options = compiler_options
             )
     else: # Modelica file found by searching MODELICAPATH
-        if 'modelicapath' in str( inspect.signature( pymodelica.compile_fmu ) ): # Newer OCT has modelicapth arg
+        if 'modelicapath' in str( inspect.signature( pymodelica.compile_fmu ) ): # Newer OCT has modelicapath arg
             modelicapath = os.getenv( 'MODELICAPATH' )
             del os.environ[ 'MODELICAPATH' ] # Prevent OCT warning
             fmu_file = pymodelica.compile_fmu(
@@ -321,10 +323,7 @@ except Exception as err:
 # Extract modelDescription.xml
 if args.xml:
     try:
-        if sys.version_info >= ( 3, 0 ):
-            subprocess.call( 'unzip -o ' + model + '.fmu modelDescription.xml', stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL, shell = True )
-        else:
-            DEVNULL = open( os.devnull, 'w' )
-            subprocess.call( 'unzip -o ' + model + '.fmu modelDescription.xml', stdout = DEVNULL, stderr = DEVNULL, shell = True )
+        with ZipFile( model + '.fmu' ) as fmu_zip:
+            fmu_zip.extract( 'modelDescription.xml' )
     except Exception as err:
         print( 'modelDescription.xml extraction failed for model: ', model, ': ', err )

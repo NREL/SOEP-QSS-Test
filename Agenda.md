@@ -18,8 +18,8 @@
       - Can it be adapted to work with other versions?
       - Number of event indicators increased => may impact QSS performance
       - Can't use with May 2023 Buildings lib I've been using: Models use `Buildings.Controls.OBC.CDL.Reals`
-    - `Case960`` giving: `Radau5 failed with flag -8. At time 237157.572000. Message: Repeated unexpected step rejections`
-    - `DualFanDualDuct``: Radau5 failed with flag -5. At time 5.610175. Message: Maximal number of steps = 100000 exceeded
+    - `Case960` giving: `Radau5 failed with flag -8. At time 237157.572000. Message: Repeated unexpected step rejections`
+    - `DualFanDualDuct`: Radau5 failed with flag -5. At time 5.610175. Message: Maximal number of steps = 100000 exceeded
     - Getting `timed out after 600 seconds` for CVode runs of `DataCenterDiscreteTimeControl` and `Guideline36` and `DualFanDualDuct`
     - Still getting `USA_CO_Denver.Intl.AP.725650_TMY3.mos - The process cannot access the file because it is being used by another process` (during output processing)
     - Parameters in supplied `configuration.yml` see to be too small to see scalability (or `time.perf_counter()` is still not measuring subprocess CPU time?)

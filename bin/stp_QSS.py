@@ -142,7 +142,7 @@ try:
                             log.write( var_name + ' ' + str( var_steps ) + '\n' )
                 except:
                     pass
-            stp.close
+            stp.close()
     else: # Process all variables
         with open( 'stp.log', 'w', newline = '\n' ) as log: # Output to log file
             stp = open( QSS_model_stp, 'r' )
@@ -156,7 +156,7 @@ try:
                         log.write( var_name + ' ' + str( var_steps ) + '\n' )
                 except:
                     pass
-            stp.close
+            stp.close()
 except Exception as err:
     print( 'Step count processing failed: ', err )
     sys.exit( 1 )

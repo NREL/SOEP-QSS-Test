@@ -141,9 +141,9 @@ def sim_diff():
     vars1 = {}
     for fnam in glob1:
         if 'QSS' in fnam.split( os.sep ) or os.path.basename( fnam ).endswith( eextB ): # Split QSS variable and type
-            snam = vnam, tnam = qss_sig_name( fnam )
+            vnam, tnam = qss_sig_name( fnam )
         else:
-            snam = vnam, tnam = ( sig_name( fnam ), '' )
+            vnam, tnam = ( sig_name( fnam ), '' )
         if vnam in vars1:
             if tnam == '': # Preferred
                 vars1[ vnam ] = fnam
@@ -158,9 +158,9 @@ def sim_diff():
     vars2 = {}
     for fnam in glob2:
         if 'QSS' in fnam.split( os.sep ) or os.path.basename( fnam ).endswith( eextB ): # Split QSS variable and type
-            snam = vnam, tnam = qss_sig_name( fnam )
+            vnam, tnam = qss_sig_name( fnam )
         else:
-            snam = vnam, tnam = ( sig_name( fnam ), '' )
+            vnam, tnam = ( sig_name( fnam ), '' )
         if vnam in vars2:
             if tnam == '': # Preferred
                 vars2[ vnam ] = fnam
@@ -300,10 +300,13 @@ def sig_compare( fnam1, fnam2 ):
 
     # Plot conditional imports
     plotting = args.plot or args.plot_fail
+    numpy_installed = None
     if args.interp or plotting:
         try:
             import numpy
+            numpy_installed = True
         except:
+            numpy_installed = False
             if args.interp:
                 print( 'Error: Interpolation diffs unavailable: NumPy is not installed' )
                 args.interp = False
@@ -324,17 +327,16 @@ def sig_compare( fnam1, fnam2 ):
 
     # Pyfunnel conditional imports
     pyfunneling = args.pyfunnel or args.pyfunnel_fail
-    if args.interp or pyfunneling:
-        if 'numpy' not in sys.modules:
+    if pyfunneling:
+        if numpy_installed is False:
+            print( 'Error: Pyfunnel unavailable: NumPy is not installed' )
+            pyfunneling = args.pyfunnel = args.pyfunnel_fail = False
+        elif numpy_installed is None:
             try:
                 import numpy
             except:
-                if args.interp:
-                    print( 'Error: Interpolation diffs unavailable: NumPy is not installed' )
-                    args.interp = False
-                if pyfunneling:
-                    print( 'Error: Pyfunnel unavailable: NumPy is not installed' )
-                    pyfunneling = args.pyfunnel = args.pyfunnel_fail = False
+                print( 'Error: Pyfunnel unavailable: NumPy is not installed' )
+                pyfunneling = args.pyfunnel = args.pyfunnel_fail = False
     if pyfunneling:
         try:
             import pyfunnel
@@ -611,7 +613,7 @@ def sig_compare( fnam1, fnam2 ):
     if interp_or_plot_or_pyfunnel and ( not ( cols1 and cols2 ) ):
         interp = False
         plotting = plot = plot_fail = False
-        pyfunneling = pyfunnel = pyfunnel_fail = False
+        pyfunneling = pyfunnel_fail = False
         interp_or_plot_or_pyfunnel = False
 
     # Interpolation and plotting and pyfunneling
@@ -814,17 +816,17 @@ def sig_compare( fnam1, fnam2 ):
                     tick.label1.set_fontsize( 7 )
                 for tick in top.yaxis.get_major_ticks():
                     tick.label1.set_fontsize( 7 )
-                len_leg = max( len( leg1 ), len( leg2 ) )
-                if len_leg <= 80:
-                    leg_font_size = 7
-                elif len_leg <= 120:
-                    leg_font_size = 6
-                elif len_leg <= 130:
-                    leg_font_size = 5
-                else:
-                    leg_font_size = 4
-                leg = top.legend( loc = 'best', fontsize = leg_font_size )
-                #leg.get_frame().set_alpha( 1.0 ) # Make legend opaque (default is semi-transparent)
+                # len_leg = max( len( leg1 ), len( leg2 ) )
+                # if len_leg <= 80:
+                #     leg_font_size = 7
+                # elif len_leg <= 120:
+                #     leg_font_size = 6
+                # elif len_leg <= 130:
+                #     leg_font_size = 5
+                # else:
+                #     leg_font_size = 4
+                # leg = top.legend( loc = 'best', fontsize = leg_font_size )
+                # leg.get_frame().set_alpha( 1.0 ) # Make legend opaque (default is semi-transparent)
 
                 # Diff plot
                 bot.set_title( title + ( '  ' if title else '' ) + 'Diff', fontsize = title_font_size )
@@ -878,7 +880,7 @@ def sig_compare( fnam1, fnam2 ):
                  ltoly = args.rTol,
                 )
                 pyfunnel.plot_funnel( 'pyfunnel_results' )
-                
+
     # Dump difference signal
     if args.dump:
         if sys.version_info >= ( 3, 0 ):

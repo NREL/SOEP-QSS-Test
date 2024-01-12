@@ -38,7 +38,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Imports
-import getopt, os, re, string, sys
+import os, sys
 
 def main():
 
