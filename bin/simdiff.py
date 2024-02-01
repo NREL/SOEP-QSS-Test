@@ -9,7 +9,7 @@
 # Developed by Objexx Engineering, Inc. (https://objexx.com) under contract to
 # the National Renewable Energy Laboratory of the U.S. Department of Energy
 #
-# Copyright (c) 2017-2023 Objexx Engineering, Inc. All rights reserved.
+# Copyright (c) 2017-2024 Objexx Engineering, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -90,7 +90,9 @@ def sim_diff():
     parser.add_argument( '--sequential', help = "compare non-numeric lines  [F]", action = 'store_true' )
     parser.add_argument( '--no-sync', help = "don't sync numeric block  [F]", dest = 'sync', action = 'store_false' )
     parser.add_argument( '--no-interp', help = "don't interpolate (interp => sync)  [F]", dest = 'interp', action = 'store_false' )
-    parser.add_argument( '--coarse', help = "compare at coarser signal's steps  [F]", action = 'store_true' )
+    parser.add_argument( '--fine', help = "compare at finer signal's steps  [F]", action = 'store_true' )
+    parser.add_argument( '--no-fine', dest = 'fine', action = 'store_false', help = argparse.SUPPRESS )
+    parser.add_argument( '--coarse', dest = 'fine', action = 'store_false', help = argparse.SUPPRESS )
     parser.add_argument( '--plot', help = 'plot signals  [F]', action = 'store_true' )
     parser.add_argument( '--plot-fail', help = 'plot signals if fail (=> interp)  [F]', action = 'store_true' )
     parser.add_argument( '--pyfunnel', help = 'pyfunnel signals  [F]', action = 'store_true' )
@@ -350,7 +352,7 @@ def sig_compare( fnam1, fnam2 ):
     sequential = args.sequential
     sync = args.sync
     interp = args.interp
-    coarse = args.coarse
+    coarse = not args.fine
     plot = args.plot
     plot_fail = args.plot_fail
     plotting = plot or plot_fail

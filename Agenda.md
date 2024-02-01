@@ -1,3 +1,25 @@
+## Agenda: 2024/02/01
+- Benchmarking
+  - Initial QSS + Windows support put on a `QSS` branch with some small fixes and refinements
+    - Tool lookup in tool_configuration logic fix and use "Optimica" instead of "optimica" as tool name (lookup is case sensitive)
+    - Support reusing a prior Buildings 10.0.0 installation in `dst`
+  - Issues/Decisions
+    - Build sep FMU for QSS with QSS options?
+      - Can be slow for larger models
+      - Don't see the QSS support options slowing PyFMI runs noticably
+      - Will want to refactor runSuite.py to separate PyFMI FMU build and simulation functions
+    - User may have to install some packages into OCT Python for runSuite.py (yaml, shutil, zipfile, ...)
+  - Features?
+    - Add automatic QSS download/build support?
+    - OCT and QSS version tagging in results/plots
+- Development (not all of this is in SOEP-QSS yet)
+  - Relaxation QSS3 experiments/refinements:
+    - Try $\dddot{x}$ relaxation only (no $\ddot{x}$ relaxation) to avoid simultaneous requantization sequence dependency issues due to ND
+    - No rQSS3 variations are performing particularly well yet: the 3rd derivative makes derivative relaxation trickier
+  - Add relaxation => inflection
+  - QSS3: Use inflection points at $\dot{x}=0$ as well as $\ddot{x}=0$
+  - Make dtND optimization the default if `--dtND` specified without a value
+
 ## Agenda: 2024/01/08
 - Development
   - List of QSS solvers added to SOEP-QSS repository README
@@ -151,7 +173,7 @@
       ![rQSS2/CVode CPU Time](img/CPU_Time_Ratio.png)
       ![rQSS2 Scalability](img/Scalability.png)
   - MixingVolumeMassFlow
-    - Suggested as a simple model we could implement in Ptolemy to compare to the SOEP-QSS implementation if it has 
+    - Suggested as a simple model we could implement in Ptolemy to compare to the SOEP-QSS implementation if it has
     - This simple model _doesn't_ demonstrate the derivative self-dependency sensitivity (yo-yoing)
     - [At the same accuracy QSS2 is actually 2.3X faster than CVode]
     - Maybe the ConservationEquationStep or some other simple model with the issue could implemented in Ptolemy instead
