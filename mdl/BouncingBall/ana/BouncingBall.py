@@ -22,7 +22,7 @@ import math
 g = 9.80665
 e = 0.8
 dtOut = 1e-4
-tEnd = 3.0
+tStop = 3.0
 
 # Variables
 i = 0 # Loop count
@@ -34,7 +34,7 @@ ti = math.sqrt( 2 / g ) # First impact time
 # Solution
 print( 'Time' + '\t' + 'Height' )
 print( 's' + '\t' + 'm' )
-while t <= tEnd:
+while t <= tStop:
     if t >= ti: # Impact
         print( "%.15f" % ti + '\t' + '0.0' )
         h0 = 0.0

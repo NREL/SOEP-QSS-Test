@@ -122,10 +122,14 @@ for arg in sys.argv[1:]:
         elif arg.startswith( ( '--qss=', '--qss:', '--QSS=', '--QSS:' ) ): # Solver
             qss = arg[6:].strip()
         else: # Clean up options
-            arg.replace( '--start_time', '--tBeg', 1 )
-            arg.replace( '--start-time', '--tBeg', 1 )
-            arg.replace( '--final_time', '--tEnd', 1 )
-            arg.replace( '--final-time', '--tEnd', 1 )
+            arg.replace( '--start_time', '--tStart', 1 )
+            arg.replace( '--start-time', '--tStart', 1 )
+            arg.replace( '--tBeg', '--tStart', 1 )
+            arg.replace( '--tbeg', '--tStart', 1 )
+            arg.replace( '--final_time', '--tStop', 1 )
+            arg.replace( '--final-time', '--tStop', 1 )
+            arg.replace( '--tEnd', '--tStop', 1 )
+            arg.replace( '--tend', '--tStop', 1 )
             arg.replace( '--res=csv', '--csv', 1 )
         args += ' ' + arg
 
