@@ -67,7 +67,12 @@ parser.add_argument( '--rtol', help = 'Relative tolerance  [FMU]', type = float 
 parser.add_argument( '--rTol', help = argparse.SUPPRESS, type = float, dest = 'rtol' )
 parser.add_argument( '--atol', help = 'Absolute tolerance  [FMU]', type = float )
 parser.add_argument( '--aTol', help = argparse.SUPPRESS, type = float, dest = 'atol' )
+parser.add_argument( '--start_time', help = 'Simulation start time  [FMU]', type = float )
+parser.add_argument( '--start-time', help = argparse.SUPPRESS, type = float, dest = 'start_time' )
+parser.add_argument( '--tBeg', help = argparse.SUPPRESS, type = float, dest = 'start_time' )
+parser.add_argument( '--tbeg', help = argparse.SUPPRESS, type = float, dest = 'start_time' )
 parser.add_argument( '--final_time', help = 'Simulation end time  [FMU]', type = float )
+parser.add_argument( '--final-time', help = argparse.SUPPRESS, type = float, dest = 'final_time' )
 parser.add_argument( '--tEnd', help = argparse.SUPPRESS, type = float, dest = 'final_time' )
 parser.add_argument( '--tend', help = argparse.SUPPRESS, type = float, dest = 'final_time' )
 parser.add_argument( '--dtOut', help = 'Output time step (s)  [computed]', type = float )
@@ -186,7 +191,9 @@ if args.var: # Variable output filtering
 if args.ncp is not None:
     opt[ 'ncp' ] = args.ncp
 else: # Use dtOut to set ncp for PyFMI
-    time_span = ( args.final_time if args.final_time is not None else fmu.get_default_experiment_stop_time() ) - fmu.get_default_experiment_start_time()
+    time_span = (
+     ( args.final_time if args.final_time is not None else fmu.get_default_experiment_stop_time() ) -
+     ( args.start_time if args.start_time is not None else fmu.get_default_experiment_start_time() ) )
     if args.dtOut is None: # Set default dtOut
         args.dtOut = math.pow( 10.0, round( math.log10( time_span * 0.0002 ) ) )
     else: # Use specified dtOut
@@ -268,8 +275,8 @@ opt_solver[ 'store_event_points' ] = not args.soo
 
 # Simulate
 sim_args = { 'options': opt }
-if args.final_time is not None:
-    sim_args[ 'final_time' ] = args.final_time
+if args.start_time is not None: sim_args[ 'start_time' ] = args.start_time
+if args.final_time is not None: sim_args[ 'final_time' ] = args.final_time
 if args.fxn:
     try:
         ( var, fxn ) = args.fxn.split( ':' )

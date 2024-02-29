@@ -78,11 +78,11 @@ solvers = (
  'iLIQSS1',
  'iLIQSS2',
  'iLIQSS3',
- 'LIQSS1', 
- 'LIQSS2', 
- 'LIQSS3', 
- 'QSS1', 
- 'QSS2', 
+ 'LIQSS1',
+ 'LIQSS2',
+ 'LIQSS3',
+ 'QSS1',
+ 'QSS2',
  'QSS3',
 )
 
@@ -119,10 +119,13 @@ for arg in sys.argv[1:]:
     else: # Pass-through argument
         if arg.startswith( ( '--var=', '--var:' ) ): # Variable file
             var = arg[6:].strip()
-        elif arg.startswith( ( '--qss=', '--qss:' ) ): # QSS method
+        elif arg.startswith( ( '--qss=', '--qss:', '--QSS=', '--QSS:' ) ): # Solver
             qss = arg[6:].strip()
         else: # Clean up options
+            arg.replace( '--start_time', '--tBeg', 1 )
+            arg.replace( '--start-time', '--tBeg', 1 )
             arg.replace( '--final_time', '--tEnd', 1 )
+            arg.replace( '--final-time', '--tEnd', 1 )
             arg.replace( '--res=csv', '--csv', 1 )
         args += ' ' + arg
 

@@ -53,8 +53,8 @@ pymodelica.environ[ 'JVM_ARGS' ] = '-Xmx131072m'
 
 # Parse arguments
 parser = argparse.ArgumentParser()
-parser.add_argument( '--qss', help = 'QSS options (OCT)  [On]', default = True, action = 'store_true' )
-parser.add_argument( '--no-qss', help = 'No QSS options (OCT)', dest = 'qss', action = 'store_false' )
+parser.add_argument( '--qss', '--QSS', help = 'QSS options (OCT)  [On]', default = True, action = 'store_true' )
+parser.add_argument( '--no-qss', '--no-QSS', help = 'No QSS options (OCT)', dest = 'qss', action = 'store_false' )
 parser.add_argument( '--pyfmi', help = 'No QSS options (OCT)', dest = 'qss', action = 'store_false' )
 parser.add_argument( '--lazy', help = 'Lazy evaluation (OCT)  [On if --qss]', default = None, action = 'store_true' )
 parser.add_argument( '--no-lazy', help = 'No lazy evaluation (OCT)', dest = 'lazy', action = 'store_false' )
@@ -72,9 +72,9 @@ parser.add_argument( '--no-diag', help = 'Don\'t generate HTML diagnostics', des
 parser.add_argument( '--xml', help = 'Extract modelDescription.xml from FMU  [On]', default = True, action = 'store_true' )
 parser.add_argument( '--no-xml', help = 'Don\'t extract modelDescription.xml from FMU', dest = 'xml', action = 'store_false' )
 parser.add_argument( '--log', help = 'FMU compiler log level/file', default = 'warning' )
-parser.add_argument( '--gcc', help = 'Use GCC C compiler', default = False, action = 'store_true' )
-parser.add_argument( '--msvs', help = 'Use Microsoft Visual Studio C compiler', default = False, action = 'store_true' )
-#parser.add_argument( '--msvs_version', help = 'Microsoft Visual Studio version  [2022]', default = '2022' )
+parser.add_argument( '--gcc', '--GCC', help = 'Use GCC C compiler', default = False, action = 'store_true' )
+parser.add_argument( '--msvs', '--MSVS', help = 'Use Microsoft Visual Studio C compiler', default = False, action = 'store_true' )
+#parser.add_argument( '--msvs-version', '--MSVS-version', help = 'Microsoft Visual Studio version  [2022]', default = '2022' )
 parser.add_argument( 'model', nargs = '?', help = 'Model file', default = '' )
 args = parser.parse_args()
 if args.qss: # Set up conditional defaults

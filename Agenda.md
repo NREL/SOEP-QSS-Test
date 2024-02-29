@@ -1,3 +1,33 @@
+## Agenda: 2024/02/29
+- Benchmarking
+  - QSS branch refinements
+    - Reorder simulations to reuse prior FMUs when possible
+    - Use separate FMUs for QSS runs since QSS FMU build options tend to slow PyFMI runs
+    - Use sim and bld config dictionaries to simplify FMU reuse and adding more simulation options in the future
+    - Support tool config settings that can be overridden for specific solvers
+    - Show OCT and QSS versions in plots
+    - Will merge into main branch after Linux testing (and any feedback)
+  - getQSS.py script developed for use (?) by benchmarking
+    - Stock QSS repo may not work for all users so hard to automate builds reliably
+      - Compilers/Python/googletest: location, version, etc. (more an issue on Windows)
+        - Some compilers can't build FMIL so depend on a 2nd compiler
+      - googletest must be built/installed to run unit tests
+    - Still a useful script for getting users started
+- Development
+  - Integrate FMIL into QSS repo/builds
+  - Clang support on Windows added
+  - Intel oneAPI support on Linux added
+  - Prune out currently unused capabilities: FMU-QSS, PyQSS, ...
+  - Linux support tested/debugged
+  - Added `--tBeg` option to change start time (for benchmarking)
+  - Git repo hash added to QSS version string (helps with saved benchmarking results)
+- OCT
+  - Installed OCT 1.48 release on Windows and Linux
+    - Windows: Working fine
+    - Ubuntu 22.04:
+      - Tried to use a Python 3.10 venv but getting "bad magic number" from the OCT .pyc files so I'll switch to Python 3.9
+      - Any reason I can't build the venv from Ubuntu's Python 3.9 rather than building 3.9 from source?
+
 ## Agenda: 2024/02/01
 - Benchmarking
   - Initial QSS + Windows support put on a `QSS` branch with some small fixes and refinements

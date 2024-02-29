@@ -2,4 +2,4 @@
 # Set MODELICA environment for using these scripts
 # Customize for your system
 export MODELICA_BUILDINGS_LIB=/opt/modelica-buildings
-export MODELICAPATH=.:..:/opt/OCT/install/ThirdParty/MSL:$MODELICA_BUILDINGS_LIB
+export MODELICAPATH=.:..:/usr/bin/oct/install/ThirdParty/MSL:$MODELICA_BUILDINGS_LIB
