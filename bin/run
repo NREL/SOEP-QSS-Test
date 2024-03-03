@@ -1,0 +1,2 @@
+#!/bin/bash
+jm_python.sh $(dirname $0)/run.py $*
