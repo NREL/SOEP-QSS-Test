@@ -42,7 +42,7 @@
 #  Run from an environment with MODELICAPATH and MODELICA_BUILDINGS_LIB set up
 
 # Python imports
-import argparse, inspect, os, shutil, subprocess, sys
+import argparse, inspect, os, shutil, sys
 from zipfile import ZipFile
 
 # PyFMI imports
