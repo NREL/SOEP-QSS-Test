@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 # Get and Build latest SOEP-QSS:
-# - Requires Python package: GitPython
-# - QSS build can fail if the default configuration scripts aren't adapted for the system
+# - Requires Python package GitPython (Ubuntu: python3-git)
+# - SOEP-QSS build can fail if the scripts called by setQSS need to be adapted for the system
 
 # Imports
 import argparse
@@ -100,9 +100,11 @@ else:
 if build not in ( 'r', 'd' ):
     print( 'Error: Build type not supported:', build )
     sys.exit( 1 )
-os.chdir( args.dir )
-print( 'Building QSS in', args.dir )
-if platform_name == 'Linux':
-    print( subprocess.check_output( [ 'source', 'bin/Linux/' + compiler + '/' + build + '/setQSS', '&&', 'bin/Linux/bld' ], shell = True, encoding = 'UTF-8' ) )
-elif platform_name == 'Windows':
-    print( subprocess.check_output( [ 'bin\\Windows\\' + compiler + '\\' + build + '\\setQSS.bat', '&&', 'bin\\Windows\\bld.bat' ], shell = True, encoding = 'UTF-8' ) )
+print( 'Building SOEP-QSS in', args.dir )
+try:
+    if platform_name == 'Linux':
+        print( subprocess.check_output( '. bin/Linux/' + compiler + '/' + build + '/setQSS && bin/Linux/bld', executable = '/bin/bash', shell = True, encoding = 'UTF-8', cwd = args.dir ) )
+    elif platform_name == 'Windows':
+        print( subprocess.check_output( [ 'bin\\Windows\\' + compiler + '\\' + build + '\\setQSS.bat', '&&', 'bin\\Windows\\bld.bat' ], shell = True, encoding = 'UTF-8', cwd = args.dir ) )
+except subprocess.CalledProcessError as err:
+        print( 'SOEP-QSS build error:', err.output )
