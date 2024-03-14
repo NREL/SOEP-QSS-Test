@@ -1,3 +1,47 @@
+## Agenda: 2024/03/14
+- QSS Development
+  - Rename options: --tEnd -> --tStart  and  --tBeg -> --tStop
+  - Updates for Linux
+- getQSS.py
+  - Clones SOEP-QSS to current or specified directory
+  - Can choose a revision
+  - Builds with GCC or specified compiler (defaults to release build)
+  - Can suppress build with `--no-bld`
+  - Builds attempt to set up environment for the compiler: Can fail if not found: Let me know and I'll adapt it to your systems
+  - Builds require GNU make and (for FMIL) CMake
+  - Requires GitPython package
+  - Pushed to SOEP-QSS-Test/bin
+  - Not currently integrated into benchmarking:
+    - Usually will build once and benchmark multiple times.
+    - Development build with some compilers (_e.g._, oneAPI) requires compiler environment but Python can't modify parent environment.
+    - Production release builds will bundle necessary compiler shared/dynamic libraries.
+    - For benchmarking you can add the QSS executable directory to `PATH` or use the SOEP-QSS `setQSS` mechanism to do that.
+- Linux (Ubuntu 22.04):
+  - OCT installed/tested
+  - QSS built/tested with GCC, Clang, and latest Intel oneAPI C++ (including googletest unit tests verification)
+  - Refined compiler build support
+  - Experiment with parallel Observers: Results similar to Windows
+  - Verify that QSS branch of benchmarking system works
+- Benchmarking Development (QSS Branch)
+  - Adapting YAML configuration file layout and code for:
+    - Separate build config (parameter name/values) from simulation options to simplify FMU reuse logic and option hierarchy/overrides
+    - Separate tool (Optimica, QSS) from solver (CVode, QSS3, ...) to simplify code
+    - Support QSS option pass-through for any option without changing benchmarking code
+    - YAML changes are not in QSS branch yet
+  - Limitation: Can't run the same model+solver with different options in a given run because the solver list is separate from the per-model options specs. This is probably OK given expected usage of the benchmarking.
+- Benchmarking Issues
+  - Seeing very high JVM memory use for some models as we try to scale them up:
+    - OneFloor_OneZone fails for n=16+ with JVM getting `-Xmx48g` (48GB)
+  - GCC is failing to compile some FMUs as n increases looks like some C sources are too large
+    - Tried to swap in a newer TDM-GCC on Windows without success
+  - Specifying Visual C++ (`--msvs`) for FMU builds is failing within the benchmarking environment but works for stand-alone FMU builds (seems to not be using the model directory on `%TEMP%`)
+- Benchmarking Runs
+  - Configuration is now working for setting up and running the models with different parameter (sizing) values
+  - Results for the non-trivial models show QSS input processing time is dominating for larger models
+    - This should be greatly reduced by efficient graph processing algorithms and an option for minimal log output (FY24 task)
+    - Added the `--sim-time` option to plot the simulation instead of total time
+  - See the expected QSS derivative sensitivity effects with Buildings models that needs further improvement
+
 ## Agenda: 2024/02/29
 - Benchmarking
   - QSS branch refinements
