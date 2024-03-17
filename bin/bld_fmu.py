@@ -75,6 +75,7 @@ parser.add_argument( '--log', help = 'FMU compiler log level/file', default = 'w
 parser.add_argument( '--gcc', '--GCC', help = 'Use GCC C compiler', default = False, action = 'store_true' )
 parser.add_argument( '--msvs', '--MSVS', help = 'Use Microsoft Visual Studio C compiler', default = False, action = 'store_true' )
 #parser.add_argument( '--msvs-version', '--MSVS-version', help = 'Microsoft Visual Studio version  [2022]', default = '2022' )
+parser.add_argument( '--parameter', help = 'Scaling parameter name:value', default = None )
 parser.add_argument( 'model', nargs = '?', help = 'Model file', default = '' )
 args = parser.parse_args()
 if args.qss: # Set up conditional defaults
@@ -202,6 +203,16 @@ compiler_options[ 'automatic_tearing' ] = args.tearing
 #compiler_options[ 'generate_mof_files' ] = args.mof # Deprecated: Replaced by generate_html_diagnostics
 compiler_options[ 'generate_html_diagnostics' ] = args.diag
 compiler_options[ 'disable_smooth_events' ] = False
+if args.parameter: # Add parameter spec to model name
+    try:
+        parameter_name, parameter_value = args.parameter.split( ':' )
+    except:
+        try:
+            parameter_name, parameter_value = args.parameter.split( '=' )
+        except:
+            print('Error: --parameter argument should have the form name:value or name=value')
+            sys.exit(2)
+    nam += '(' + parameter_name + '=' + parameter_value + ')'
 if tool == 'OCT':
     compiler_options[ 'event_indicator_scaling' ] = args.qss
     compiler_options[ 'event_output_vars' ] = args.qss

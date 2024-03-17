@@ -48,6 +48,11 @@ import argparse, fnmatch, glob, math, os, re, sys
 import numpy
 from pyfmi import load_fmu
 
+def nonnegative_float( value ):
+    assert isinstance( value, float )
+    if value < 0.0: raise argparse.ArgumentTypeError( "%s is not nonnegative" % value )
+    return value
+
 # Parse arguments
 parser = argparse.ArgumentParser( formatter_class = argparse.RawTextHelpFormatter, add_help = False )
 parser.add_argument( '-h', '--help', help = 'Show this message', action = 'help' )
@@ -65,6 +70,7 @@ parser.add_argument( '--fxn', help = '''Input function in the form VARIABLE:FUNC
 )
 parser.add_argument( '--rtol', help = 'Relative tolerance  [FMU]', type = float )
 parser.add_argument( '--rTol', help = argparse.SUPPRESS, type = float, dest = 'rtol' )
+parser.add_argument( '--tolerance', help = argparse.SUPPRESS, type = float, dest = 'rtol' )
 parser.add_argument( '--atol', help = 'Absolute tolerance  [FMU]', type = float )
 parser.add_argument( '--aTol', help = argparse.SUPPRESS, type = float, dest = 'atol' )
 parser.add_argument( '--start_time', help = 'Simulation start time  [FMU]', type = float )
@@ -81,7 +87,7 @@ parser.add_argument( '--tEnd', help = argparse.SUPPRESS, type = float, dest = 'f
 parser.add_argument( '--tend', help = argparse.SUPPRESS, type = float, dest = 'final_time' )
 parser.add_argument( '--dtOut', help = 'Output time step (s)  [computed]', type = float )
 parser.add_argument( '--dtout', help = argparse.SUPPRESS, type = float, dest = 'dtOut' )
-parser.add_argument( '--maxh', help = 'Max time step (s) for CVode or Radau5ODE solvers (0 => ∞, <0 => compute from ncp)  [0]', type = float, default = '0' ) # Default to ∞ so output steps don't add integration steps
+parser.add_argument( '--maxh', help = 'Max time step (s) for CVode or Radau5ODE solvers (0 => ∞)  [0]', type = nonnegative_float, default = 0.0 ) # Default to ∞ so output steps don't add integration steps
 parser.add_argument( '--dtMax', help = argparse.SUPPRESS, type = float, dest = 'maxh' )
 parser.add_argument( '--dtmax', help = argparse.SUPPRESS, type = float, dest = 'maxh' )
 parser.add_argument( '--h', help = 'ExplicitEuler max time step (s)  [0.01]', type = float )
@@ -91,16 +97,18 @@ parser.add_argument( '--res', help = 'Results format  [memory]', default = 'memo
 parser.add_argument( '--var', help = 'Variable output filter list file' )
 parser.add_argument( '--log', help = 'Logging level  [3]', type = int, default = 3, choices = [ 0, 1, 2, 3, 4, 5, 6, 7 ] )
 args = parser.parse_args()
-if args.maxh is not None and args.maxh < 0.0: args.maxh = None
 
 # Check Modelica environment is set up
 if not os.getenv( 'MODELICAPATH' ):
     print( 'Error: Modelica environment is not set up' )
     sys.exit( 1 )
 
+# Get current directory
+cur_dir = os.getcwd()
+
 # Find tool directory and name
 tools = ( 'OCT', 'JModelica' )
-tool_dir = os.getcwd()
+tool_dir = cur_dir
 tool = os.path.splitext( os.path.basename( tool_dir ) )[0]
 while tool not in tools: # Move up one directory level
     tool_dir = os.path.dirname( tool_dir )
@@ -132,7 +140,12 @@ if not model:
     sys.exit( 1 )
 
 # Find the model FMU file
-model_fmu = os.path.join( tool_dir, model + '.fmu' )
+fmu_dir = cur_dir
+model_fmu = model + '.fmu'
+while not os.path.isfile( os.path.join( fmu_dir, model_fmu ) ):
+    if fmu_dir == tool_dir: break # Don't go higher
+    fmu_dir = os.path.dirname( fmu_dir )
+model_fmu = os.path.join( fmu_dir, model_fmu )
 if not os.path.isfile( model_fmu ):
     print( 'Error: FMU not found:', model_fmu )
     sys.exit( 1 )
@@ -145,7 +158,7 @@ if args.var is not None: # Use specified variable output list file
         sys.exit( 1 )
 else: # Look for default variable output list file
     var = ''
-    var_dir = os.getcwd()
+    var_dir = cur_dir
     model_var = model + '.var'
     while True:
         var_look = os.path.join( var_dir, model_var )
@@ -210,7 +223,7 @@ if args.solver == 'CVode':
     opt_solver[ 'discr' ] = args.discr
     opt_solver[ 'iter' ] = args.iter
     if args.maxord is not None: opt_solver[ 'maxord' ] = args.maxord
-    if args.maxh is not None: opt_solver[ 'maxh' ] = args.maxh
+    opt_solver[ 'maxh' ] = args.maxh
 # Additional arguments for testing
 #   opt_solver[ 'external_event_detection' ] = False
 #   opt_solver[ 'maxh' ] = ( fmu.get_default_experiment_stop_time() - fmu.get_default_experiment_stop_time() ) / float( opt[ 'ncp' ] )
@@ -222,7 +235,7 @@ elif args.solver == 'Radau5ODE':
         print( 'Error: Unsupported solver:', args.solver )
         sys.exit( 1 )
     opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination # May not be needed anymore since OCT 1.43.4 fix
-    if args.maxh is not None: opt_solver[ 'maxh' ] = args.maxh
+    opt_solver[ 'maxh' ] = args.maxh
 elif args.solver == 'RungeKutta34':
     try:
         opt_solver = opt[ args.solver + '_options' ]
