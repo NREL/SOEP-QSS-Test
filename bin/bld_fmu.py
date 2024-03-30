@@ -203,6 +203,7 @@ compiler_options[ 'automatic_tearing' ] = args.tearing
 #compiler_options[ 'generate_mof_files' ] = args.mof # Deprecated: Replaced by generate_html_diagnostics
 compiler_options[ 'generate_html_diagnostics' ] = args.diag
 compiler_options[ 'disable_smooth_events' ] = False
+nam_par = nam # Name with parameter spec suffix if any
 if args.parameter: # Add parameter spec to model name
     try:
         parameter_name, parameter_value = args.parameter.split( ':' )
@@ -212,7 +213,7 @@ if args.parameter: # Add parameter spec to model name
         except:
             print('Error: --parameter argument should have the form name:value or name=value')
             sys.exit(2)
-    nam += '(' + parameter_name + '=' + parameter_value + ')'
+    nam_par += '(' + parameter_name + '=' + parameter_value + ')'
 if tool == 'OCT':
     compiler_options[ 'event_indicator_scaling' ] = args.qss
     compiler_options[ 'event_output_vars' ] = args.qss
@@ -267,7 +268,7 @@ try:
             modelicapath = os.getenv( 'MODELICAPATH' )
             del os.environ[ 'MODELICAPATH' ] # Prevent OCT warning
             fmu_file = pymodelica.compile_fmu(
-             nam,
+             nam_par,
              mod,
              version = "2.0",
              compiler_log_level = args.log,
@@ -276,7 +277,7 @@ try:
             )
         else: # Older OCT uses MODELICAPATH env var
             fmu_file = pymodelica.compile_fmu(
-             nam,
+             nam_par,
              mod,
              version = "2.0",
              compiler_log_level = args.log,
@@ -287,7 +288,7 @@ try:
             modelicapath = os.getenv( 'MODELICAPATH' )
             del os.environ[ 'MODELICAPATH' ] # Prevent OCT warning
             fmu_file = pymodelica.compile_fmu(
-             nam,
+             nam_par,
              version = "2.0",
              compiler_log_level = args.log,
              compiler_options = compiler_options,
@@ -295,7 +296,7 @@ try:
             )
         else: # Older OCT uses MODELICAPATH env var
             fmu_file = pymodelica.compile_fmu(
-             nam,
+             nam_par,
              version = "2.0",
              compiler_log_level = args.log,
              compiler_options = compiler_options
