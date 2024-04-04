@@ -160,13 +160,15 @@ if not qss: # QSS solver not specified
 # Find tool directory and name
 tools = ( 'QSS', )
 tool_dir = os.getcwd()
+tool_sub = [] # Tool subdirectories
 tool = os.path.splitext( os.path.basename( tool_dir ) )[0]
 while tool not in tools: # Look up one directory level
     tool_dir = os.path.dirname( tool_dir )
     if os.path.splitdrive( tool_dir )[1] == os.sep: # At top of drive/mount
-        tool_dir = tool = ''
+        tool = None
         break
     tool = os.path.splitext( os.path.basename( tool_dir ) )[0]
+    if tool not in tools: tool_sub.append( tool )
 if not tool:
     print( 'Error: Not in/under a directory named for a supported QSS simulation tool:', tools )
     sys.exit( 1 )
@@ -180,18 +182,24 @@ if not model:
     print( 'Error: QSS directory not in a model directory' )
     sys.exit( 1 )
 
-# Find the model FMU file
-if fmus:
+# Find the model FMU(s)
+if fmus: # Use specified FMU(s)
     for fmu in fmus:
         if not os.path.isfile( fmu ):
             print( 'Error: FMU not found:', fmu )
             sys.exit( 1 )
     model_fmu = ' '.join( fmus )
-else:
-    model_fmu = os.path.join( model_dir, gen, model + '.fmu' )
-    if not os.path.isfile( model_fmu ):
-        print( 'Error: FMU not found:', model_fmu )
-        sys.exit( 1 )
+else: # Search for the model's FMU
+    found = False
+    if tool_sub:
+        model_fmu = os.path.join( model_dir, gen, *tool_sub, model + '.fmu' )
+        if os.path.isfile( model_fmu ): # Found FMU in tool subdirectory
+            found = True
+    if not found: # Look in tool directory
+        model_fmu = os.path.join( model_dir, gen, model + '.fmu' )
+        if not os.path.isfile( model_fmu ):
+            print( 'Error: FMU not found:', model_fmu )
+            sys.exit( 1 )
 
 # Find the model variable output list file if present
 if var: # Use specified variable output list file
@@ -213,6 +221,7 @@ else: # Look up the directory tree for a default variable output list file
     if var: args += ' --var=' + var
 
 # Run QSS
+sys.stdout.flush() # Flush any diagnostic output
 try:
     if sys.version_info >= ( 3, 0 ):
         if red: # Redirect

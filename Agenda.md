@@ -1,3 +1,27 @@
+## Agenda: 2024/04/04
+- Benchmarking
+  - Save and plot both total and simulation CPU time to clarify what we are measuring with the runs
+  - Separate config.yml files for each benchmarking model set up and run with different scaling and `stopTime` to see what the largest `n` we can build each with and how small a `stopTime` we can use and still get useful scaling information
+    - OneFloor_OneZone builds fail by `n=16`
+  - To investigate behavior for the benchmarking models I set up a way to run them stand-alone so I can save the output and log files:
+    - Added a `--parameter` option to `bld_fmu.py` to pass the scaling parameter to the FMU compilation
+    - Added searching up the directory tree for the FMU to my `run_PyFMI.py` and `run_QSS.py` scripts to support saving different scaling/parameter/other FMU variants under the same model tree
+  - Looking into suprising behavior with scaling
+    - OneFloor_OneZone: Going from `nFlo=1` to `nFlo=2` the number of event indicators goes from 48 to 174 and the CVode run time goes from 52 s to 793 s
+      - `nFlo=2` ~doubles the model size but the number of `cas` entries also doubles (?)
+      - Maybe we want an option to not use the grid of duplicate models when the parameter itself changes the model size (Scalable also) (?)
+  - Results repository created at https://github.com/DeadParrot/benchmark_results has some placeholder/preliminary results
+  - Trying 1-week runs to see which models are fast enough to generate useful scalability curves
+- OCT
+  - Passing a model name with a parameter spec, like _model_(_var_=_val_), causes the `DefaultExperiment` section to be omitted. Bug?
+  - Model size compilation limits wrt JVM use and/or generated C code size may be too low for SOEP
+    - How to establish the needed size?
+    - Can compilation be changed to reduce the JVM resource use and size of generated C?
+- QSS
+  - Added QSS startup processing CPU and wall time tracking to help with the planned work to reduce that
+  - Working on getting better rQSS3 solver algorithm
+  - Working on ideas for next phase of relaxation/stiff solvers
+
 ## Agenda: 2024/03/14
 - QSS Development
   - Rename options: --tEnd -> --tStart  and  --tBeg -> --tStop
