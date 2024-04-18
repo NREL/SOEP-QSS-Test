@@ -1,3 +1,19 @@
+## Agenda: 2024/04/18
+- Benchmarking
+  - Added benchmarks repository git revision to plot footers
+  - Verified that IntegratorWithReset CPU time doesn't start to look linear-ish until stopTime > ~100s: Reran benchmarks and they make sense now
+  - 1-week simulations run times are too long for practical benchmarking: Improving QSS handling of derivative sensitivity will help but the CVode runs also get very slow as _n_ increases
+- Development
+  - Exploring LIQSS+clustering
+    - Motivation:
+      - ConservationEquationStep shows yoyoing but LIQSS solvers work on it because the stiffness is diagonal:
+      - Forcing QSS to behave like a traditional solver with a fixed time step (setting dtMin=dtMax) has a controlling effect on the stiffness
+      - "Modified LIQSS" paper that proposes a method for pairwise off-diagonal stiffness: we can try it and we may be able to generalize to _n_-ary off-diagonal stiffness
+    - Added cluster file support to specify "clusters" of variables that should always be requantized simultaneously
+      - We would find the clusters automatically _via_ Jacobian analysis for production use
+    - Want to see what the effect is on time step size with all variants of the QSS and LIQSS solvers
+    - Testing with Case600 since it has a modest number (41) of continuous states
+
 ## Agenda: 2024/04/04
 - Benchmarking
   - Save and plot both total and simulation CPU time to clarify what we are measuring with the runs

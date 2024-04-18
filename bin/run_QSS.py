@@ -39,7 +39,7 @@
 
 # Notes
 #  Run from an environment set up for QSS
-#  Variable output list file entries can use wildcard or regex syntax
+#  Variable cluster and output spec file entries can use wildcard or regex syntax
 
 # Imports
 import os, subprocess, sys
@@ -87,7 +87,7 @@ solvers = (
 )
 
 # Set up pass-through QSS arguments
-args = var = qss = red = ''
+args = clu = var = qss = red = ''
 fmus = []
 gen = 'OCT' # Default FMU generator
 for arg in sys.argv[1:]:
@@ -117,7 +117,9 @@ for arg in sys.argv[1:]:
             arg = arg.replace( '\\', '/' )
         fmus.append( arg )
     else: # Pass-through argument
-        if arg.startswith( ( '--var=', '--var:' ) ): # Variable file
+        if arg.startswith( ( '--clu=', '--clu:' ) ): # Cluster file
+            clu = arg[6:].strip()
+        elif arg.startswith( ( '--var=', '--var:' ) ): # Variable file
             var = arg[6:].strip()
         elif arg.startswith( ( '--qss=', '--qss:', '--QSS=', '--QSS:' ) ): # Solver
             qss = arg[6:].strip()
@@ -201,12 +203,31 @@ else: # Search for the model's FMU
             print( 'Error: FMU not found:', model_fmu )
             sys.exit( 1 )
 
-# Find the model variable output list file if present
-if var: # Use specified variable output list file
-    if not os.path.isfile( os.path.abspath( var ) ):
-        print( 'Error: Specified variable output list file not found:', var )
+# Find the model variable cluster spec file if present
+if clu: # Use specified variable cluster spec file
+    if not os.path.isfile( os.path.abspath( clu ) ):
+        print( 'Error: Specified variable cluster spec file not found:', clu )
         sys.exit( 1 )
-else: # Look up the directory tree for a default variable output list file
+else: # Look up the directory tree for a default variable cluster spec file(s)
+    clu_dir = os.getcwd()
+    model_clu = model + '.clu'
+    while True:
+        clu_look = os.path.join( clu_dir, model_clu )
+        if os.path.isfile( clu_look ): # Found clu file
+            clu = clu_look
+            break
+        elif clu_dir == model_dir: # Reached model dir without finding clu file
+            break
+        else: # Move up to parent directory
+            clu_dir = os.path.dirname( clu_dir )
+    if clu: args += ' --clu=' + clu
+
+# Find the model variable output spec file if present
+if var: # Use specified variable output spec file
+    if not os.path.isfile( os.path.abspath( var ) ):
+        print( 'Error: Specified variable output spec file not found:', var )
+        sys.exit( 1 )
+else: # Look up the directory tree for a default variable output spec file
     var_dir = os.getcwd()
     model_var = model + '.var'
     while True:
