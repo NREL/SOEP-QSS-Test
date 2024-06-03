@@ -1,5 +1,13 @@
 ## Agenda: 2024/06/03
+- Modelon Topics
+  - Event indicator dependencies clarifications (from email):
+    - When <Dependencies> has one event indicator depending on another (ei2 -> ei1) that means that ei2's expression has all of the same (non-event indicator) dependencies as ei1, and not that ei2's expression contains variables modified when an ei1 zero-crossing event occurs. It appears that in this situation the (non-event indicator) dependencies of ei2 appear in the <Outputs> dependencies.
+    - When the combination of <Dependencies> and <Outputs> dependencies shows an event indicator that no variable depends on or that only "passive" variables (which no "active" continuous state or other variable in their dependency sub-graphs) depends on it is safe for QSS to treat those event indicators as "passive" so that QSS doesn't waste time tracking and requantizing them.
+    Some such event indicators are marked inAssert="true" but others that are inAssert="false", which I'm assuming means they may occur in noEvent contexts or only in expressions for output variables but that don't affect the solution trajectories. I can provide examples of these if that is helpful.
 - QSS Performance Development
+  - Some important but smaller potential refinements were made
+  - Other behaviors observed were investigated and led to other refinements
+  - Next stage (larger potential) revisions are starting
   - Very small trajectory values and derivatives occur in some models and can cause tiny QSS steps and simulations getting "stuck"
     - Enabled flushing denormal values to zero in build options and code ("precise" floating point model disables it)
     - Still a problem for small values that are bigger than denormals so added a clipping threhold (defaults to 1e-100 but can override with `--clip` option)
