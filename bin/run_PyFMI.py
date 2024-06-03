@@ -49,9 +49,13 @@ import numpy
 from pyfmi import load_fmu
 
 def nonnegative_float( value ):
-    assert isinstance( value, float )
-    if value < 0.0: raise argparse.ArgumentTypeError( "%s is not nonnegative" % value )
-    return value
+    try:
+        val = float( value )
+    except:
+        raise argparse.ArgumentTypeError( "%s is not convertible to a float" % value )
+    assert isinstance( val, float )
+    if val < 0.0: raise argparse.ArgumentTypeError( "%s is not nonnegative" % val )
+    return val
 
 # Parse arguments
 parser = argparse.ArgumentParser( formatter_class = argparse.RawTextHelpFormatter, add_help = False )
@@ -87,7 +91,7 @@ parser.add_argument( '--tEnd', help = argparse.SUPPRESS, type = float, dest = 'f
 parser.add_argument( '--tend', help = argparse.SUPPRESS, type = float, dest = 'final_time' )
 parser.add_argument( '--dtOut', help = 'Output time step (s)  [computed]', type = float )
 parser.add_argument( '--dtout', help = argparse.SUPPRESS, type = float, dest = 'dtOut' )
-parser.add_argument( '--maxh', help = 'Max time step (s) for CVode or Radau5ODE solvers (0 => ∞)  [0]', type = nonnegative_float, default = 0.0 ) # Default to ∞ so output steps don't add integration steps
+parser.add_argument( '--maxh', help = 'Max time step (s) for CVode or Radau5ODE or LSODAR solvers (0 => ∞)  [0]', type = nonnegative_float, default = 0.0 ) # Default to ∞ so output steps don't add integration steps
 parser.add_argument( '--dtMax', help = argparse.SUPPRESS, type = float, dest = 'maxh' )
 parser.add_argument( '--dtmax', help = argparse.SUPPRESS, type = float, dest = 'maxh' )
 parser.add_argument( '--h', help = 'ExplicitEuler max time step (s)  [0.01]', type = float )
@@ -234,8 +238,8 @@ elif args.solver == 'Radau5ODE':
     except:
         print( 'Error: Unsupported solver:', args.solver )
         sys.exit( 1 )
-    opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination # May not be needed anymore since OCT 1.43.4 fix
     opt_solver[ 'maxh' ] = args.maxh
+    opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination # May not be needed anymore since OCT 1.43.4 fix
 elif args.solver == 'RungeKutta34':
     try:
         opt_solver = opt[ args.solver + '_options' ]
@@ -256,6 +260,7 @@ elif args.solver == 'RodasODE':
     except:
         print( 'Error: Unsupported solver:', args.solver )
         sys.exit( 1 )
+    opt_solver[ 'maxh' ] = args.maxh
     opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
 elif args.solver == 'LSODAR':
     try:
@@ -266,6 +271,7 @@ elif args.solver == 'LSODAR':
     if args.maxord is not None:
         opt_solver[ 'maxordn' ] = args.maxord
         opt_solver[ 'maxords' ] = args.maxord
+    opt_solver[ 'maxh' ] = args.maxh
     opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
 elif args.solver == 'ExplicitEuler':
     try:

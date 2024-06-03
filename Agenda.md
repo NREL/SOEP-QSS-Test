@@ -1,3 +1,28 @@
+## Agenda: 2024/06/03
+- QSS Performance Development
+  - Very small trajectory values and derivatives occur in some models and can cause tiny QSS steps and simulations getting "stuck"
+    - Enabled flushing denormal values to zero in build options and code ("precise" floating point model disables it)
+    - Still a problem for small values that are bigger than denormals so added a clipping threhold (defaults to 1e-100 but can override with `--clip` option)
+    - Root solver iteration logic was hardened against very small values
+  - Some models miss events with the rQSS3 solvers: More investigation is needed to see if we are missing dependencies or it is inherent to QSS
+    - Using a deactivation state reset on variables altered in a zero-crossing event (and their observers) corrects this but has a cost when not needed so a `--dtInfReset` flag was added for now
+    - Using a max time step or the new max deactivation time step can also limit this issue
+    - More testing will be needed to choose a best approach
+  - Use of second order inflection point time steps in rQSS3 was seen to cause overly small steps so a higher threhold for using these was added
+  - For some models QSS spends a lot of work tracking event indicators that don't affect solutions
+    - Added the `--EI` option that can disable tracking of these types of event indicators:
+      - Event indicators that have no effect on solutions (such as those appearing only in asserts): Turning these off prevents detection of violations of those asserts
+      - Event indicators that have no "computational" observers so can only affect (non-state) output only variables: Outputs of such variables would be incorrect and should be disabled
+  - Zero crossing event logic refined to avoid "handler" processing of self-observing zero-crossing variables, which act as a conditional event signaling mechanism
+  - Changed dependency processing logic to ignore EI->EI in `<Dependencies>` on the assumption that these are not actually short-circuited "handler" dependencies but just used when the zero-crossing functions are similar (the EI dependencies in `<Outputs>` show the actual dependencies are QSS currently merges those in)
+    - Email to Christian identifies clarifications needed to confirm this approach is OK
+  - Relaxation solver time step growth damping was refined to not include the effect of inflection point step limiting
+- Testing
+  - `run_PyFMI.py` updated to apply `maxh` for RodasODE and LSODAR (which use `maxh` but the OCT docs don't note that)
+  - Scalable 1x1: (show plots)
+    - rQSS2 is ~2.7X faster than prior version with these smaller refinements
+    - Should be within ~4X of CVode for the larger Scalable models so we need another big jump forward
+
 ## Agenda: 2024/04/18
 - Benchmarking
   - Added benchmarks repository git revision to plot footers
