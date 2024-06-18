@@ -1,3 +1,12 @@
+## Agenda: 2024/06/18
+- Modelon
+  - Can get incorrect directional derivatives unless I make "get" calls on the variable's dependencies ("computational observees") after setting them
+  - Hard to determine which "get" calls needed after "set": before directional derivatives only? Working on it...
+  - No luck finding a small demo case yet
+- QSS Development
+  - Relaxation solver refinements to avoid chance of time step stalling scenario
+  - Relaxation convergence logic experiments underway
+
 ## Agenda: 2024/06/03
 - Modelon Topics
   - Event indicator dependencies clarifications (from email):
