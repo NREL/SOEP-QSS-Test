@@ -1,3 +1,22 @@
+## Agenda: 2024/08/29
+- Development
+  - Need for get_real calls
+    - Tried various approaches to limit when get_real calls needed
+    - Effect not limited to directional derivative calls
+    - Left it in for now after all set_real calls: 10-20% performance penalty
+  - Deactivation reset at zero-crossing events
+    - Makes sense since trajectory discontinuities can occur there
+    - But can cause progress to stall
+  - EI modes that shouldn't affect state trajectories do => Missing dependencies
+  - Option to clip very small values/derivatives to zero and denormal flush to zero (ftz) added: Avoids meaningless steps for some models
+  - Inflection point treatment refined for 3rd order solvers to separate treatment of 2nd derivative inflection points
+  - Zero-crossing self "handler" efficient treatment
+  - Misc efficiency refinements
+- Testing
+  - Recent Buildings library has more event indicators
+  - Extra get_real calls cause a slowdown
+  - The basic performance picture hasn't changed much: Need to start on some of the bigger ideas
+
 ## Agenda: 2024/06/18
 - Modelon
   - Can get incorrect directional derivatives unless I make "get" calls on the variable's dependencies ("computational observees") after setting them
