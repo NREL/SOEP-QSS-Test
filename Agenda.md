@@ -1,3 +1,20 @@
+## Agenda: 2024/09/19
+- Development
+  - Focus has been on finishing relaxation refinements before moving to bigger ideas
+  - Resolved slowdown with rQSS3 due to larger inflectionFrac2
+  - Added x (broadcast continuous representation) builds and evaulated performance impact on Buildings models (earlier testing had shown benefits)
+  - Latest stable code pushed to SOEP-QSS repo
+  - Yoyoing detection and convergence refinements
+  - Deactivation reset options balancing accuracy and performance
+  - rQSS3 missing some zero crossings in Scalable model
+- Testing
+  - Benchmarking runs/comparisons with latest QSS code: No big changes
+- In Progress
+  - Info for CW on get_real call issue
+  - Info on EI mode surprising impacts for CW
+- Peer Review slides
+- QSS paper draft review and generate list of possible topics
+
 ## Agenda: 2024/08/29
 - Development
   - Need for get_real calls
