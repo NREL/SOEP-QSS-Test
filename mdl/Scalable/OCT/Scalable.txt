@@ -1,5 +1,21 @@
 Scalable Model OCT Notes
 
+1-Day Runs
+1-day simulations of the 1x1 Scalable model were run with all the PyFMI solvers.
+Both ncp=0 and maxh=0 (where relevant) were used to minimize simulation time.
+The solutions (assessed from fan[1]].vol.dynBal.U) were generally close except
+Dopri5 & RungeKutta34 go off track shortly after an apparent event at ~64,800 s.
+Elapsed simulation times (s):
+ CVode (stiff):                1.042315
+ LSODAR (stiff):               3.21532
+ Radau5ODE (stiff):           16.0078245
+ RodasODE (stiff):             4.0068418
+ RungeKutta34 (non-stiff):   514.9223673
+ Dopri5 (non-stiff):         448.3619505
+ ExplicitEuler (non-stiff): 1112.4118753999999
+The stiff solvers are much faster: Scalable like most Buildings Library models,
+is a stiff system.
+
 OCT needs a significant amount of FMU build time and memory for the
 larger 6x6 and 8x8 versions of this model. JVM was increased in the
 bld_fmu.py file with:

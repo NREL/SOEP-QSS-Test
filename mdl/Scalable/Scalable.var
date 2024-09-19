@@ -1,2 +1,16 @@
-fan[1].vol.dynBal.m
-fan[1].vol.dynBal.U
+_eventIndicator_*
+fan[?].vol.dynBal.m
+fan[?].vol.dynBal.U
+fan[?].filter.s[?]
+fanRet[?].filter.s[?]
+valHea[?].filter.s[?]
+
+# For investigation
+buiZon.theZon[1,1].roo.air.vol.dynBal.m
+eco[1].filter.s[2]
+eco[1].port_Ret.m_flow
+fanRet[1].filter.s[2]
+eco[1].port_Ret.m_flow
+cooCoi[1].heaCooHum_u.vol.dynBal.U
+TRet[1].T
+buiZon.theZon[1,1].intECoo.y
