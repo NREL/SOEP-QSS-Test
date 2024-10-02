@@ -1,3 +1,7 @@
+## Agenda: 2024/10/02
+- QSS paper draft review/discussion
+- QSS code updated with latest refinements
+
 ## Agenda: 2024/09/19
 - Development
   - Focus has been on finishing relaxation refinements before moving to bigger ideas
