@@ -23,7 +23,7 @@ if platform_name not in ( 'Linux', 'Windows' ):
 parser = argparse.ArgumentParser()
 parser.add_argument( '--dir', help = 'Target directory  [SOEP-QSS]', default = 'SOEP-QSS' )
 parser.add_argument( '--rev', help = 'Revision [latest]', default = None )
-parser.add_argument( '--bld', help = 'Build specs  (Compiler[.Build])  [GCC|Clang|VC|IX[.r]]', default = 'GCC.r' )
+parser.add_argument( '--bld', help = 'Build specs  (Compiler[.Build])  [GCC|Clang|VC|IC[.r]]', default = 'GCC.r' )
 parser.add_argument( '--no-bld', help = 'Don\'t build  [False]', default = False, action = 'store_true' )
 parser.add_argument( '--git', help = 'Git executable directory (if not on PATH)', default = None )
 args = parser.parse_args()
@@ -88,7 +88,10 @@ if compiler_lower in ( 'gcc', 'g++' ): # GCC
 elif compiler_lower in ( 'clang', 'clang++' ): # Clang
     compiler = 'Clang'
 elif compiler_lower in ( 'intel', 'icx', 'icpx', 'ix' ): # Intel C++ (LLVM)
-    compiler = 'IX'
+    compiler = 'IC'
+elif compiler_lower in ( 'icc', 'icl', 'icpc' ): # Intel C++ (Classic)
+    print( 'Error: The Classic Intel C++ is no longer supported: Use a recent oneAPI LLVM-based Intel C++' )
+    sys.exit( 1 )
 elif compiler_lower in ( 'msvc', 'msvs', 'vc', 'vc++' ): # Microsoft Visual C++
     if platform_name == 'Linux':
         print( 'Error: Visual C++ is not supported on Linux' )

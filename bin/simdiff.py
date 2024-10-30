@@ -4,7 +4,7 @@
 #
 # Project: QSS Solver
 #
-# Language: Python 2.7 and 3.x
+# Language: 3.x
 #
 # Developed by Objexx Engineering, Inc. (https://objexx.com) under contract to
 # the National Renewable Energy Laboratory of the U.S. Department of Energy
@@ -620,6 +620,13 @@ def sig_compare( fnam1, fnam2 ):
 
     # Interpolation and plotting and pyfunneling
     if interp_or_plot_or_pyfunnel:
+        if hasattr( numpy, 'trapezoid' ):
+            trapezoid = numpy.trapezoid
+        elif hasattr( numpy, 'trapz' ):
+            trapezoid = numpy.trapez
+        else:
+            print( 'NumPy trapezoid integrator not found' )
+            sys.exit( 1 )
         x1 = numpy.array( cols1[ 0 ] )
         x2 = numpy.array( cols2[ 0 ] )
         x = numpy.unique( numpy.concatenate( ( x1, x2 ) ) )
@@ -692,9 +699,9 @@ def sig_compare( fnam1, fnam2 ):
                     x_range = X[ -1 ] - X[ 0 ]
                     if x_range != 0.0:
                         yda = numpy.abs( zd )
-                        yda_avg = numpy.trapz( yda, X ) / x_range
+                        yda_avg = trapezoid( yda, X ) / x_range
                         yd2 = numpy.square( yda )
-                        yd2_avg = math.sqrt( numpy.trapz( yd2, X ) / x_range )
+                        yd2_avg = math.sqrt( trapezoid( yd2, X ) / x_range )
                         print( ' |Avg| (L1): ' + str( yda_avg ) )
                         print( '  RMS  (L2): ' + str( yd2_avg ) )
                     if row_diffs == 0:
@@ -748,9 +755,9 @@ def sig_compare( fnam1, fnam2 ):
                     x_range = x[ -1 ] - x[ 0 ]
                     if x_range != 0.0:
                         yda = numpy.abs( Yd )
-                        yda_avg = numpy.trapz( yda, x ) / x_range
+                        yda_avg = trapezoid( yda, x ) / x_range
                         yd2 = numpy.square( yda )
-                        yd2_avg = math.sqrt( numpy.trapz( yd2, x ) / x_range )
+                        yd2_avg = math.sqrt( trapezoid( yd2, x ) / x_range )
                         print( ' |Avg| (L1): ' + str( yda_avg ) )
                         print( '  RMS  (L2): ' + str( yd2_avg ) )
                     if row_diffs == 0:
