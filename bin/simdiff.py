@@ -623,7 +623,7 @@ def sig_compare( fnam1, fnam2 ):
         if hasattr( numpy, 'trapezoid' ):
             trapezoid = numpy.trapezoid
         elif hasattr( numpy, 'trapz' ):
-            trapezoid = numpy.trapez
+            trapezoid = numpy.trapz
         else:
             print( 'NumPy trapezoid integrator not found' )
             sys.exit( 1 )
@@ -817,14 +817,10 @@ def sig_compare( fnam1, fnam2 ):
                 top.plot( x1, y1, label = leg1, linewidth = 0.6, color = 'darkgreen', zorder = 2.1 ) # zorder > 2 to put on top of File 2 curve
                 top.plot( x2, y2, label = leg2, linewidth = 0.6, color = 'darkblue' )
                 top.grid( linestyle = 'dotted', alpha = 0.25 )
-                top.tick_params( axis = 'both', direction = 'in' )
+                top.tick_params( axis = 'both', direction = 'in', labelsize = 7 )
                 top.ticklabel_format( style = 'sci', scilimits = ( -4, 5 ), axis = 'both' )
                 top.xaxis.get_offset_text().set_size( 6 )
                 top.yaxis.get_offset_text().set_size( 6 )
-                for tick in top.xaxis.get_major_ticks():
-                    tick.label1.set_fontsize( 7 )
-                for tick in top.yaxis.get_major_ticks():
-                    tick.label1.set_fontsize( 7 )
                 # len_leg = max( len( leg1 ), len( leg2 ) )
                 # if len_leg <= 80:
                 #     leg_font_size = 7
@@ -841,14 +837,10 @@ def sig_compare( fnam1, fnam2 ):
                 bot.set_title( title + ( '  ' if title else '' ) + 'Diff', fontsize = title_font_size )
                 bot.plot( x, Yd, linewidth = 0.8, color = 'darkred' )
                 bot.grid( linestyle = 'dotted', alpha = 0.25 )
-                bot.tick_params( axis = 'both', direction = 'in' )
+                bot.tick_params( axis = 'both', direction = 'in', labelsize = 7 )
                 bot.ticklabel_format( style = 'sci', scilimits = ( -4, 5 ), axis = 'both' )
                 bot.xaxis.get_offset_text().set_size( 6 )
                 bot.yaxis.get_offset_text().set_size( 6 )
-                for tick in bot.xaxis.get_major_ticks():
-                    tick.label1.set_fontsize( 7 )
-                for tick in bot.yaxis.get_major_ticks():
-                    tick.label1.set_fontsize( 7 )
 
                 # Labels
                 if lbls:
