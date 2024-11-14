@@ -1,3 +1,10 @@
+## Agenda: 2024/11/14
+- QSS paper draft review/discussion
+  - Should all examples go to the Appendix for now?
+- Knock-On Zero Crossings
+  - Order in FMU event_indicators array ==? Order in XML (not order of EI variables)
+  - QSS zero-crossing protocol refinement to detect and handle this
+
 ## Agenda: 2024/10/02
 - QSS paper draft review/discussion
 - QSS code updated with latest refinements
