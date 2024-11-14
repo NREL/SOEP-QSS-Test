@@ -48,6 +48,15 @@ import argparse, fnmatch, glob, math, os, re, sys
 import numpy
 from pyfmi import load_fmu
 
+def nonnegative_int( value ):
+    try:
+        val = int( value )
+    except:
+        raise argparse.ArgumentTypeError( "%s is not convertible to an int" % value )
+    assert isinstance( val, int )
+    if val < 0: raise argparse.ArgumentTypeError( "%s is not nonnegative" % val )
+    return val
+
 def nonnegative_float( value ):
     try:
         val = float( value )
@@ -95,7 +104,7 @@ parser.add_argument( '--maxh', help = 'Max time step (s)  (0 => ∞)  [∞|ncp-b
 parser.add_argument( '--dtMax', help = argparse.SUPPRESS, type = float, dest = 'maxh' )
 parser.add_argument( '--dtmax', help = argparse.SUPPRESS, type = float, dest = 'maxh' )
 parser.add_argument( '--h', help = 'ExplicitEuler max time step (s)  [0.01]', type = float )
-parser.add_argument( '--ncp', help = 'Number of communication (output) points (overrides dtOut) (0 => no sampled points)', type = int )
+parser.add_argument( '--ncp', help = 'Number of communication (output) points (overrides dtOut) (0 => none)', type = nonnegative_int )
 parser.add_argument( '--soo', help = 'Sampled output only (no event points)  [False]', default = False, action = 'store_true' )
 parser.add_argument( '--res', help = 'Results format  [memory]', default = 'memory', choices = [ 'memory', 'binary', 'csv', 'text', 'none', '' ] )
 parser.add_argument( '--var', help = 'Variable output filter list file' )
@@ -214,7 +223,15 @@ time_span = (
  ( args.start_time if args.start_time is not None else fmu.get_default_experiment_start_time() ) )
 if args.ncp is not None:
     opt[ 'ncp' ] = args.ncp
-    if args.maxh is None: args.maxh = time_span / float( opt[ 'ncp' ] ) # Specifying ncp adds integration points at outputs
+    if args.maxh is None:
+        ncp = int( opt[ 'ncp' ] )
+        if ncp < 0:
+            print( 'Error: Negative ncp specified' )
+            sys.exit( 1 )
+        elif ncp == 0:
+            args.maxh = 0.0 # 0 => ∞ => No integration points added for output points
+        else: # Compute maxh consistent with ncp
+            args.maxh = time_span / ncp # Specifying ncp adds integration points at outputs
 else: # Use dtOut to set ncp for PyFMI
     if args.dtOut is None: # Set default dtOut
         args.dtOut = math.pow( 10.0, round( math.log10( time_span * 0.0002 ) ) )
