@@ -91,7 +91,7 @@ parser.add_argument( '--tEnd', help = argparse.SUPPRESS, type = float, dest = 'f
 parser.add_argument( '--tend', help = argparse.SUPPRESS, type = float, dest = 'final_time' )
 parser.add_argument( '--dtOut', help = 'Output time step (s)  [computed]', type = float )
 parser.add_argument( '--dtout', help = argparse.SUPPRESS, type = float, dest = 'dtOut' )
-parser.add_argument( '--maxh', help = 'Max time step (s) for CVode or Radau5ODE or LSODAR solvers (0 => ∞)  [0]', type = nonnegative_float, default = 0.0 ) # Default to ∞ so output steps don't add integration steps
+parser.add_argument( '--maxh', help = 'Max time step (s)  (0 => ∞)  [∞|ncp-based]', type = nonnegative_float ) # Defaults to ∞ unless ncp specified so output steps don't add integration steps
 parser.add_argument( '--dtMax', help = argparse.SUPPRESS, type = float, dest = 'maxh' )
 parser.add_argument( '--dtmax', help = argparse.SUPPRESS, type = float, dest = 'maxh' )
 parser.add_argument( '--h', help = 'ExplicitEuler max time step (s)  [0.01]', type = float )
@@ -209,12 +209,13 @@ if args.var: # Variable output filtering
                     key = re.sub( r'([\[\]])', r'[\1]', key ) # filter needs glob syntax with recent OCT: Add variant assuming brackets aren't protected in .var files
                     filter.append( key )
     if filter: opt[ 'filter' ] = filter
+time_span = (
+ ( args.final_time if args.final_time is not None else fmu.get_default_experiment_stop_time() ) -
+ ( args.start_time if args.start_time is not None else fmu.get_default_experiment_start_time() ) )
 if args.ncp is not None:
     opt[ 'ncp' ] = args.ncp
+    if args.maxh is None: args.maxh = time_span / float( opt[ 'ncp' ] ) # Specifying ncp adds integration points at outputs
 else: # Use dtOut to set ncp for PyFMI
-    time_span = (
-     ( args.final_time if args.final_time is not None else fmu.get_default_experiment_stop_time() ) -
-     ( args.start_time if args.start_time is not None else fmu.get_default_experiment_start_time() ) )
     if args.dtOut is None: # Set default dtOut
         args.dtOut = math.pow( 10.0, round( math.log10( time_span * 0.0002 ) ) )
     else: # Use specified dtOut
@@ -222,15 +223,14 @@ else: # Use dtOut to set ncp for PyFMI
             print( 'Error: Non-positive dtOut time step specified:', args.dtOut )
             sys.exit( 1 )
     opt[ 'ncp' ] = int( round( time_span / args.dtOut ) )
+    if args.maxh is None: args.maxh = 0.0 # 0 => ∞ => No integration points added for output points
 if args.solver == 'CVode':
     opt_solver = opt[ args.solver + '_options' ]
     opt_solver[ 'discr' ] = args.discr
     opt_solver[ 'iter' ] = args.iter
     if args.maxord is not None: opt_solver[ 'maxord' ] = args.maxord
     opt_solver[ 'maxh' ] = args.maxh
-# Additional arguments for testing
 #   opt_solver[ 'external_event_detection' ] = False
-#   opt_solver[ 'maxh' ] = ( fmu.get_default_experiment_stop_time() - fmu.get_default_experiment_stop_time() ) / float( opt[ 'ncp' ] )
 #   opt_solver[ 'store_event_points' ] = True # True is default
 elif args.solver == 'Radau5ODE':
     try:
@@ -246,6 +246,7 @@ elif args.solver == 'RungeKutta34':
     except:
         print( 'Error: Unsupported solver:', args.solver )
         sys.exit( 1 )
+    # opt_solver[ 'maxh' ] = args.maxh # Not supported by RungeKutta34
     opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
 elif args.solver == 'Dopri5':
     try:
@@ -253,6 +254,7 @@ elif args.solver == 'Dopri5':
     except:
         print( 'Error: Unsupported solver:', args.solver )
         sys.exit( 1 )
+    opt_solver[ 'maxh' ] = args.maxh
     opt_solver[ 'maxsteps' ] = 100000000 # Avoid early termination
 elif args.solver == 'RodasODE':
     try:
